@@ -1,3 +1,0 @@
-/usr/local/lib/mc_controller/etc/LIPMStabilizerWinnie.yaml
-/usr/local/lib/libLIPMStabilizer.so
-/usr/local/lib/mc_controller/LIPMStabilizer_controller.so
