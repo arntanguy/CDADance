@@ -12,22 +12,13 @@ StepByStep: false
 # otherwise the FSM holds the last state until transition
 IdleKeepState: true
 # Where to look for state libraries
-# StatesLibraries:
-# - "@LIPMStabilizer_STATES_DESTINATION_PREFIX@"
-# # Where to look for state files
-# StatesFiles:
-# - "@LIPMStabilizer_STATES_DATA_DESTINATION_PREFIX@"
+#
 StatesLibraries:
 - "/usr/local/lib/mc_controller/fsm/states"
 # Where to look for state files
 StatesFiles:
 - "/usr/local/lib/mc_controller/fsm/states/data"
-# StatesLibraries:
-# - "./fsm/states"
-# # Where to look for state files
-# StatesFiles:
-# - "./fsm/states/data"
-# # If true, state factory will be more verbose
+# If true, state factory will be more verbose
 VerboseStateFactory: false
 
 # Additional robots to load
@@ -46,27 +37,14 @@ collisions:
   useMinimal: true
 # Initial set of contacts
 contacts: []
-# contacts:
-# - r1: hrp4
-#   r1Surface: LeftFoot
-#   r2: ground
-#   r2Surface: AllGround
-# - r1: hrp4
-#   r1Surface: RightFoot
-#   r2: ground
-#   r2Surface: AllGround
-# hrp2_drc:
-#   posture:
-#     stiffness: 1.0
-#     weight: 10.0
-# jvrc1:
-#   posture:
-#     stiffness: 1.0
-#     weight: 10.0
-# hrp4:
-#   posture:
-#     stiffness: 1.0
-#     weight: 10.0
+hrp2_drc:
+  posture:
+    stiffness: 1.0
+    weight: 10.0
+jvrc1:
+  posture:
+    stiffness: 1.0
+    weight: 10.0
 
 # Implement some additional text states
 states:
@@ -157,7 +135,7 @@ states:
   # - Lift up phase: surface transform moving above the current position
   # - Put down phase: admittance tasks looking for a positive force above a threshold
   ###
-  LIPMStabilizer::LiftRightFoot: #usable;but robot flows in the air
+  LIPMStabilizer::LiftRightFoot:
     base: MetaTasks
     tasks:
       LiftFootTask:
@@ -174,13 +152,13 @@ states:
             - timeout: 3
             - speed: 0.005
 
-  LIPMStabilizer::LiftLeftFoot: #usable;but robot flows in the air
+  LIPMStabilizer::LiftLeftFoot:
     base: LIPMStabilizer::LiftRightFoot
     tasks:
       LiftFootTask:
         surface: LeftFoot
 
-  LIPMStabilizer::PutRightFoot: #usable;but robot flows in the air
+  LIPMStabilizer::PutRightFoot:
     base: MetaTasks
     tasks:
       PutFootAdmittance:
@@ -205,33 +183,33 @@ states:
             force: [.nan, .nan, 20]
             couple: [.nan, .nan, .nan]
 
-  LIPMStabilizer::PutLeftFoot: #usable;but robot flows in the air
+  LIPMStabilizer::PutLeftFoot:
     base: LIPMStabilizer::PutRightFoot
     tasks:
       PutFootAdmittance:
         surface: LeftFoot
 
-  LIPMStabilizer::Stabilized::LiftRightFoot: #usable
+  LIPMStabilizer::Stabilized::LiftRightFoot:
     base: Parallel
     states: [Stabilizer::LeftSupport, LIPMStabilizer::LiftRightFoot]
 
-  LIPMStabilizer::Stabilized::LiftLeftFoot: #usable
+  LIPMStabilizer::Stabilized::LiftLeftFoot:
     base: Parallel
     states: [Stabilizer::RightSupport, LIPMStabilizer::LiftLeftFoot]
 
-  LIPMStabilizer::Stabilized::PutRightFoot: #usable
+  LIPMStabilizer::Stabilized::PutRightFoot:
     base: Parallel
     states: [Stabilizer::LeftSupport, LIPMStabilizer::PutRightFoot]
 
-  LIPMStabilizer::Stabilized::PutLeftFoot: #usable
+  LIPMStabilizer::Stabilized::PutLeftFoot:
     base: Parallel
     states: [Stabilizer::RightSupport, LIPMStabilizer::PutLeftFoot]
 
-  LIPMStabilizer::Stabilized::StayLeft: #usable
+  LIPMStabilizer::Stabilized::StayLeft:
     base: Stabilizer::GoLeft
     completion: {}
 
-  LIPMStabilizer::Stabilized::StayRight: #usable
+  LIPMStabilizer::Stabilized::StayRight:
     base: Stabilizer::GoRight
     completion: {}
 
@@ -274,7 +252,7 @@ states:
   ###
   # Simple forward walking FSM
   ###
-  LIPMStabilizer::RightFootTrajectory: #usable;but robot flows in the air
+  LIPMStabilizer::RightFootTrajectory:
     base: MetaTasks
     tasks:
       SwingFootTrajectory:
@@ -299,7 +277,7 @@ states:
           controlPoints:
             - [1, [0.01, 0.0, 0.01]]
 
-  LIPMStabilizer::LeftFootTrajectory: #usable;but robot flows in the air
+  LIPMStabilizer::LeftFootTrajectory:
     base: LIPMStabilizer::RightFootTrajectory
     tasks:
       SwingFootTrajectory:
@@ -313,11 +291,11 @@ states:
             - [1., [0.01, 0.0, 0.01]]
 
 
-  LIPMStabilizer::Stabilized::LeftFootTrajectory: #usable
+  LIPMStabilizer::Stabilized::LeftFootTrajectory:
     base: Parallel
     states: [Stabilizer::RightSupport, LIPMStabilizer::LeftFootTrajectory]
 
-  LIPMStabilizer::Stabilized::RightFootTrajectory: #usable
+  LIPMStabilizer::Stabilized::RightFootTrajectory:
     base: Parallel
     states: [Stabilizer::LeftSupport, LIPMStabilizer::RightFootTrajectory]
 
@@ -342,7 +320,7 @@ states:
   ###
   # FSM to walk backwards
   ###
-  LIPMStabilizer::RightFootBackwardTrajectory: #usable;but robot flows in the air
+  LIPMStabilizer::RightFootBackwardTrajectory:
     base: LIPMStabilizer::RightFootTrajectory
     tasks:
       SwingFootTrajectory:
@@ -354,7 +332,7 @@ states:
           controlPoints:
             - [1, [-0.01, 0.0, 0.01]]
 
-  LIPMStabilizer::LeftFootBackwardTrajectory: #usable;but robot flows in the air
+  LIPMStabilizer::LeftFootBackwardTrajectory:
     base: LIPMStabilizer::RightFootBackwardTrajectory
     tasks:
       SwingFootTrajectory:
@@ -367,11 +345,11 @@ states:
           controlPoints:
             - [1., [-0.01, 0.0, 0.01]]
 
-  LIPMStabilizer::Stabilized::LeftFootBackwardTrajectory: #usable
+  LIPMStabilizer::Stabilized::LeftFootBackwardTrajectory:
     base: Parallel
     states: [Stabilizer::RightSupport, LIPMStabilizer::LeftFootBackwardTrajectory]
 
-  LIPMStabilizer::Stabilized::RightFootBackwardTrajectory: #usable
+  LIPMStabilizer::Stabilized::RightFootBackwardTrajectory:
     base: Parallel
     states: [Stabilizer::LeftSupport, LIPMStabilizer::RightFootBackwardTrajectory]
 
@@ -421,9 +399,6 @@ transitions:
 - [LIPMStabilizer::WalkingFSM::StepBackward, OK, Stabilizer::Standing, Auto]
 #   # Go back to list of choices
 - [Stabilizer::GoCenter, OK, Stabilizer::Standing]
-
-# # Initial state
-# init: @LIPMStabilizer_INIT_STATE@
 
 ObserverPipelines:
 - name: "MainPipeline"
