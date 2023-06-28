@@ -44,6 +44,58 @@ constraints:
 collisions:
 - type: collision
   useMinimal: true
+  collisions:
+    - body1: r_wrist
+      body2: torso
+      iDist: 0.1
+      sDist: 0.08
+    - body1: R_WRIST_P_LINK
+      body2: torso
+      iDist: 0.1
+      sDist: 0.08
+    - body1: R_WRIST_Y_LINK
+      body2: torso
+      iDist: 0.1
+      sDist: 0.08
+    - body1: R_ELBOW_P_LINK
+      body2: torso
+      iDist: 0.1
+      sDist: 0.08
+    - body1: r_wrist
+      body2: body
+      iDist: 0.1
+      sDist: 0.05
+    - body1: R_WRIST_P_LINK
+      body2: body
+      iDist: 0.1
+      sDist: 0.05
+    - body1: R_WRIST_Y_LINK
+      body2: body
+      iDist: 0.1
+      sDist: 0.05
+    - body1: R_ELBOW_P_LINK
+      body2: body
+      iDist: 0.1
+      sDist: 0.05
+    - body1: r_wrist
+      body2: NECK_P_LINK
+      iDist: 0.1
+      sDist: 0.05
+    - body1: R_WRIST_P_LINK
+      body2: NECK_P_LINK
+      iDist: 0.1
+      sDist: 0.05
+    - body1: R_WRIST_Y_LINK
+      body2: NECK_P_LINK
+      iDist: 0.1
+      sDist: 0.05
+    - body1: R_ELBOW_P_LINK
+      body2: NECK_P_LINK
+      iDist: 0.1
+      sDist: 0.05
+
+
+
 # Initial set of contacts
 contacts: []
 # contacts:
@@ -412,6 +464,162 @@ states:
   LIPMStabilizer::WalkingFSM::StepBackward1:
     base: LIPMStabilizer::WalkingFSM::StepBackward
 
+  StandingBase:
+    base: MetaTasks
+    tasks:
+      CoM:
+        type: com
+        above: [LeftFoot, RightFoot]
+        weight: 2000
+        stiffness: 5
+        unactiveJoints: [L_SHOULDER_R, L_SHOULDER_P, L_SHOULDER_Y, L_ELBOW_P, L_WRIST_P, L_WRIST_R, NECK_P, NECK_Y]
+      LookAt:
+        type: lookAtFrame
+        frame: NECK_P_LINK
+        frameVector: [1, 0, 0]
+        target:
+          robot: hrp4
+          frame: r_wrist
+        weight: 500
+        stiffness: 10
+  
+  TouchHead:
+    base: StandingBase
+    tasks:
+      RightHandToTheHead:
+        type: posture
+        stiffness: 1.0
+        weight: 100.0
+        target:
+          NECK_P: [0.8]
+          NECK_Y: [1.2]
+          R_SHOULDER_R: [-0.6]
+          R_SHOULDER_P: [-2.5] #-2.0
+          R_SHOULDER_Y: [1.6] #-3.1
+          R_ELBOW_P: [-2.1]
+          # L_SHOULDER_R: [2.15]
+        completion:
+          OR:
+            - timeout: 8.0
+            - AND:
+              - eval: 0.01
+              - speed: 0.01
+
+  RaiseRightHand:
+    base: StandingBase
+    tasks:
+      LeftHandTrajectory:
+        type: bspline_trajectory
+        setupMode: false
+        surface: r_gripper
+        weight: 100
+        stiffness: 50
+        duration: 4
+        dimWeight: [1,1,1, 1, 0.5, 0.5]
+        displaySamples: 100
+        target:
+          translation: [0.5, -0.3, 1.1]
+          rotation: [0, 0, 0]
+        controlPoints: [[0.57, 0.5, 0.85]]
+        # oriWaypoints: [[3.5, [-1.57,  0, 1.57]]]
+        completion:
+          timeElapsed: true
+
+  RightHandBackground:
+    base: StandingBase
+    tasks:
+      LeftHandTrajectory:
+        type: bspline_trajectory
+        setupMode: false
+        surface: r_gripper
+        weight: 100
+        stiffness: 50
+        duration: 4
+        dimWeight: [1,1, 1, 1, 0.5, 0.5]
+        displaySamples: 100
+        target:
+          # Rotation expressed as RPY (in radian)
+          # May also be expressed as quaternion or rotation matrix
+          translation: [0.6, -0.3, 1.1]
+          rotation: [0, 0, 0]
+        controlPoints: [[0.0, 0.15, 0.85]]
+        # oriWaypoints: [[3.5, [-1.57,  0, 1.57]]]
+        completion:
+          timeElapsed: true
+    transform:
+      frame: LeftFoot
+      robot: ground
+      frame: AllGround
+      offset:
+        translation: [1.4, -0.25, 0.78]
+        rotation: [0.0, 0.0, 0.0]
+      completion:
+        AND:
+          - eval: 0.001
+          - speed: 0.0001
+          - timeout: 3.0
+
+  DrawCircleRightHand:
+    base: StandingBase
+    tasks:
+      LeftHandTrajectory:
+        type: bspline_trajectory
+        setupMode: false
+        surface: r_gripper
+        weight: 100
+        stiffness: 50
+        duration: 4
+        dimWeight: [1,1,1, 1, 0.5, 0.5]
+        displaySamples: 100
+        target:
+          translation: [0.7, 0.0, 0.8]
+          rotation: [0, 0, 0]
+        controlPoints: [[0.27, 0.4, 0.85]]
+        # oriWaypoints: [[3.5, [-1.57,  0, 1.57]]]
+        completion:
+          timeElapsed: true
+
+  PutDownRightShoulder:
+    base: MetaTasks
+    tasks:
+      RightHandToTheHead:
+        type: posture
+        stiffness: 1.0
+        weight: 100.0
+        target:
+          R_SHOULDER_P: [-0.167]
+          R_SHOULDER_R: [-0.31]
+          R_SHOULDER_Y: [0.02]
+          R_ELBOW_P: [-0.18]
+          R_WRIST_R: [0.08]
+        completion:
+          OR:
+            - eval: 0.1
+            - AND:
+              - timeout: 1.0
+              - speed: 0.1
+
+
+  TouchHeadStabalized:
+    base: Parallel
+    states: [Stabilizer::Standing, TouchHead]
+
+  RaiseRightHandStabalized:
+    base: Parallel
+    states: [Stabilizer::Standing, RaiseRightHand]
+
+  RightHandBackgroundStabalized:
+    base: Parallel
+    states: [Stabilizer::Standing, RightHandBackground]
+
+  DrawCircleRightHandStabalized:
+    base: Parallel
+    states: [Stabilizer::Standing, DrawCircleRightHand]
+
+  PutDownRightShoulderStabalized:
+    base: Parallel
+    states: [Stabilizer::Standing, PutDownRightShoulder]
+
 ###
 # This FSM is meant to test and tune the LIPMStabilizer, use it with appropriate caution.
 # It can:
@@ -443,16 +651,22 @@ states:
 # #   # Go back to list of choices
 # - [Stabilizer::GoCenter, OK, Stabilizer::Standing]
 transitions:
-- [Pause_2s, OK, Stabilizer::Standing, Auto]
-- [Stabilizer::Standing, OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting, Auto]
-- [LIPMStabilizer::StandingFSM::AlternateFeetLifting, OK, LIPMStabilizer::WalkingFSM::StepForward, Auto]
-- [LIPMStabilizer::WalkingFSM::StepForward, OK, LIPMStabilizer::WalkingFSM::StepForward1, Auto]
-- [LIPMStabilizer::WalkingFSM::StepForward1, OK, LIPMStabilizer::WalkingFSM::StepForward2, Auto]
-- [LIPMStabilizer::WalkingFSM::StepForward2, OK, LIPMStabilizer::WalkingFSM::StepBackward1, Auto]
-- [LIPMStabilizer::WalkingFSM::StepBackward1, OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting1, Auto]
-- [LIPMStabilizer::StandingFSM::AlternateFeetLifting1, OK, LIPMStabilizer::WalkingFSM::StepForward3, Auto]
-- [LIPMStabilizer::WalkingFSM::StepForward3, OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting2, Auto]
-- [LIPMStabilizer::StandingFSM::AlternateFeetLifting2, OK, LIPMStabilizer::Endpoint, Auto]
+- [Pause_2s,                                            OK, Stabilizer::Standing, Auto]
+- [Stabilizer::Standing,                                OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting, Auto]
+- [LIPMStabilizer::StandingFSM::AlternateFeetLifting,   OK, LIPMStabilizer::WalkingFSM::StepForward, Auto]
+- [LIPMStabilizer::WalkingFSM::StepForward,             OK, TouchHeadStabalized, Auto]
+- [TouchHeadStabalized,                                 OK, LIPMStabilizer::WalkingFSM::StepForward1, Auto]
+- [LIPMStabilizer::WalkingFSM::StepForward1,            OK, LIPMStabilizer::WalkingFSM::StepForward2, Auto]
+- [LIPMStabilizer::WalkingFSM::StepForward2,            OK, RaiseRightHandStabalized, Auto]
+- [RaiseRightHandStabalized,                            OK, LIPMStabilizer::WalkingFSM::StepBackward1, Auto]
+- [LIPMStabilizer::WalkingFSM::StepBackward1,           OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting1, Auto]
+- [LIPMStabilizer::StandingFSM::AlternateFeetLifting1,  OK, RightHandBackgroundStabalized, Auto]
+- [RightHandBackgroundStabalized,                       OK, DrawCircleRightHandStabalized, Auto]
+- [DrawCircleRightHandStabalized,                       OK, PutDownRightShoulderStabalized, Auto]
+- [PutDownRightShoulderStabalized,                      OK, LIPMStabilizer::WalkingFSM::StepForward3, Auto]
+- [LIPMStabilizer::WalkingFSM::StepForward3,            OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting2, Auto]
+- [LIPMStabilizer::StandingFSM::AlternateFeetLifting2,  OK, LIPMStabilizer::Endpoint, Auto]
+
 
 # # Initial state
 # init: @LIPMStabilizer_INIT_STATE@
