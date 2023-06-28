@@ -73,6 +73,9 @@ states:
   LIPMStabilizer::Pause_2s:
     base: Pause
     duration: 2
+  LIPMStabilizer::Endpoint:
+    base: Stabilizer::Standing
+
   LIPMStabilizer::CustomConfiguration:
     base: Stabilizer::Standing
 
@@ -263,6 +266,12 @@ states:
       - [LIPMStabilizer::StandingFSM::LiftRightFoot, OK, LIPMStabilizer::StandingFSM::LiftLeftFoot]
       - [LIPMStabilizer::StandingFSM::LiftLeftFoot, OK, Stabilizer::GoCenter]
 
+  LIPMStabilizer::StandingFSM::AlternateFeetLifting1:
+    base: LIPMStabilizer::StandingFSM::AlternateFeetLifting
+
+  LIPMStabilizer::StandingFSM::AlternateFeetLifting2:
+    base: LIPMStabilizer::StandingFSM::AlternateFeetLifting
+
   LIPMStabilizer::StandingFSM::AlternateFeetLiftingManual:
     base: Meta
     StepByStep: true
@@ -338,6 +347,15 @@ states:
     - [LIPMStabilizer::WalkingFSM::LeftStep, OK, LIPMStabilizer::WalkingFSM::RightStep, Auto]
     - [LIPMStabilizer::WalkingFSM::RightStep, OK, Stabilizer::GoCenter, Auto]
 
+  LIPMStabilizer::WalkingFSM::StepForward1:
+    base: LIPMStabilizer::WalkingFSM::StepForward
+
+  LIPMStabilizer::WalkingFSM::StepForward2:
+    base: LIPMStabilizer::WalkingFSM::StepForward
+
+  LIPMStabilizer::WalkingFSM::StepForward3:
+    base: LIPMStabilizer::WalkingFSM::StepForward
+
 
   ###
   # FSM to walk backwards
@@ -391,6 +409,9 @@ states:
     - [LIPMStabilizer::WalkingFSM::LeftBackwardStep, OK, LIPMStabilizer::WalkingFSM::RightBackwardStep, Auto]
     - [LIPMStabilizer::WalkingFSM::RightBackwardStep, OK, Stabilizer::GoCenter, Auto]
 
+  LIPMStabilizer::WalkingFSM::StepBackward1:
+    base: LIPMStabilizer::WalkingFSM::StepBackward
+
 ###
 # This FSM is meant to test and tune the LIPMStabilizer, use it with appropriate caution.
 # It can:
@@ -405,22 +426,33 @@ states:
 #
 # - See StabilizerStanding.yaml for a library of simple states to deal with the stabilizer
 ###
+# transitions:
+#   # Stand from left to right support and lift and put down feet
+# - [Pause_2s, OK, Stabilizer::Standing, Auto]
+# - [Stabilizer::Standing, Lift feet, LIPMStabilizer::StandingFSM::AlternateFeetLifting, Auto]
+# - [LIPMStabilizer::StandingFSM::AlternateFeetLifting, OK, Stabilizer::Standing, Auto]
+#   # Stand from left to right support and lift and put down feet (manual user input)
+# - [Stabilizer::Standing, Lift feet (Manual), LIPMStabilizer::StandingFSM::AlternateFeetLiftingManual, Auto]
+# - [LIPMStabilizer::StandingFSM::AlternateFeetLiftingManual, OK, Stabilizer::Standing, Auto]
+#   # Walk one step forward in a stabilized semi quasi-static way
+# - [Stabilizer::Standing, Step Forward, LIPMStabilizer::WalkingFSM::StepForward, Auto]
+# - [LIPMStabilizer::WalkingFSM::StepForward, OK, Stabilizer::Standing, Auto]
+#   # Walk one step backwards in a stabilized semi quasi-static way
+# - [Stabilizer::Standing, Step Backward, LIPMStabilizer::WalkingFSM::StepBackward, Auto]
+# - [LIPMStabilizer::WalkingFSM::StepBackward, OK, Stabilizer::Standing, Auto]
+# #   # Go back to list of choices
+# - [Stabilizer::GoCenter, OK, Stabilizer::Standing]
 transitions:
-  # Stand from left to right support and lift and put down feet
 - [Pause_2s, OK, Stabilizer::Standing, Auto]
-- [Stabilizer::Standing, Lift feet, LIPMStabilizer::StandingFSM::AlternateFeetLifting, Auto]
-- [LIPMStabilizer::StandingFSM::AlternateFeetLifting, OK, Stabilizer::Standing, Auto]
-  # Stand from left to right support and lift and put down feet (manual user input)
-- [Stabilizer::Standing, Lift feet (Manual), LIPMStabilizer::StandingFSM::AlternateFeetLiftingManual, Auto]
-- [LIPMStabilizer::StandingFSM::AlternateFeetLiftingManual, OK, Stabilizer::Standing, Auto]
-  # Walk one step forward in a stabilized semi quasi-static way
-- [Stabilizer::Standing, Step Forward, LIPMStabilizer::WalkingFSM::StepForward, Auto]
-- [LIPMStabilizer::WalkingFSM::StepForward, OK, Stabilizer::Standing, Auto]
-  # Walk one step backwards in a stabilized semi quasi-static way
-- [Stabilizer::Standing, Step Backward, LIPMStabilizer::WalkingFSM::StepBackward, Auto]
-- [LIPMStabilizer::WalkingFSM::StepBackward, OK, Stabilizer::Standing, Auto]
-#   # Go back to list of choices
-- [Stabilizer::GoCenter, OK, Stabilizer::Standing]
+- [Stabilizer::Standing, OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting, Auto]
+- [LIPMStabilizer::StandingFSM::AlternateFeetLifting, OK, LIPMStabilizer::WalkingFSM::StepForward, Auto]
+- [LIPMStabilizer::WalkingFSM::StepForward, OK, LIPMStabilizer::WalkingFSM::StepForward1, Auto]
+- [LIPMStabilizer::WalkingFSM::StepForward1, OK, LIPMStabilizer::WalkingFSM::StepForward2, Auto]
+- [LIPMStabilizer::WalkingFSM::StepForward2, OK, LIPMStabilizer::WalkingFSM::StepBackward1, Auto]
+- [LIPMStabilizer::WalkingFSM::StepBackward1, OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting1, Auto]
+- [LIPMStabilizer::StandingFSM::AlternateFeetLifting1, OK, LIPMStabilizer::WalkingFSM::StepForward3, Auto]
+- [LIPMStabilizer::WalkingFSM::StepForward3, OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting2, Auto]
+- [LIPMStabilizer::StandingFSM::AlternateFeetLifting2, OK, LIPMStabilizer::Endpoint, Auto]
 
 # # Initial state
 # init: @LIPMStabilizer_INIT_STATE@
