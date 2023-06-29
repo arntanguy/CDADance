@@ -1,33 +1,13 @@
-###
-# This FSM is meant to test and tune the LIPMStabilizer
-#
-# See the transition map description for details
-###
----
-## If true, the FSM transitions are managed by an external tool
 Managed: false
-# If true and the FSM is self-managed, transitions should be triggered
 StepByStep: false
-# Change idle behaviour, if true the state is kept until transition,
-# otherwise the FSM holds the last state until transition
 IdleKeepState: true
-# Where to look for state libraries
-# StatesLibraries:
-# - "@LIPMStabilizer_STATES_DESTINATION_PREFIX@"
-# # Where to look for state files
-# StatesFiles:
-# - "@LIPMStabilizer_STATES_DATA_DESTINATION_PREFIX@"
+
 StatesLibraries:
-- "/usr/local/lib/mc_controller/fsm/states"
-# Where to look for state files
+- "@MC_STATES_DEFAULT_RUNTIME_INSTALL_PREFIX@"
+- "@MC_STATES_RUNTIME_INSTALL_PREFIX@"
 StatesFiles:
-- "/usr/local/lib/mc_controller/fsm/states/data"
-# StatesLibraries:
-# - "./fsm/states"
-# # Where to look for state files
-# StatesFiles:
-# - "./fsm/states/data"
-# # If true, state factory will be more verbose
+- "@MC_STATES_DEFAULT_RUNTIME_INSTALL_PREFIX@/data"
+- "@MC_STATES_RUNTIME_INSTALL_PREFIX@/data"
 VerboseStateFactory: false
 
 # Additional robots to load
@@ -94,118 +74,11 @@ collisions:
       iDist: 0.1
       sDist: 0.05
 
-
-
 # Initial set of contacts
 contacts: []
-# contacts:
-# - r1: hrp4
-#   r1Surface: LeftFoot
-#   r2: ground
-#   r2Surface: AllGround
-# - r1: hrp4
-#   r1Surface: RightFoot
-#   r2: ground
-#   r2Surface: AllGround
-# hrp2_drc:
-#   posture:
-#     stiffness: 1.0
-#     weight: 10.0
-# jvrc1:
-#   posture:
-#     stiffness: 1.0
-#     weight: 10.0
-# hrp4:
-#   posture:
-#     stiffness: 1.0
-#     weight: 10.0
 
 # Implement some additional text states
 states:
-  LIPMStabilizer::Pause_2s:
-    base: Pause
-    duration: 2
-  LIPMStabilizer::Endpoint:
-    base: Stabilizer::Standing
-
-  LIPMStabilizer::CustomConfiguration:
-    base: Stabilizer::Standing
-
-    # Add contacts to the solver.
-    # Note that in order for the stabilizer to work, roll and pitch DoF need to be free to allow for admittance
-    # control of the feet, and vertical DoF to allow for foot force-difference control.
-    AddContacts:
-    - r1: hrp2_drc
-      r2: ground
-      r1Surface: LeftFoot
-      r2Surface: AllGround
-      dof: [0, 0, 1, 1, 1, 0]
-    - r1: hrp2_drc
-      r2: ground
-      r1Surface: RightFoot
-      r2Surface: AllGround
-      dof: [0, 0, 1, 1, 1, 0]
-
-    StabilizerConfig:
-      enabled: true
-
-      ###########################
-      ## Stabilizer configuration
-      ###########################
-      # Default values for these robot-specific parameters are set in the corresponding robot module.
-      # You may choose to override any of them here, with due caution.
-      hrp2_drc:
-        leftFootSurface: LeftFoot
-        rightFootSurface: RightFoot
-        friction: 0.8
-        torsoBodyName: CHEST_LINK1
-        # Configuration  of the QP tasks used by the stabilizer
-        tasks:
-          com:
-            stiffness: [1000, 1000, 100]
-            weight: 1000
-            active_joints: [Root, RLEG_JOINT0, RLEG_JOINT1, RLEG_JOINT2, RLEG_JOINT3, RLEG_JOINT4, RLEG_JOINT5, LLEG_JOINT0, LLEG_JOINT1, LLEG_JOINT2, LLEG_JOINT3, LLEG_JOINT4, LLEG_JOINT5]
-            height: 0.87
-          contact:
-            damping: 300
-            stiffness: 1
-            weight: 10000
-
-        # Weights for the force-distribution QP
-        fdqp_weights:
-          net_wrench: 10000
-          ankle_torque: 100
-          pressure: 1
-
-        # Vertical drift frequency
-        vdc:
-          frequency: 1
-          stiffness: 1000
-
-        # Admittance coefficients (force-control)
-        admittance:
-          cop: [0.001, 0.001]
-
-        ########################
-        # Gains for DCM tracking
-        ########################
-        # These are the main gains of the stabilizer.
-        dcm_tracking:
-          gains:
-            prop: 3
-            integral: 20
-            deriv: 0.5
-          derivator_time_constant: 5
-          integrator_time_constant: 30
-
-      # Change some parameters for another robot
-      jvrc1:
-        dcm_tracking:
-          gains:
-            prop: 4
-            integral: 10
-            deriv: 0.5
-
   ###
   # Simple foot lifting
   # Tasks to handle the free foot
@@ -464,15 +337,9 @@ states:
   LIPMStabilizer::WalkingFSM::StepBackward1:
     base: LIPMStabilizer::WalkingFSM::StepBackward
 
-  StandingBase:
+  LookAtRightHand:
     base: MetaTasks
     tasks:
-      CoM:
-        type: com
-        above: [LeftFoot, RightFoot]
-        weight: 2000
-        stiffness: 5
-        unactiveJoints: [L_SHOULDER_R, L_SHOULDER_P, L_SHOULDER_Y, L_ELBOW_P, L_WRIST_P, L_WRIST_R, NECK_P, NECK_Y]
       LookAt:
         type: lookAtFrame
         frame: NECK_P_LINK
@@ -484,7 +351,7 @@ states:
         stiffness: 10
   
   TouchHead:
-    base: StandingBase
+    base: LookAtRightHand
     tasks:
       RightHandToTheHead:
         type: posture
@@ -506,7 +373,7 @@ states:
               - speed: 0.01
 
   RaiseRightHand:
-    base: StandingBase
+    base: LookAtRightHand
     tasks:
       LeftHandTrajectory:
         type: bspline_trajectory
@@ -526,7 +393,7 @@ states:
           timeElapsed: true
 
   RightHandBackground:
-    base: StandingBase
+    base: LookAtRightHand
     tasks:
       LeftHandTrajectory:
         type: bspline_trajectory
@@ -546,21 +413,9 @@ states:
         # oriWaypoints: [[3.5, [-1.57,  0, 1.57]]]
         completion:
           timeElapsed: true
-    transform:
-      frame: LeftFoot
-      robot: ground
-      frame: AllGround
-      offset:
-        translation: [1.4, -0.25, 0.78]
-        rotation: [0.0, 0.0, 0.0]
-      completion:
-        AND:
-          - eval: 0.001
-          - speed: 0.0001
-          - timeout: 3.0
 
   DrawCircleRightHand:
-    base: StandingBase
+    base: LookAtRightHand
     tasks:
       LeftHandTrajectory:
         type: bspline_trajectory
@@ -600,86 +455,68 @@ states:
               - speed: 0.1
 
 
-  TouchHeadStabalized:
+  TouchHeadStabilized:
     base: Parallel
     states: [Stabilizer::Standing, TouchHead]
 
-  RaiseRightHandStabalized:
+  RaiseRightHandStabilized:
     base: Parallel
     states: [Stabilizer::Standing, RaiseRightHand]
 
-  RightHandBackgroundStabalized:
+  RightHandBackgroundStabilized:
     base: Parallel
     states: [Stabilizer::Standing, RightHandBackground]
 
-  DrawCircleRightHandStabalized:
+  DrawCircleRightHandStabilized:
     base: Parallel
     states: [Stabilizer::Standing, DrawCircleRightHand]
 
-  PutDownRightShoulderStabalized:
+  PutDownRightShoulderStabilized:
     base: Parallel
     states: [Stabilizer::Standing, PutDownRightShoulder]
 
-###
-# This FSM is meant to test and tune the LIPMStabilizer, use it with appropriate caution.
-# It can:
-# - In the initial state Stabilizer::Standing, you can use the GUI to freely move the CoM in-between the feet. Go to the Tasks->Stabilizer tab to see the stabilizer parameters. You may also add live plots from there to help with tuning.
-# - Two FSM are provided to make the robot stand on a single foot:
-#   - AlternateFeetLifting: Alternates between lifting the left and right foot automatically
-#   - AlternateFeetLiftingManual: Step by step FSM
-# - Two FSMs are provided as an example of quasi-static walking.
-#   Note that these FSM implementation do not handle early impact.
-#   - StepForward: steps 20cm forward
-#   - StepBackward: steps 10cm backward
-#
-# - See StabilizerStanding.yaml for a library of simple states to deal with the stabilizer
-###
-# transitions:
-#   # Stand from left to right support and lift and put down feet
-# - [Pause_2s, OK, Stabilizer::Standing, Auto]
-# - [Stabilizer::Standing, Lift feet, LIPMStabilizer::StandingFSM::AlternateFeetLifting, Auto]
-# - [LIPMStabilizer::StandingFSM::AlternateFeetLifting, OK, Stabilizer::Standing, Auto]
-#   # Stand from left to right support and lift and put down feet (manual user input)
-# - [Stabilizer::Standing, Lift feet (Manual), LIPMStabilizer::StandingFSM::AlternateFeetLiftingManual, Auto]
-# - [LIPMStabilizer::StandingFSM::AlternateFeetLiftingManual, OK, Stabilizer::Standing, Auto]
-#   # Walk one step forward in a stabilized semi quasi-static way
-# - [Stabilizer::Standing, Step Forward, LIPMStabilizer::WalkingFSM::StepForward, Auto]
-# - [LIPMStabilizer::WalkingFSM::StepForward, OK, Stabilizer::Standing, Auto]
-#   # Walk one step backwards in a stabilized semi quasi-static way
-# - [Stabilizer::Standing, Step Backward, LIPMStabilizer::WalkingFSM::StepBackward, Auto]
-# - [LIPMStabilizer::WalkingFSM::StepBackward, OK, Stabilizer::Standing, Auto]
-# #   # Go back to list of choices
-# - [Stabilizer::GoCenter, OK, Stabilizer::Standing]
+  Dance::Seq1::Walk:
+    base: Meta
+    transitions:
+      - [LIPMStabilizer::StandingFSM::AlternateFeetLifting, OK, LIPMStabilizer::WalkingFSM::StepForward, Auto]
+      - [LIPMStabilizer::WalkingFSM::StepForward, OK, LIPMStabilizer::WalkingFSM::StepForward1, Auto]
+      - [LIPMStabilizer::WalkingFSM::StepForward1, OK, LIPMStabilizer::WalkingFSM::StepForward2, Auto]
+      - [LIPMStabilizer::WalkingFSM::StepForward2, OK, LIPMStabilizer::WalkingFSM::StepBackward1, Auto]
+      - [LIPMStabilizer::WalkingFSM::StepBackward1, OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting1, Auto]
+      - [LIPMStabilizer::StandingFSM::AlternateFeetLifting1, OK, LIPMStabilizer::WalkingFSM::StepForward3, Auto]
+      - [LIPMStabilizer::WalkingFSM::StepForward3, OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting2, Auto]
+
+  Dance::Seq3::LookForApples:
+    base: Meta
+    transitions:
+      - [LIPMStabilizer::StandingFSM::AlternateFeetLifting,   OK, LIPMStabilizer::WalkingFSM::StepForward, Auto]
+      - [LIPMStabilizer::WalkingFSM::StepForward,             OK, TouchHeadStabilized, Auto]
+      - [TouchHeadStabilized,                                 OK, LIPMStabilizer::WalkingFSM::StepForward1, Auto]
+      - [LIPMStabilizer::WalkingFSM::StepForward1,            OK, LIPMStabilizer::WalkingFSM::StepForward2, Auto]
+      - [LIPMStabilizer::WalkingFSM::StepForward2,            OK, RaiseRightHandStabilized, Auto]
+      - [RaiseRightHandStabilized,                            OK, LIPMStabilizer::WalkingFSM::StepBackward1, Auto]
+      - [LIPMStabilizer::WalkingFSM::StepBackward1,           OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting1, Auto]
+      - [LIPMStabilizer::StandingFSM::AlternateFeetLifting1,  OK, RightHandBackgroundStabilized, Auto]
+      - [RightHandBackgroundStabilized,                       OK, DrawCircleRightHandStabilized, Auto]
+      - [DrawCircleRightHandStabilized,                       OK, PutDownRightShoulderStabilized, Auto]
+      - [PutDownRightShoulderStabilized,                      OK, LIPMStabilizer::WalkingFSM::StepForward3, Auto]
+      - [LIPMStabilizer::WalkingFSM::StepForward3,            OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting2, Auto]
+
+  Dance::Standing:
+    base: Parallel
+    states: [HalfSitting, Stabilizer::Standing]
+
 transitions:
-- [Pause_2s,                                            OK, Stabilizer::Standing, Auto]
-- [Stabilizer::Standing,                                OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting, Auto]
-- [LIPMStabilizer::StandingFSM::AlternateFeetLifting,   OK, LIPMStabilizer::WalkingFSM::StepForward, Auto]
-- [LIPMStabilizer::WalkingFSM::StepForward,             OK, TouchHeadStabalized, Auto]
-- [TouchHeadStabalized,                                 OK, LIPMStabilizer::WalkingFSM::StepForward1, Auto]
-- [LIPMStabilizer::WalkingFSM::StepForward1,            OK, LIPMStabilizer::WalkingFSM::StepForward2, Auto]
-- [LIPMStabilizer::WalkingFSM::StepForward2,            OK, RaiseRightHandStabalized, Auto]
-- [RaiseRightHandStabalized,                            OK, LIPMStabilizer::WalkingFSM::StepBackward1, Auto]
-- [LIPMStabilizer::WalkingFSM::StepBackward1,           OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting1, Auto]
-- [LIPMStabilizer::StandingFSM::AlternateFeetLifting1,  OK, RightHandBackgroundStabalized, Auto]
-- [RightHandBackgroundStabalized,                       OK, DrawCircleRightHandStabalized, Auto]
-- [DrawCircleRightHandStabalized,                       OK, PutDownRightShoulderStabalized, Auto]
-- [PutDownRightShoulderStabalized,                      OK, LIPMStabilizer::WalkingFSM::StepForward3, Auto]
-- [LIPMStabilizer::WalkingFSM::StepForward3,            OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting2, Auto]
-- [LIPMStabilizer::StandingFSM::AlternateFeetLifting2,  OK, LIPMStabilizer::Endpoint, Auto]
+- [Dance::Standing, DanceSeq1, Dance::Seq1::Walk, Strict]
+- [Dance::Standing, DanceSeq2, Dance::Seq3::LookForApples, Strict]
+- [Dance::Seq1::Walk, OK, Dance::Standing, Auto]
+- [Dance::Seq3::LookForApples, OK, Dance::Standing, Auto]
 
-
-# # Initial state
-# init: @LIPMStabilizer_INIT_STATE@
+init: Dance::Standing
 
 ObserverPipelines:
 - name: "MainPipeline"
   observers:
     - type: Encoder
     - type: Attitude
-      # Floating base kinematic-inertial state observation
     - type: KinematicInertial
-      # Floating base Groundtruth
-    - type: BodySensor
-      update: false
-      config:
-        bodySensor: FloatingBase
