@@ -506,9 +506,30 @@ states:
     base: Parallel
     states: [HalfSitting, Stabilizer::Standing]
 
-transitions:
-- [Dance::Standing, DanceSeq1, Dance::Seq1::Walk, Strict]
-- [Dance::Standing, DanceSeq2, Dance::Seq3::LookForApples, Strict]
+  Dance::ConditionBaseMovement:
+    base: AutonomousInteraction
+    robot: hrp4
+    stiffness: 200
+    weight: 1000
+    offset:
+      translation: [0.0, 0.0, 0.0]
+    
+
+transitions: 
+##demo danse seq on real HRP4
+# - [Dance::Standing, DanceSeq1, Dance::Seq1::Walk, Strict] # this line help to show up the bottom control on moveing forward to this state in the simulation interface
+# - [Dance::Standing, DanceSeq2, Dance::Seq3::LookForApples, Strict]
+# - [Dance::Seq1::Walk, OK, Dance::Standing, Auto]
+# - [Dance::Seq3::LookForApples, OK, Dance::Standing, Auto]
+
+##condition base movements (prepare to sync with HPE algo)
+- [Dance::Standing, DanceSeq1, Dance::ConditionBaseMovement, Strict]
+- [Dance::ConditionBaseMovement, SeqSF, LIPMStabilizer::WalkingFSM::StepForward, Auto]
+- [Dance::ConditionBaseMovement, SeqAFL, LIPMStabilizer::StandingFSM::AlternateFeetLifting, Auto]
+- [Dance::ConditionBaseMovement, Seq1Walk, Dance::Seq1::Walk, Auto]
+- [Dance::ConditionBaseMovement, Seq3LookForApples, Dance::Seq3::LookForApples, Auto]
+- [LIPMStabilizer::WalkingFSM::StepForward, OK, Dance::Standing, Auto]
+- [LIPMStabilizer::StandingFSM::AlternateFeetLifting, OK, Dance::Standing, Auto]
 - [Dance::Seq1::Walk, OK, Dance::Standing, Auto]
 - [Dance::Seq3::LookForApples, OK, Dance::Standing, Auto]
 

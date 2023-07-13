@@ -1,0 +1,1 @@
+add_fsm_state_simple(AutonomousInteraction)
