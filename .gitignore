@@ -5,6 +5,8 @@
 # Folder #
 ##########
 build/*
+src/states/__pycache__/*
+.vscode/*
 
 # Compiled source #
 ###################
