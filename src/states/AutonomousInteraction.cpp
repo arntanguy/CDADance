@@ -9,29 +9,29 @@ using namespace std;
 
 void AutonomousInteraction::configure(const mc_rtc::Configuration & config)
 {
-  mc_rtc::log::info("------ DEBUG enter AutonomousInteraction::configure ------\n");
+  if(debugmode_){mc_rtc::log::info("------ DEBUG enter AutonomousInteraction::configure ------\n");}
 
   config("stiffness", stiffness_);
   config("robot", robot_);
   config("offset", offset_);
 
-  mc_rtc::log::info("------ DEBUG leave AutonomousInteraction::configure ------\n");
+  if(debugmode_){mc_rtc::log::info("------ DEBUG leave AutonomousInteraction::configure ------\n");}
 
 }
 
 void AutonomousInteraction::start(mc_control::fsm::Controller & ctl_)
 {
-    mc_rtc::log::info("------ DEBUG enter AutonomousInteraction::start ------\n");
+    if(debugmode_){mc_rtc::log::info("------ DEBUG enter AutonomousInteraction::start ------\n");}
 
     auto & ctl = static_cast<LIPMStabilizerController &>(ctl_);
     run(ctl);
 
-    mc_rtc::log::info("------ DEBUG leave AutonomousInteraction::start ------\n");
+    if(debugmode_){mc_rtc::log::info("------ DEBUG leave AutonomousInteraction::start ------\n");}
 }
 
 bool AutonomousInteraction::run(mc_control::fsm::Controller & ctl_)
 {
-  mc_rtc::log::info("------ DEBUG enter AutonomousInteraction::run ------\n");
+  if(debugmode_){mc_rtc::log::info("------ DEBUG enter AutonomousInteraction::run ------\n");}
 
   auto & ctl = static_cast<LIPMStabilizerController &>(ctl_);
   auto & robot = ctl.robot(robot_);
@@ -45,27 +45,49 @@ bool AutonomousInteraction::run(mc_control::fsm::Controller & ctl_)
 
   PyRun_SimpleString("import sys");
   PyRun_SimpleString("import os");
+  PyRun_SimpleString("print(\"Python version\")");
+  PyRun_SimpleString("print (sys.version)");
+  PyRun_SimpleString("print(\"Version info.\")");
+  PyRun_SimpleString("print (sys.version_info)");
+
   PyRun_SimpleString("sys.path.append(os.getcwd())"); //in other words, when running simulation the dir need to be under {PROJECT}/src/states/ so that it could read *.py correctly
   PyRun_SimpleString("print(os.getcwd())");
 
-  pModule = PyImport_ImportModule("hello_test_CPY");
-  PyErr_Print();
+  const char* pyModuleName = "hello_test_CPY"; //hpe_recog2; hello_test_CPY
+  const char* pyModuleCallFuncName = "sayHello2"; //human_pose_landmarks_estimation; sayHello2
 
-  pFunc = PyObject_GetAttrString(pModule, "sayHello2");
+  pModule = PyImport_ImportModule(pyModuleName);
+  if(pModule != NULL)
+  {
+    mc_rtc::log::info("------ Successfully import python module ------\n");
+  } 
+  else
+  {
+    PyErr_Print();
+  }
+  
+  pFunc = PyObject_GetAttrString(pModule, pyModuleCallFuncName);
+  if(pFunc != NULL)
+  {
+    mc_rtc::log::info("------ Successfully import functions inside python module ------\n");
+  } 
+  else
+  {
+    PyErr_Print();
+  }
+
+
   pValue = PyObject_CallObject(pFunc, NULL);
 
   Py_Finalize();
 
-  // std::string SeqName[category_seq_] = {"SeqSF", "SeqAFL", "Seq3LookForApples", "Seq1Walk"};
+  std::string SeqName[category_seq_] = {"SeqSF", "SeqAFL", "Seq3LookForApples", "Seq1Walk"};
+  int segIdx = static_cast<int>(PyLong_AsLong(pValue));
 
-  // srand( (unsigned)time(NULL) );
-  // rand_val = 10 * (float) rand()/RAND_MAX;
-  // remainder_val = int(floor(rand_val)) % category_seq_;
+  mc_rtc::log::info("------ Return Index = {}; output = {} ------\n", segIdx, SeqName[segIdx]);
+  output(SeqName[segIdx]);
 
-  // mc_rtc::log::info("------ Random Value = {}; output {} ------\n", remainder_val, SeqName[remainder_val]);
-  // output(SeqName[remainder_val]);
-
-  mc_rtc::log::info("------ DEBUG leave AutonomousInteraction::run ------\n");
+  if(debugmode_){mc_rtc::log::info("------ DEBUG leave AutonomousInteraction::run ------\n");}
 
   return true;
 }

@@ -1,5 +1,7 @@
 # add_fsm_state_simple(AutonomousInteraction)
 
+# set(CMAKE_CXX_FLAGS -rdynamic)
+
 set(states_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/AutonomousInteraction.cpp
 )
@@ -10,11 +12,9 @@ set(states_HDR
 
 set(state_name AutonomousInteraction)
 
-find_package(PythonLibs REQUIRED)
 find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
 
-message(STATUS "PYTHON_LIBRARIES: ${PYTHON_LIBRARIES}")
-message(STATUS "Python3_INCLUDE_DIRS : ${Python3_INCLUDE_DIRS}")
+message(STATUS "Python3_INCLUDE_DIRS : ${Python3_INCLUDE_DIRS}") #/usr/include/python3.8
 # add_executable(${PROJECT_NAME} main.cpp)
 
 # The following are the decompose result of "add_fsm_state_simple" define by macro in the /home/dell/devel/src/mc_rtc/src/mc_rtcMacros.in.cmake
@@ -38,6 +38,7 @@ set_target_properties(${state_name}
 )
 endif()
 
+# set_property(TARGET ${state_name} PROPERTY ENABLE_EXPORTS ON)
 
 target_include_directories(${state_name}
     PRIVATE  

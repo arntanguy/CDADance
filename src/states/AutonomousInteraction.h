@@ -15,9 +15,10 @@ struct AutonomousInteraction : mc_control::fsm::State
 private:
     float rand_val;
     int remainder_val;
+    int category_seq_ = 4;
     double stiffness_ = 10;
     double weight_ = 1000;
-    int category_seq_ = 4;
+    bool debugmode_ = false;
     std::string robot_{};
     sva::PTransformd offset_ = sva::PTransformd::Identity();
 
