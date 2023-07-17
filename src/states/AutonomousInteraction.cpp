@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cmath>
 #include <Python.h>
+#define PY_SSIZE_T_CLEAN
 
 using namespace std;
 
@@ -35,7 +36,12 @@ bool AutonomousInteraction::run(mc_control::fsm::Controller & ctl_)
 
   auto & ctl = static_cast<LIPMStabilizerController &>(ctl_);
   auto & robot = ctl.robot(robot_);
-
+  
+  // py::scoped_interpreter guard{}; // start the interpreter and keep it alive
+  // py::print("Hello, World!");
+  // auto np = py::module::import("hello_test_CPY");
+  // mc_rtc::log::info("------ Successfully import python NUMPY ------\n");
+  
   PyObject *pName = NULL;
   PyObject *pModule = NULL;
   PyObject *pFunc = NULL;
@@ -45,13 +51,17 @@ bool AutonomousInteraction::run(mc_control::fsm::Controller & ctl_)
 
   PyRun_SimpleString("import sys");
   PyRun_SimpleString("import os");
+  PyRun_SimpleString("print(os.__file__)");
   PyRun_SimpleString("print(\"Python version\")");
   PyRun_SimpleString("print (sys.version)");
   PyRun_SimpleString("print(\"Version info.\")");
   PyRun_SimpleString("print (sys.version_info)");
 
   PyRun_SimpleString("sys.path.append(os.getcwd())"); //in other words, when running simulation the dir need to be under {PROJECT}/src/states/ so that it could read *.py correctly
-  PyRun_SimpleString("print(os.getcwd())");
+  PyRun_SimpleString("print(sys.path)");
+
+  // PyRun_SimpleString("sys.path.insert(0, os.path.abspath(\"/home/dell/.local/lib/python3.8/site-packages/\"))");
+  // PyRun_SimpleString("print(sys.path)");
 
   const char* pyModuleName = "hello_test_CPY"; //hpe_recog2; hello_test_CPY
   const char* pyModuleCallFuncName = "sayHello2"; //human_pose_landmarks_estimation; sayHello2

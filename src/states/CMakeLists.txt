@@ -12,8 +12,11 @@ set(states_HDR
 
 set(state_name AutonomousInteraction)
 
+# find_package(PythonLibs REQUIRED)
 find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+# find_package(pybind11 REQUIRED)
 
+# message(STATUS "PYTHON_LIBRARIES: ${PYTHON_LIBRARIES}")
 message(STATUS "Python3_INCLUDE_DIRS : ${Python3_INCLUDE_DIRS}") #/usr/include/python3.8
 # add_executable(${PROJECT_NAME} main.cpp)
 
@@ -40,12 +43,19 @@ endif()
 
 # set_property(TARGET ${state_name} PROPERTY ENABLE_EXPORTS ON)
 
+# set(Pybind11_inclusDir /home/dell/.local/lib/python3.8/site-packages/pybind11/include)
 target_include_directories(${state_name}
     PRIVATE  
         ${Python3_INCLUDE_DIRS}
+        # ${Pybind11_inclusDir}
 )
 target_link_libraries(${state_name} PRIVATE Python3::Python)
 target_link_libraries(${state_name} PUBLIC mc_rtc::mc_control_fsm)
+target_link_libraries(${state_name} PRIVATE ${CMAKE_DL_LIBS})
+set_target_properties(${state_name} PROPERTIES ENABLE_EXPORTS TRUE)
+
+# target_link_libraries(${state_name} PRIVATE pybind11::embed)
+
 # if(TARGET ${PROJECT_NAME})
 # target_link_libraries(${state_name} PUBLIC ${PROJECT_NAME})
 # endif()

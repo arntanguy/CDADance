@@ -1,7 +1,14 @@
 import datetime
-# import sys 
-# print(f'{sys.path}')
+import sys 
 import numpy
+
+# print(f'{sys.path}')
+# import traceback
+# try:
+#     import numpy
+# except:
+#     traceback.print_exc()
+
 
 current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
