@@ -1,5 +1,11 @@
 #include <mc_control/fsm/State.h>
 #include <mc_tasks/EndEffectorTask.h>
+#include <mc_rtc/ros.h>
+#include <geometry_msgs/AccelStamped.h>
+#include <geometry_msgs/PoseStamped.h>
+#include <ros/ros.h>
+#include <std_msgs/Bool.h>
+#include <std_msgs/String.h>
 
 
 struct AutonomousInteraction : mc_control::fsm::State
@@ -21,6 +27,9 @@ private:
     bool debugmode_ = false;
     std::string robot_{};
     sva::PTransformd offset_ = sva::PTransformd::Identity();
+
+    int argc;
+    char **argv;
 
 };
    
