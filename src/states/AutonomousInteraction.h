@@ -21,7 +21,9 @@ struct AutonomousInteraction : mc_control::fsm::State
 private:
     float rand_val;
     int remainder_val;
+    int segIdx;
     int category_seq_ = 4;
+    int capture_charatersN = 1;
     double stiffness_ = 10;
     double weight_ = 1000;
     bool debugmode_ = false;
