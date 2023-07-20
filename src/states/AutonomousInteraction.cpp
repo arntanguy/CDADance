@@ -60,7 +60,7 @@ bool AutonomousInteraction::run(mc_control::fsm::Controller & ctl_)
 
   auto & ctl = static_cast<LIPMStabilizerController &>(ctl_);
   auto & robot = ctl.robot(robot_);
-  std::string SeqName[4] = {"Seq0", "Seq1", "Seq2", "Seq3"};
+  std::string SeqName[8] = {"Seq0", "Seq1", "Seq2", "Seq3", "Seq4", "Seq5", "Seq6", "Seq7"};
 
   ros::init(argc, argv, "listener");
   ros::NodeHandle n;
