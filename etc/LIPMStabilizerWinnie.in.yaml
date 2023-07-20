@@ -709,7 +709,8 @@ transitions:
 # - [Dance::Seq3::TESTrosSubscriber, OK, Dance::Standing, Auto]
 
 ##condition base movements (syncing with HPE algo)
-- [Dance::Standing, DanceSeq1, Dance::ConditionBaseMovement, Strict]
+# - [Dance::Standing, DanceSeq1, Dance::ConditionBaseMovement, Strict]
+- [Dance::Standing, OK, Dance::ConditionBaseMovement, Auto]
 - [Dance::ConditionBaseMovement, Seq0, Dance::RightHandInteractNormal, Auto]
 - [Dance::ConditionBaseMovement, Seq1, Dance::RightHandInteractCloseToCore, Auto]
 - [Dance::ConditionBaseMovement, Seq2, Dance::RightHandInteractFarFromCore, Auto]

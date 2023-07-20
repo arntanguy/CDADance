@@ -92,7 +92,7 @@ bool AutonomousInteraction::run(mc_control::fsm::Controller & ctl_)
 
   // spinThread_.join();
   spinThread_.detach();
-  std::this_thread::sleep_for(std::chrono::seconds(3));
+  std::this_thread::sleep_for(std::chrono::seconds(1));
 
   return true;
 }
