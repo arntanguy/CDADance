@@ -4,8 +4,10 @@
 #include <geometry_msgs/AccelStamped.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <ros/ros.h>
+#include <ros/callback_queue.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/String.h>
+#include <thread>
 
 
 struct AutonomousInteraction : mc_control::fsm::State
@@ -29,6 +31,7 @@ private:
     bool debugmode_ = false;
     std::string robot_{};
     sva::PTransformd offset_ = sva::PTransformd::Identity();
+    std::thread spinThread_;
 
     int argc;
     char **argv;

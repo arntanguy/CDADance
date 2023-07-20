@@ -513,6 +513,18 @@ states:
     weight: 1000
     offset:
       translation: [0.0, 0.0, 0.0]
+
+  Dance::Seq0::TESTrosSubscriber:
+    base: LIPMStabilizer::WalkingFSM::StepForward
+
+  Dance::Seq1::TESTrosSubscriber:
+    base: LIPMStabilizer::StandingFSM::AlternateFeetLifting
+
+  Dance::Seq2::TESTrosSubscriber:
+    base: LIPMStabilizer::WalkingFSM::StepBackward
+
+  Dance::Seq3::TESTrosSubscriber:
+    base: Dance::Standing
     
 
 transitions: 
@@ -524,14 +536,16 @@ transitions:
 
 ##condition base movements (prepare to sync with HPE algo)
 - [Dance::Standing, DanceSeq1, Dance::ConditionBaseMovement, Strict]
-- [Dance::ConditionBaseMovement, SeqSF, LIPMStabilizer::WalkingFSM::StepForward, Auto]
-- [Dance::ConditionBaseMovement, SeqAFL, LIPMStabilizer::StandingFSM::AlternateFeetLifting, Auto]
-- [Dance::ConditionBaseMovement, Seq1Walk, Dance::Seq1::Walk, Auto]
-- [Dance::ConditionBaseMovement, Seq3LookForApples, Dance::Seq3::LookForApples, Auto]
-- [LIPMStabilizer::WalkingFSM::StepForward, OK, Dance::Standing, Auto]
-- [LIPMStabilizer::StandingFSM::AlternateFeetLifting, OK, Dance::Standing, Auto]
-- [Dance::Seq1::Walk, OK, Dance::Standing, Auto]
-- [Dance::Seq3::LookForApples, OK, Dance::Standing, Auto]
+- [Dance::ConditionBaseMovement, Seq0, Dance::Seq0::TESTrosSubscriber, Auto]
+- [Dance::ConditionBaseMovement, Seq1, Dance::Seq1::TESTrosSubscriber, Auto]
+- [Dance::ConditionBaseMovement, Seq2, Dance::Seq2::TESTrosSubscriber, Auto]
+- [Dance::ConditionBaseMovement, Seq3, Dance::Seq3::TESTrosSubscriber, Auto]
+# - [Dance::ConditionBaseMovement, Seq1Walk, Dance::Seq1::Walk, Auto]
+# - [Dance::ConditionBaseMovement, Seq3LookForApples, Dance::Seq3::LookForApples, Auto]
+- [Dance::Seq0::TESTrosSubscriber, OK, Dance::Standing, Auto]
+- [Dance::Seq1::TESTrosSubscriber, OK, Dance::Standing, Auto]
+- [Dance::Seq2::TESTrosSubscriber, OK, Dance::Standing, Auto]
+- [Dance::Seq3::TESTrosSubscriber, OK, Dance::Standing, Auto]
 
 init: Dance::Standing
 
