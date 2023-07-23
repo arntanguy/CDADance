@@ -1,1 +1,2 @@
 add_fsm_state_simple(AutonomousInteraction)
+add_fsm_state_simple(RosSubscriber)

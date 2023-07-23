@@ -633,6 +633,27 @@ states:
       - [PutDownRightShoulderStabilized,                      OK, LIPMStabilizer::WalkingFSM::StepForward3, Auto]
       - [LIPMStabilizer::WalkingFSM::StepForward3,            OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting2, Auto]
 
+  Dance::Seq4::ConditionBaseMovement:
+    base: Meta
+    transitions:
+      - [Dance::Standing, OK, Dance::ConditionBaseMovement, Auto]
+      - [Dance::ConditionBaseMovement, Seq0, Dance::RightHandInteractNormal, Auto]
+      - [Dance::ConditionBaseMovement, Seq1, Dance::RightHandInteractCloseToCore, Auto]
+      - [Dance::ConditionBaseMovement, Seq2, Dance::RightHandInteractFarFromCore, Auto]
+      - [Dance::ConditionBaseMovement, Seq3, Dance::LeftHandInteractNormal, Auto]
+      - [Dance::ConditionBaseMovement, Seq4, Dance::LeftHandInteractCloseToCore, Auto]
+      - [Dance::ConditionBaseMovement, Seq5, Dance::LeftHandInteractFarFromCore, Auto]
+      - [Dance::ConditionBaseMovement, Seq6, Dance::LeftHeadTilt, Auto]
+      - [Dance::ConditionBaseMovement, Seq7, Dance::RightHeadTilt, Auto]
+      - [Dance::RightHandInteractNormal, OK, Dance::Standing, Auto]
+      - [Dance::RightHandInteractCloseToCore, OK, Dance::Standing, Auto]
+      - [Dance::RightHandInteractFarFromCore, OK, Dance::Standing, Auto]
+      - [Dance::LeftHandInteractNormal, OK, Dance::Standing, Auto]
+      - [Dance::LeftHandInteractCloseToCore, OK, Dance::Standing, Auto]
+      - [Dance::LeftHandInteractFarFromCore, OK, Dance::Standing, Auto]
+      - [Dance::LeftHeadTilt, OK, Dance::Standing, Auto]
+      - [Dance::RightHeadTilt, OK, Dance::Standing, Auto]
+
   Dance::Standing:
     base: Parallel
     states: [HalfSitting, Stabilizer::Standing]
@@ -688,6 +709,10 @@ states:
   Dance::RightHeadTilt:
     base: Parallel
     states: [Stabilizer::Standing, RightHeadTilt]
+
+  Dance::Seq4::ConditionBaseMovement::withPubSub:
+    base: Parallel
+    states: [Dance::Seq4::ConditionBaseMovement, RosSubscriber] #[FAIL] to run these two in parallel: cannot do movements when the ros is receiving data at the same time.
   
 
 transitions: 
@@ -710,7 +735,12 @@ transitions:
 
 ##condition base movements (syncing with HPE algo)
 # - [Dance::Standing, DanceSeq1, Dance::ConditionBaseMovement, Strict]
-- [Dance::Standing, OK, Dance::ConditionBaseMovement, Auto]
+# - [Dance::Standing, DanceSeq1, RosSubscriber, Strict]
+# - [RosSubscriber, DanceSeq2, Dance::ConditionBaseMovement, Strict]
+
+- [Dance::Standing, OK, RosSubscriber, Auto]
+- [RosSubscriber, OK, Dance::ConditionBaseMovement, Auto]
+# - [Dance::Standing, OK, Dance::ConditionBaseMovement, Auto]
 - [Dance::ConditionBaseMovement, Seq0, Dance::RightHandInteractNormal, Auto]
 - [Dance::ConditionBaseMovement, Seq1, Dance::RightHandInteractCloseToCore, Auto]
 - [Dance::ConditionBaseMovement, Seq2, Dance::RightHandInteractFarFromCore, Auto]
@@ -719,14 +749,14 @@ transitions:
 - [Dance::ConditionBaseMovement, Seq5, Dance::LeftHandInteractFarFromCore, Auto]
 - [Dance::ConditionBaseMovement, Seq6, Dance::LeftHeadTilt, Auto]
 - [Dance::ConditionBaseMovement, Seq7, Dance::RightHeadTilt, Auto]
-# - [Dance::Standing, DanceSeq1, Dance::RightHandInteractNormal, Strict]
-# - [Dance::Standing, DanceSeq2, Dance::RightHandInteractCloseToCore, Strict]
-# - [Dance::Standing, DanceSeq3, Dance::RightHandInteractFarFromCore, Strict]
-# - [Dance::Standing, DanceSeq4, Dance::LeftHandInteractNormal, Strict]
-# - [Dance::Standing, DanceSeq5, Dance::LeftHandInteractCloseToCore, Strict]
-# - [Dance::Standing, DanceSeq6, Dance::LeftHandInteractFarFromCore, Strict]
-# - [Dance::Standing, DanceSeq7, Dance::LeftHeadTilt, Strict]
-# - [Dance::Standing, DanceSeq8, Dance::RightHeadTilt, Strict]
+# # - [Dance::Standing, DanceSeq1, Dance::RightHandInteractNormal, Strict]
+# # - [Dance::Standing, DanceSeq2, Dance::RightHandInteractCloseToCore, Strict]
+# # - [Dance::Standing, DanceSeq3, Dance::RightHandInteractFarFromCore, Strict]
+# # - [Dance::Standing, DanceSeq4, Dance::LeftHandInteractNormal, Strict]
+# # - [Dance::Standing, DanceSeq5, Dance::LeftHandInteractCloseToCore, Strict]
+# # - [Dance::Standing, DanceSeq6, Dance::LeftHandInteractFarFromCore, Strict]
+# # - [Dance::Standing, DanceSeq7, Dance::LeftHeadTilt, Strict]
+# # - [Dance::Standing, DanceSeq8, Dance::RightHeadTilt, Strict]
 - [Dance::RightHandInteractNormal, OK, Dance::Standing, Auto]
 - [Dance::RightHandInteractCloseToCore, OK, Dance::Standing, Auto]
 - [Dance::RightHandInteractFarFromCore, OK, Dance::Standing, Auto]
@@ -736,6 +766,8 @@ transitions:
 - [Dance::LeftHeadTilt, OK, Dance::Standing, Auto]
 - [Dance::RightHeadTilt, OK, Dance::Standing, Auto]
 
+##condition base movements (syncing with HPE algo + ros-subs/pubs running in back ground)
+# - [Dance::Standing, OK, Dance::Seq4::ConditionBaseMovement::withPubSub, Auto]
 
 
 init: Dance::Standing

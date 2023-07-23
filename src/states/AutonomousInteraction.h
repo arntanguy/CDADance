@@ -1,14 +1,5 @@
 #include <mc_control/fsm/State.h>
 #include <mc_tasks/EndEffectorTask.h>
-#include <mc_rtc/ros.h>
-#include <geometry_msgs/AccelStamped.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <ros/ros.h>
-#include <ros/callback_queue.h>
-#include <std_msgs/Bool.h>
-#include <std_msgs/String.h>
-#include <thread>
-
 
 struct AutonomousInteraction : mc_control::fsm::State
 {
@@ -31,10 +22,7 @@ private:
     bool debugmode_ = false;
     std::string robot_{};
     sva::PTransformd offset_ = sva::PTransformd::Identity();
-    std::thread spinThread_;
-
-    int argc;
-    char **argv;
-
+    std::string SeqName[8] = {"Seq0", "Seq1", "Seq2", "Seq3", "Seq4", "Seq5", "Seq6", "Seq7"};
+    std::string subscriber_msg;
 };
    
