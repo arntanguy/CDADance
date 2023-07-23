@@ -395,10 +395,10 @@ states:
         target:
           NECK_P: [0.8]
           NECK_Y: [1.2]
-          L_SHOULDER_R: [-0.6]
-          L_SHOULDER_P: [-2.5] #-2.0
-          L_SHOULDER_Y: [1.6] #-3.1
-          L_ELBOW_P: [-2.1]
+          L_SHOULDER_R: [1.235]
+          # L_SHOULDER_P: [-2.5] #-2.0
+          # L_SHOULDER_Y: [1.6] #-3.1
+          L_ELBOW_P: [-1.29]
           # L_SHOULDER_R: [2.15]
         completion:
           OR:
@@ -460,7 +460,7 @@ states:
         dimWeight: [1,1,1, 1, 0.5, 0.5]
         displaySamples: 100
         target:
-          translation: [-0.5, -0.3, 1.1]
+          translation: [-0.5, 0.3, 0.5]
           rotation: [0, 0, 0]
         controlPoints: [[0.57, 0.5, 0.85]]
         # oriWaypoints: [[3.5, [-1.57,  0, 1.57]]]
