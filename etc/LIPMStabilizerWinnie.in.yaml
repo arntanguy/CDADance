@@ -765,6 +765,7 @@ transitions:
 - [Dance::LeftHandInteractFarFromCore, OK, Dance::Standing, Auto]
 - [Dance::LeftHeadTilt, OK, Dance::Standing, Auto]
 - [Dance::RightHeadTilt, OK, Dance::Standing, Auto]
+#[TODO]: still remain a problem where the standing movements can't finish in a proper way. The final solution might be using "parallel" method.
 
 ##condition base movements (syncing with HPE algo + ros-subs/pubs running in back ground)
 # - [Dance::Standing, OK, Dance::Seq4::ConditionBaseMovement::withPubSub, Auto]
