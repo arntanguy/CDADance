@@ -11,7 +11,7 @@ void chatterCallBack(const std_msgs::String::ConstPtr& msg)
 
 void rosSpinner()
 {
-  ros::Rate rate(8);
+  ros::Rate rate(12);
   mc_rtc::log::info("ROS spinner thread created");
 
   // ros::spin();
