@@ -15,30 +15,23 @@
 // }
 struct rosSubscriberData
 {
-    std::string val{};
+    std::string val{""};
 };
-
-rosSubscriberData rS_data;
-
-void chatterCallBack(const std_msgs::String::ConstPtr& msg);
-void rosSpinner();
 
 
 struct RosSubscriber:mc_control::fsm::State
 {
-
-    void configure(const mc_rtc::Configuration & config) override;
-
     void start(mc_control::fsm::Controller & ctl) override;
 
     bool run(mc_control::fsm::Controller & ctl) override;
 
     void teardown(mc_control::fsm::Controller & ctl) override;
-
+protected:
+    void chatterCallBack(const std_msgs::String::ConstPtr& msg);
+    void rosSpinner();  
 private:
-    bool active_ = true; //start rosSunscriber on assigning true; while stop: false.
+    std::atomic<bool> active_{true}; //start rosSunscriber on assigning true; while stop: false.
     std::thread spinThread_;
-    int argc;
-    char **argv;
-
+    rosSubscriberData rS_data;
+    std::mutex receiveMutex_;
 };

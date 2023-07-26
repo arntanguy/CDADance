@@ -58,6 +58,8 @@ bool AutonomousInteraction::run(mc_control::fsm::Controller & ctl_)
     else
     {
       mc_rtc::log::info("------ subscriber_msg = NULL ------\n");
+      output("Null");
+      return false;
     }
 
   }

@@ -3,69 +3,46 @@
 #include <iostream>
 
 
-void chatterCallBack(const std_msgs::String::ConstPtr& msg)
+void RosSubscriber::chatterCallBack(const std_msgs::String::ConstPtr& msg)
 {
-    rS_data.val = msg->data;
-    ROS_INFO("I heard: [%s]", rS_data.val.c_str());
+  std::lock_guard<std::mutex> lock(receiveMutex_);
+  rS_data.val = msg->data;
+  ROS_INFO("I heard: [%s]", rS_data.val.c_str());
 }
 
-void rosSpinner()
+void RosSubscriber::rosSpinner()
 {
   ros::Rate rate(12);
   mc_rtc::log::info("ROS spinner thread created");
+  
+  auto & n = *mc_rtc::ROSBridge::get_node_handle();
+  ros::Subscriber sub = n.subscribe("HPE_communicator_Winnie", 1000, &RosSubscriber::chatterCallBack, this);
+  mc_rtc::log::info("[ROS listener]; topic = {}", sub.getTopic());
 
-  // ros::spin();
-  // rate.sleep();
-  while(ros::ok())
-  {
-    // ros::AsyncSpinner spinner(2);
-    // spinner.start();
-    // ros::getGlobalCallbackQueue()->callAvailable(ros::WallDuration(0.1));
+  while(active_ && ros::ok())
+  {    
     ros::spinOnce();
     rate.sleep();
   }
   mc_rtc::log::info("ROS spinner destroyed");
 }
 
-void RosSubscriber::configure(const mc_rtc::Configuration & config)
-{
-
-}
 
 void RosSubscriber::start(mc_control::fsm::Controller & ctl_)
 {
     auto & ctl = static_cast<LIPMStabilizerController &>(ctl_);
-    run(ctl);
+    ctl.datastore().make<rosSubscriberData>("rosSubscriber_msg", rosSubscriberData{});
+    spinThread_ = std::thread(std::bind(&RosSubscriber::rosSpinner, this));
 }
 
 bool RosSubscriber::run(mc_control::fsm::Controller & ctl_)
 {
     auto & ctl = static_cast<LIPMStabilizerController &>(ctl_);
 
-    if(active_)
-    {
-        ros::init(argc, argv, "listener");
-        ros::NodeHandle n;
-        ros::Subscriber sub = n.subscribe("HPE_communicator_Winnie", 1000, chatterCallBack);
-        mc_rtc::log::info("[ROS listener]; topic = {}", sub.getTopic());
-        spinThread_ = std::thread(&rosSpinner);
-
-        if(ctl.datastore().has("rosSubscriber_msg"))
-        {
-            ctl.datastore().remove("rosSubscriber_msg");
-        }
-        auto & receivedata = ctl.datastore().make<rosSubscriberData>("rosSubscriber_msg", rS_data);
-        mc_rtc::log::info("[ROS listener get string] = {}", receivedata.val);
-
-        // spinThread_.join();
-        spinThread_.detach();
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
-    else
-    {
-        //destroy the thread 
-    }
-
+  {
+    std::lock_guard<std::mutex> lock(receiveMutex_);
+    ctl.datastore().get<rosSubscriberData>("rosSubscriber_msg") = rS_data;
+  }
     output("OK");
     return true;
 }
@@ -73,6 +50,12 @@ bool RosSubscriber::run(mc_control::fsm::Controller & ctl_)
 void RosSubscriber::teardown(mc_control::fsm::Controller & ctl_)
 {
   auto & ctl = static_cast<LIPMStabilizerController &>(ctl_);
+  if(ctl.datastore().has("rosSubscriber_msg"))
+  {
+    ctl.datastore().remove("rosSubscriber_msg");
+  }
+  active_ = false;
+  spinThread_.join();
 }
 
 EXPORT_SINGLE_STATE("RosSubscriber", RosSubscriber)

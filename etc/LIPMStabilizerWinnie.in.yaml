@@ -712,10 +712,11 @@ states:
 
   Dance::Seq4::ConditionBaseMovement::withPubSub:
     base: Parallel
-    states: [Dance::Seq4::ConditionBaseMovement, RosSubscriber] #[FAIL] to run these two in parallel: cannot do movements when the ros is receiving data at the same time.
+    states: [RosSubscriber, Stabilizer::Standing, Dance::Seq4::ConditionBaseMovement] #[FAIL] to run these two in parallel: cannot do movements when the ros is receiving data at the same time.
   
 
 transitions: 
+- [Dance::Seq4::ConditionBaseMovement::withPubSub, OK, Dance::Seq4::ConditionBaseMovement::withPubSub, Strict]
 ##demo danse seq on real HRP4
 # - [Dance::Standing, DanceSeq1, Dance::Seq1::Walk, Strict] # this line help to show up the bottom control on moveing forward to this state in the simulation interface
 # - [Dance::Standing, DanceSeq2, Dance::Seq3::LookForApples, Strict]
@@ -771,7 +772,7 @@ transitions:
 # - [Dance::Standing, OK, Dance::Seq4::ConditionBaseMovement::withPubSub, Auto]
 
 
-init: Dance::Standing
+init: Dance::Seq4::ConditionBaseMovement::withPubSub
 
 ObserverPipelines:
 - name: "MainPipeline"
