@@ -8,16 +8,10 @@
 #include <std_msgs/String.h>
 #include <thread>
 
-
-// struct RosSubscriberConfiguration
-// {
-    
-// }
 struct rosSubscriberData
 {
     std::string val{""};
 };
-
 
 struct RosSubscriber:mc_control::fsm::State
 {
@@ -26,9 +20,11 @@ struct RosSubscriber:mc_control::fsm::State
     bool run(mc_control::fsm::Controller & ctl) override;
 
     void teardown(mc_control::fsm::Controller & ctl) override;
+
 protected:
     void chatterCallBack(const std_msgs::String::ConstPtr& msg);
     void rosSpinner();  
+
 private:
     std::atomic<bool> active_{true}; //start rosSunscriber on assigning true; while stop: false.
     std::thread spinThread_;

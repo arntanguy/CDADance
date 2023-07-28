@@ -31,7 +31,7 @@ void RosSubscriber::rosSpinner()
 void RosSubscriber::start(mc_control::fsm::Controller & ctl_)
 {
     auto & ctl = static_cast<LIPMStabilizerController &>(ctl_);
-    ctl.datastore().make<rosSubscriberData>("rosSubscriber_msg", rosSubscriberData{});
+    ctl.datastore().make<rosSubscriberData>("rosSubscriber_msg", rosSubscriberData{}); //init content of "rosSubscriber_msg" in the datastore to be empty
     spinThread_ = std::thread(std::bind(&RosSubscriber::rosSpinner, this));
 }
 
@@ -41,7 +41,7 @@ bool RosSubscriber::run(mc_control::fsm::Controller & ctl_)
 
   {
     std::lock_guard<std::mutex> lock(receiveMutex_);
-    ctl.datastore().get<rosSubscriberData>("rosSubscriber_msg") = rS_data;
+    ctl.datastore().get<rosSubscriberData>("rosSubscriber_msg") = rS_data; //assign content
   }
     output("OK");
     return true;
