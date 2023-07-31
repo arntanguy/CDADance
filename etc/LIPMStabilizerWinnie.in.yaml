@@ -73,7 +73,30 @@ collisions:
       body2: NECK_P_LINK
       iDist: 0.1
       sDist: 0.05
-
+    - body1: r_wrist
+      body2: R_HIP_P_LINK
+      iDist: 0.1
+      sDist: 0.08
+    - body1: R_WRIST_P_LINK
+      body2: R_HIP_P_LINK
+      iDist: 0.1
+      sDist: 0.08
+    - body1: R_WRIST_Y_LINK
+      body2: R_HIP_P_LINK
+      iDist: 0.1
+      sDist: 0.08  
+    - body1: l_wrist
+      body2: L_HIP_P_LINK
+      iDist: 0.1
+      sDist: 0.08
+    - body1: L_WRIST_P_LINK
+      body2: L_HIP_P_LINK
+      iDist: 0.1
+      sDist: 0.08
+    - body1: L_WRIST_Y_LINK
+      body2: L_HIP_P_LINK
+      iDist: 0.1
+      sDist: 0.08  
 # Initial set of contacts
 contacts: []
 
@@ -522,9 +545,9 @@ states:
         dimWeight: [1,1,1, 1, 0.5, 0.5]
         displaySamples: 100
         target:
-          translation: [0.7, 0.0, -0.8]
+          translation: [0.7, 0.0, 0.5]
           rotation: [0, 0, 0]
-        controlPoints: [[0.27, 0.4, 0.85]]
+        controlPoints: [[0.37, 0.2, 0.85]]
         # oriWaypoints: [[3.5, [-1.57,  0, 1.57]]]
         completion:
           timeElapsed: true
@@ -661,6 +684,9 @@ states:
       - [DrawCircleLeftHand, OK, HalfSitting, Auto]
       - [LeftHeadTilt, OK, HalfSitting, Auto]
       - [RightHeadTilt, OK, HalfSitting, Auto]
+    configs:
+      HalfSitting:
+        eval: 0.2
 
   Dance::Standing:
     base: Parallel
@@ -778,5 +804,5 @@ ObserverPipelines:
 - name: "MainPipeline"
   observers:
     - type: Encoder
-    - type: Attitude
+    # - type: Attitude
     - type: KinematicInertial
