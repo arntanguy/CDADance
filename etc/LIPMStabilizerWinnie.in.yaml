@@ -364,15 +364,15 @@ states:
         stiffness: 10
   
   TouchHead:
-    base: LookAtRightHand
+    base: MetaTasks
     tasks:
       RightHandToTheHead:
         type: posture
         stiffness: 1.0
         weight: 100.0
         target:
-          NECK_P: [0.8]
-          NECK_Y: [1.2]
+          # NECK_P: [0.8]
+          # NECK_Y: [1.2]
           R_SHOULDER_R: [-0.6]
           R_SHOULDER_P: [-2.5] #-2.0
           R_SHOULDER_Y: [1.6] #-3.1
@@ -386,19 +386,19 @@ states:
               - speed: 0.01
 
   TouchHead_L:
-    base: LookAtLeftHand
+    base: MetaTasks
     tasks:
       RightHandToTheHead:
         type: posture
         stiffness: 1.0
         weight: 100.0
         target:
-          NECK_P: [0.8]
-          NECK_Y: [1.2]
+          # NECK_P: [0.8]
+          # NECK_Y: [1.2]
           L_SHOULDER_R: [1.235]
-          # L_SHOULDER_P: [-2.5] #-2.0
+          L_SHOULDER_P: [-1.9] #-2.0
           # L_SHOULDER_Y: [1.6] #-3.1
-          L_ELBOW_P: [-1.29]
+          L_ELBOW_P: [-2.12]
           # L_SHOULDER_R: [2.15]
         completion:
           OR:
@@ -408,7 +408,7 @@ states:
               - speed: 0.01
 
   RaiseRightHand_v2:
-    base: LookAtRightHand
+    base: MetaTasks
     tasks:
       LeftHandTrajectory:
         type: bspline_trajectory
@@ -448,7 +448,7 @@ states:
           timeElapsed: true
 
   RaiseLeftHand:
-    base: LookAtLeftHand
+    base: MetaTasks
     tasks:
       LeftHandTrajectory:
         type: bspline_trajectory
@@ -490,7 +490,7 @@ states:
           timeElapsed: true
 
   DrawCircleRightHand:
-    base: LookAtRightHand
+    base: MetaTasks
     tasks:
       LeftHandTrajectory:
         type: bspline_trajectory
@@ -510,7 +510,7 @@ states:
           timeElapsed: true
 
   DrawCircleLeftHand:
-    base: LookAtLeftHand
+    base: MetaTasks
     tasks:
       LeftHandTrajectory:
         type: bspline_trajectory
@@ -558,7 +558,7 @@ states:
         weight: 100.0
         target:
           NECK_P: [0.7]
-          NECK_Y: [0.5]
+          # NECK_Y: [0.5]
           # L_SHOULDER_R: [2.15]
         completion:
           OR:
@@ -575,8 +575,8 @@ states:
         stiffness: 1.0
         weight: 100.0
         target:
-          NECK_P: [-0.7]
-          NECK_Y: [-0.5]
+          NECK_P: [0.0]
+          # NECK_Y: [-0.1]
           # L_SHOULDER_R: [2.15]
         completion:
           OR:
@@ -640,7 +640,7 @@ states:
     weight: 1000
     offset:
       translation: [0.0, 0.0, 0.0]
-      
+
   Dance::Seq4::ConditionBaseMovement:
     base: Meta
     transitions:
