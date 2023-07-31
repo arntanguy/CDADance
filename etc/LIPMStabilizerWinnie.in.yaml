@@ -684,9 +684,9 @@ states:
       - [DrawCircleLeftHand, OK, HalfSitting, Auto]
       - [LeftHeadTilt, OK, HalfSitting, Auto]
       - [RightHeadTilt, OK, HalfSitting, Auto]
-    configs:
-      HalfSitting:
-        eval: 0.2
+    # configs:
+    #   HalfSitting:
+    #     eval: 0.2
 
   Dance::Standing:
     base: Parallel
@@ -804,5 +804,5 @@ ObserverPipelines:
 - name: "MainPipeline"
   observers:
     - type: Encoder
-    # - type: Attitude
+    - type: Attitude
     - type: KinematicInertial
