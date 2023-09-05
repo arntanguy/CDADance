@@ -275,8 +275,7 @@
 
                         auto pose = sva::PTransformd(Eigen::Quaterniond{r.w, r.x, r.y, r.z}.inverse(), Eigen::Vector3d{t.x, t.y, t.z});
 
-                        return pose;
-                      })
+                        return pose; })
 
   {
   }
@@ -297,8 +296,7 @@
 
                         auto acc = sva::MotionVecd(Eigen::Vector3d{w.x, w.y, w.z}, Eigen::Vector3d{a.x, a.y, a.z});
 
-                        return acc;
-                      })
+                        return acc; })
 
   {
   }
@@ -432,8 +430,7 @@
 
                         joy.y = msg.buttons[1];
 
-                        return joy;
-                      })
+                        return joy; })
 
   {
   }
@@ -468,8 +465,7 @@
 
                         joy.y = msg.buttons[3];
 
-                        return joy;
-                      })
+                        return joy; })
 
   {
   }
@@ -620,8 +616,7 @@
 
                         joy.triangle = msg.buttons[2];
 
-                        return joy;
-                      })
+                        return joy; })
 
   {
   }

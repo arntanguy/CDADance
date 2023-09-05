@@ -23,343 +23,12 @@ constraints:
 # Collision constraint
 collisions:
 - type: collision
-  useMinimal: true
-  collisions:
-    - body1: r_wrist
-      body2: torso
-      iDist: 0.1
-      sDist: 0.08
-    - body1: R_WRIST_P_LINK
-      body2: torso
-      iDist: 0.1
-      sDist: 0.08
-    - body1: R_WRIST_Y_LINK
-      body2: torso
-      iDist: 0.1
-      sDist: 0.08
-    - body1: R_ELBOW_P_LINK
-      body2: torso
-      iDist: 0.1
-      sDist: 0.08
-    - body1: r_wrist
-      body2: body
-      iDist: 0.1
-      sDist: 0.05
-    - body1: R_WRIST_P_LINK
-      body2: body
-      iDist: 0.1
-      sDist: 0.05
-    - body1: R_WRIST_Y_LINK
-      body2: body
-      iDist: 0.1
-      sDist: 0.05
-    - body1: R_ELBOW_P_LINK
-      body2: body
-      iDist: 0.1
-      sDist: 0.05
-    - body1: r_wrist
-      body2: NECK_P_LINK
-      iDist: 0.1
-      sDist: 0.05
-    - body1: R_WRIST_P_LINK
-      body2: NECK_P_LINK
-      iDist: 0.1
-      sDist: 0.05
-    - body1: R_WRIST_Y_LINK
-      body2: NECK_P_LINK
-      iDist: 0.1
-      sDist: 0.05
-    - body1: R_ELBOW_P_LINK
-      body2: NECK_P_LINK
-      iDist: 0.1
-      sDist: 0.05
-    - body1: r_wrist
-      body2: R_HIP_P_LINK
-      iDist: 0.1
-      sDist: 0.08
-    - body1: R_WRIST_P_LINK
-      body2: R_HIP_P_LINK
-      iDist: 0.1
-      sDist: 0.08
-    - body1: R_WRIST_Y_LINK
-      body2: R_HIP_P_LINK
-      iDist: 0.1
-      sDist: 0.08
-    - body1: l_wrist
-      body2: L_HIP_P_LINK
-      iDist: 0.1
-      sDist: 0.08
-    - body1: L_WRIST_P_LINK
-      body2: L_HIP_P_LINK
-      iDist: 0.1
-      sDist: 0.08
-    - body1: L_WRIST_Y_LINK
-      body2: L_HIP_P_LINK
-      iDist: 0.1
-      sDist: 0.08
+  useCommon: true
 # Initial set of contacts
 contacts: []
 
 # Implement some additional text states
 states:
-  ###
-  # Simple foot lifting
-  # Tasks to handle the free foot
-  # - Lift up phase: surface transform moving above the current position
-  # - Put down phase: admittance tasks looking for a positive force above a threshold
-  ###
-  LIPMStabilizer::LiftRightFoot: #usable;but robot flows in the air
-    base: MetaTasks
-    tasks:
-      LiftFootTask:
-        type: surfaceTransform
-        stiffness: 10
-        weight: 500
-        surface: "RightFoot"
-        moveWorld:
-          translation: [0,0,0.1]
-        completion:
-          OR:
-          - eval: 0.01
-          - AND:
-            - timeout: 3
-            - speed: 0.005
-
-  LIPMStabilizer::LiftLeftFoot: #usable;but robot flows in the air
-    base: LIPMStabilizer::LiftRightFoot
-    tasks:
-      LiftFootTask:
-        surface: LeftFoot
-
-  LIPMStabilizer::PutRightFoot: #usable;but robot flows in the air
-    base: MetaTasks
-    tasks:
-      PutFootAdmittance:
-        type: admittance
-        surface: RightFoot
-        stiffness: [10, 10, 10, 10, 10, 3]
-        damping: [6.3, 6.3, 6.3, 6.3, 6.3, 300]
-        admittance: [0,0,0,0,0,0.001]
-        maxVel:
-          linear: [0.2, 0.2, 0.5]
-          angular: [0.2, 0.2, 0.2]
-        wrench:
-         force: [0, 0, 20]
-         couple: [0, 0, 0]
-        moveWorld:
-          translation: [0, 0, -0.1]
-        overwriteRPY:
-          roll: 0
-          pitch: 0
-        completion:
-          wrench:
-            force: [.nan, .nan, 20]
-            couple: [.nan, .nan, .nan]
-
-  LIPMStabilizer::PutLeftFoot: #usable;but robot flows in the air
-    base: LIPMStabilizer::PutRightFoot
-    tasks:
-      PutFootAdmittance:
-        surface: LeftFoot
-
-  LIPMStabilizer::Stabilized::LiftRightFoot: #usable
-    base: Parallel
-    states: [Stabilizer::LeftSupport, LIPMStabilizer::LiftRightFoot]
-
-  LIPMStabilizer::Stabilized::LiftLeftFoot: #usable
-    base: Parallel
-    states: [Stabilizer::RightSupport, LIPMStabilizer::LiftLeftFoot]
-
-  LIPMStabilizer::Stabilized::PutRightFoot: #usable
-    base: Parallel
-    states: [Stabilizer::LeftSupport, LIPMStabilizer::PutRightFoot]
-
-  LIPMStabilizer::Stabilized::PutLeftFoot: #usable
-    base: Parallel
-    states: [Stabilizer::RightSupport, LIPMStabilizer::PutLeftFoot]
-
-  LIPMStabilizer::Stabilized::StayLeft: #usable
-    base: Stabilizer::GoLeft
-    completion: {}
-
-  LIPMStabilizer::Stabilized::StayRight: #usable
-    base: Stabilizer::GoRight
-    completion: {}
-
-  LIPMStabilizer::StandingFSM::LiftRightFoot:
-    base: Meta
-    transitions:
-      - [Stabilizer::GoLeft, OK, LIPMStabilizer::Stabilized::LiftRightFoot]
-      - [LIPMStabilizer::Stabilized::LiftRightFoot, OK, LIPMStabilizer::Stabilized::PutRightFoot]
-      - [LIPMStabilizer::Stabilized::PutRightFoot, OK, LIPMStabilizer::Stabilized::StayLeft, Auto]
-
-  LIPMStabilizer::StandingFSM::LiftLeftFoot:
-    base: Meta
-    transitions:
-      - [Stabilizer::GoRight, OK, LIPMStabilizer::Stabilized::LiftLeftFoot]
-      - [LIPMStabilizer::Stabilized::LiftLeftFoot, OK, LIPMStabilizer::Stabilized::PutLeftFoot]
-      - [LIPMStabilizer::Stabilized::PutLeftFoot, OK, LIPMStabilizer::Stabilized::StayRight, Auto]
-
-  LIPMStabilizer::StandingFSM::LiftRightFootManual:
-    base: LIPMStabilizer::StandingFSM::LiftRightFoot
-    StepByStep: true
-
-  LIPMStabilizer::StandingFSM::LiftLeftFootManual:
-    base: LIPMStabilizer::StandingFSM::LiftLeftFoot
-    StepByStep: true
-
-  LIPMStabilizer::StandingFSM::AlternateFeetLifting:
-    base: Meta
-    transitions:
-      - [LIPMStabilizer::StandingFSM::LiftRightFoot, OK, LIPMStabilizer::StandingFSM::LiftLeftFoot]
-      - [LIPMStabilizer::StandingFSM::LiftLeftFoot, OK, Stabilizer::GoCenter]
-
-  LIPMStabilizer::StandingFSM::AlternateFeetLifting1:
-    base: LIPMStabilizer::StandingFSM::AlternateFeetLifting
-
-  LIPMStabilizer::StandingFSM::AlternateFeetLifting2:
-    base: LIPMStabilizer::StandingFSM::AlternateFeetLifting
-
-  LIPMStabilizer::StandingFSM::AlternateFeetLiftingManual:
-    base: Meta
-    StepByStep: true
-    transitions:
-      - [Stabilizer::GoCenter, OK, LIPMStabilizer::StandingFSM::LiftRightFootManual]
-      - [LIPMStabilizer::StandingFSM::LiftRightFootManual, OK, LIPMStabilizer::StandingFSM::LiftLeftFootManual]
-      - [LIPMStabilizer::StandingFSM::LiftLeftFootManual, OK, Stabilizer::GoCenter]
-
-  ###
-  # Simple forward walking FSM
-  ###
-  LIPMStabilizer::RightFootTrajectory: #usable;but robot flows in the air
-    base: MetaTasks
-    tasks:
-      SwingFootTrajectory:
-        type: exact_cubic_trajectory
-        surface: RightFoot
-        stiffness: 10000.0
-        duration: 5.0
-        weight: 100
-        displaySamples: 20
-        completion:
-          OR:
-            - timeElapsed: true
-            - AND:
-              - timeout: 2.5
-              - wrench: [.nan, .nan, .nan, .nan, .nan, 20]
-        targetSurface:
-          surface: RightFoot
-          # Aim 5mm above ground as the FSM does not have early-impact detection
-          translation: [0.1, 0.0, 0.005]
-          rotation: [0,0,0]
-          # control points in target surface frame
-          controlPoints:
-            - [1, [0.01, 0.0, 0.01]]
-
-  LIPMStabilizer::LeftFootTrajectory: #usable;but robot flows in the air
-    base: LIPMStabilizer::RightFootTrajectory
-    tasks:
-      SwingFootTrajectory:
-        surface: LeftFoot
-        targetSurface:
-          surface: LeftFoot
-          translation: [0.1, 0.0, 0.005]
-          rotation: [0,0,0]
-          # control points in target surface frame
-          controlPoints:
-            - [1., [0.01, 0.0, 0.01]]
-
-
-  LIPMStabilizer::Stabilized::LeftFootTrajectory: #usable
-    base: Parallel
-    states: [Stabilizer::RightSupport, LIPMStabilizer::LeftFootTrajectory]
-
-  LIPMStabilizer::Stabilized::RightFootTrajectory: #usable
-    base: Parallel
-    states: [Stabilizer::LeftSupport, LIPMStabilizer::RightFootTrajectory]
-
-  LIPMStabilizer::WalkingFSM::RightStep:
-    base: Meta
-    transitions:
-    - [Stabilizer::GoLeft, OK, LIPMStabilizer::Stabilized::RightFootTrajectory, Auto]
-
-  LIPMStabilizer::WalkingFSM::LeftStep:
-    base: LIPMStabilizer::WalkingFSM::RightStep
-    transitions:
-    - [Stabilizer::GoRight, OK, LIPMStabilizer::Stabilized::LeftFootTrajectory, Auto]
-
-
-  LIPMStabilizer::WalkingFSM::StepForward:
-    base: Meta
-    transitions:
-    - [LIPMStabilizer::WalkingFSM::LeftStep, OK, LIPMStabilizer::WalkingFSM::RightStep, Auto]
-    - [LIPMStabilizer::WalkingFSM::RightStep, OK, Stabilizer::GoCenter, Auto]
-
-  LIPMStabilizer::WalkingFSM::StepForward1:
-    base: LIPMStabilizer::WalkingFSM::StepForward
-
-  LIPMStabilizer::WalkingFSM::StepForward2:
-    base: LIPMStabilizer::WalkingFSM::StepForward
-
-  LIPMStabilizer::WalkingFSM::StepForward3:
-    base: LIPMStabilizer::WalkingFSM::StepForward
-
-
-  ###
-  # FSM to walk backwards
-  ###
-  LIPMStabilizer::RightFootBackwardTrajectory: #usable;but robot flows in the air
-    base: LIPMStabilizer::RightFootTrajectory
-    tasks:
-      SwingFootTrajectory:
-        targetSurface:
-          surface: RightFoot
-          translation: [-0.1, 0.0, 0.005]
-          rotation: [0, 0, 0]
-          # control points in target surface frame
-          controlPoints:
-            - [1, [-0.01, 0.0, 0.01]]
-
-  LIPMStabilizer::LeftFootBackwardTrajectory: #usable;but robot flows in the air
-    base: LIPMStabilizer::RightFootBackwardTrajectory
-    tasks:
-      SwingFootTrajectory:
-        surface: LeftFoot
-        targetSurface:
-          surface: LeftFoot
-          translation: [-0.1, 0.0, 0.005]
-          rotation: [0,0,0]
-          # control points in target surface frame
-          controlPoints:
-            - [1., [-0.01, 0.0, 0.01]]
-
-  LIPMStabilizer::Stabilized::LeftFootBackwardTrajectory: #usable
-    base: Parallel
-    states: [Stabilizer::RightSupport, LIPMStabilizer::LeftFootBackwardTrajectory]
-
-  LIPMStabilizer::Stabilized::RightFootBackwardTrajectory: #usable
-    base: Parallel
-    states: [Stabilizer::LeftSupport, LIPMStabilizer::RightFootBackwardTrajectory]
-
-  LIPMStabilizer::WalkingFSM::RightBackwardStep:
-    base: Meta
-    transitions:
-    - [Stabilizer::GoLeft, OK, LIPMStabilizer::Stabilized::RightFootBackwardTrajectory, Auto]
-
-  LIPMStabilizer::WalkingFSM::LeftBackwardStep:
-    base: LIPMStabilizer::WalkingFSM::RightStep
-    transitions:
-    - [Stabilizer::GoRight, OK, LIPMStabilizer::Stabilized::LeftFootBackwardTrajectory, Auto]
-
-  LIPMStabilizer::WalkingFSM::StepBackward:
-    base: Meta
-    transitions:
-    - [LIPMStabilizer::WalkingFSM::LeftBackwardStep, OK, LIPMStabilizer::WalkingFSM::RightBackwardStep, Auto]
-    - [LIPMStabilizer::WalkingFSM::RightBackwardStep, OK, Stabilizer::GoCenter, Auto]
-
-  LIPMStabilizer::WalkingFSM::StepBackward1:
-    base: LIPMStabilizer::WalkingFSM::StepBackward
-
   LookAtRightHand:
     base: MetaTasks
     tasks:
@@ -386,12 +55,23 @@ states:
         weight: 500
         stiffness: 10
 
+  LookAtAudience:
+    base: MetaTasks
+    tasks:
+      LookAt:
+        type: lookAt
+        frame: NECK_P_LINK
+        frameVector: [1, 0, 0]
+        targetVector: [1, 0, 0]
+        weight: 500
+        stiffness: 10
+
   TouchHead:
     base: MetaTasks
     tasks:
       RightHandToTheHead:
         type: posture
-        stiffness: 1.0
+        stiffness: 5.0
         weight: 100.0
         target:
           # NECK_P: [0.8]
@@ -403,7 +83,7 @@ states:
           # L_SHOULDER_R: [2.15]
         completion:
           OR:
-            - timeout: 8.0
+            - timeout: 3.0
             - AND:
               - eval: 0.01
               - speed: 0.01
@@ -413,7 +93,7 @@ states:
     tasks:
       RightHandToTheHead:
         type: posture
-        stiffness: 1.0
+        stiffness: 5.0
         weight: 100.0
         target:
           # NECK_P: [0.8]
@@ -425,7 +105,7 @@ states:
           # L_SHOULDER_R: [2.15]
         completion:
           OR:
-            - timeout: 8.0
+            - timeout: 3.0
             - AND:
               - eval: 0.01
               - speed: 0.01
@@ -436,7 +116,7 @@ states:
       LeftHandTrajectory:
         type: bspline_trajectory
         setupMode: false
-        surface: r_gripper
+        frame: r_gripper
         weight: 100
         stiffness: 50
         duration: 4
@@ -456,7 +136,7 @@ states:
       LeftHandTrajectory:
         type: bspline_trajectory
         setupMode: false
-        surface: r_gripper
+        frame: r_gripper
         weight: 100
         stiffness: 50
         duration: 4
@@ -476,7 +156,7 @@ states:
       LeftHandTrajectory:
         type: bspline_trajectory
         setupMode: false
-        surface: l_gripper
+        frame: l_gripper
         weight: 100
         stiffness: 50
         duration: 4
@@ -496,7 +176,7 @@ states:
       LeftHandTrajectory:
         type: bspline_trajectory
         setupMode: false
-        surface: r_gripper
+        frame: r_gripper
         weight: 100
         stiffness: 50
         duration: 4
@@ -518,7 +198,7 @@ states:
       LeftHandTrajectory:
         type: bspline_trajectory
         setupMode: false
-        surface: r_gripper
+        frame: r_gripper
         weight: 100
         stiffness: 50
         duration: 4
@@ -538,7 +218,7 @@ states:
       LeftHandTrajectory:
         type: bspline_trajectory
         setupMode: false
-        surface: l_gripper
+        frame: l_gripper
         weight: 100
         stiffness: 50
         duration: 4
@@ -557,7 +237,7 @@ states:
     tasks:
       RightHandToTheHead:
         type: posture
-        stiffness: 1.0
+        stiffness: 5.0
         weight: 100.0
         target:
           R_SHOULDER_P: [-0.167]
@@ -567,9 +247,9 @@ states:
           R_WRIST_R: [0.08]
         completion:
           OR:
-            - eval: 0.1
+            - timeout: 3.0
             - AND:
-              - timeout: 1.0
+              - eval: 0.1
               - speed: 0.1
 
   LeftHeadTilt:
@@ -577,7 +257,7 @@ states:
     tasks:
       LeftHeadTiltPosture:
         type: posture
-        stiffness: 1.0
+        stiffness: 5.0
         weight: 100.0
         target:
           NECK_P: [0.7]
@@ -585,7 +265,7 @@ states:
           # L_SHOULDER_R: [2.15]
         completion:
           OR:
-            - timeout: 8.0
+            - timeout: 3.0
             - AND:
               - eval: 0.01
               - speed: 0.01
@@ -595,7 +275,7 @@ states:
     tasks:
       RightHeadTiltPosture:
         type: posture
-        stiffness: 1.0
+        stiffness: 5.0
         weight: 100.0
         target:
           NECK_P: [0.0]
@@ -603,71 +283,65 @@ states:
           # L_SHOULDER_R: [2.15]
         completion:
           OR:
-            - timeout: 8.0
+            - timeout: 3.0
             - AND:
               - eval: 0.01
               - speed: 0.01
 
 
-  TouchHeadStabilized:
-    base: Parallel
-    states: [Stabilizer::Standing, TouchHead]
+  # TouchHeadStabilized:
+  #   base: Parallel
+  #   states: [Stabilizer::Standing, TouchHead]
+  #
+  # RaiseRightHandStabilized:
+  #   base: Parallel
+  #   states: [Stabilizer::Standing, RaiseRightHand]
+  #
+  # RightHandBackgroundStabilized:
+  #   base: Parallel
+  #   states: [Stabilizer::Standing, RightHandBackground]
+  #
+  # DrawCircleRightHandStabilized:
+  #   base: Parallel
+  #   states: [Stabilizer::Standing, DrawCircleRightHand]
+  #
+  # PutDownRightShoulderStabilized:
+  #   base: Parallel
+  #   states: [Stabilizer::Standing, PutDownRightShoulder]
 
-  RaiseRightHandStabilized:
-    base: Parallel
-    states: [Stabilizer::Standing, RaiseRightHand]
+  # Dance::Seq1::Walk:
+  #   base: Meta
+  #   transitions:
+  #     - [LIPMStabilizer::StandingFSM::AlternateFeetLifting, OK, LIPMStabilizer::WalkingFSM::StepForward, Auto]
+  #     - [LIPMStabilizer::WalkingFSM::StepForward, OK, LIPMStabilizer::WalkingFSM::StepForward1, Auto]
+  #     - [LIPMStabilizer::WalkingFSM::StepForward1, OK, LIPMStabilizer::WalkingFSM::StepForward2, Auto]
+  #     - [LIPMStabilizer::WalkingFSM::StepForward2, OK, LIPMStabilizer::WalkingFSM::StepBackward1, Auto]
+  #     - [LIPMStabilizer::WalkingFSM::StepBackward1, OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting1, Auto]
+  #     - [LIPMStabilizer::StandingFSM::AlternateFeetLifting1, OK, LIPMStabilizer::WalkingFSM::StepForward3, Auto]
+  #     - [LIPMStabilizer::WalkingFSM::StepForward3, OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting2, Auto]
 
-  RightHandBackgroundStabilized:
-    base: Parallel
-    states: [Stabilizer::Standing, RightHandBackground]
-
-  DrawCircleRightHandStabilized:
-    base: Parallel
-    states: [Stabilizer::Standing, DrawCircleRightHand]
-
-  PutDownRightShoulderStabilized:
-    base: Parallel
-    states: [Stabilizer::Standing, PutDownRightShoulder]
-
-  Dance::Seq1::Walk:
-    base: Meta
-    transitions:
-      - [LIPMStabilizer::StandingFSM::AlternateFeetLifting, OK, LIPMStabilizer::WalkingFSM::StepForward, Auto]
-      - [LIPMStabilizer::WalkingFSM::StepForward, OK, LIPMStabilizer::WalkingFSM::StepForward1, Auto]
-      - [LIPMStabilizer::WalkingFSM::StepForward1, OK, LIPMStabilizer::WalkingFSM::StepForward2, Auto]
-      - [LIPMStabilizer::WalkingFSM::StepForward2, OK, LIPMStabilizer::WalkingFSM::StepBackward1, Auto]
-      - [LIPMStabilizer::WalkingFSM::StepBackward1, OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting1, Auto]
-      - [LIPMStabilizer::StandingFSM::AlternateFeetLifting1, OK, LIPMStabilizer::WalkingFSM::StepForward3, Auto]
-      - [LIPMStabilizer::WalkingFSM::StepForward3, OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting2, Auto]
-
-  Dance::Seq3::LookForApples:
-    base: Meta
-    transitions:
-      - [LIPMStabilizer::StandingFSM::AlternateFeetLifting,   OK, LIPMStabilizer::WalkingFSM::StepForward, Auto]
-      - [LIPMStabilizer::WalkingFSM::StepForward,             OK, TouchHeadStabilized, Auto]
-      - [TouchHeadStabilized,                                 OK, LIPMStabilizer::WalkingFSM::StepForward1, Auto]
-      - [LIPMStabilizer::WalkingFSM::StepForward1,            OK, LIPMStabilizer::WalkingFSM::StepForward2, Auto]
-      - [LIPMStabilizer::WalkingFSM::StepForward2,            OK, RaiseRightHandStabilized, Auto]
-      - [RaiseRightHandStabilized,                            OK, LIPMStabilizer::WalkingFSM::StepBackward1, Auto]
-      - [LIPMStabilizer::WalkingFSM::StepBackward1,           OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting1, Auto]
-      - [LIPMStabilizer::StandingFSM::AlternateFeetLifting1,  OK, RightHandBackgroundStabilized, Auto]
-      - [RightHandBackgroundStabilized,                       OK, DrawCircleRightHandStabilized, Auto]
-      - [DrawCircleRightHandStabilized,                       OK, PutDownRightShoulderStabilized, Auto]
-      - [PutDownRightShoulderStabilized,                      OK, LIPMStabilizer::WalkingFSM::StepForward3, Auto]
-      - [LIPMStabilizer::WalkingFSM::StepForward3,            OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting2, Auto]
+  # Dance::Seq3::LookForApples:
+  #   base: Meta
+  #   transitions:
+  #     - [LIPMStabilizer::StandingFSM::AlternateFeetLifting,   OK, LIPMStabilizer::WalkingFSM::StepForward, Auto]
+  #     - [LIPMStabilizer::WalkingFSM::StepForward,             OK, TouchHeadStabilized, Auto]
+  #     - [TouchHeadStabilized,                                 OK, LIPMStabilizer::WalkingFSM::StepForward1, Auto]
+  #     - [LIPMStabilizer::WalkingFSM::StepForward1,            OK, LIPMStabilizer::WalkingFSM::StepForward2, Auto]
+  #     - [LIPMStabilizer::WalkingFSM::StepForward2,            OK, RaiseRightHandStabilized, Auto]
+  #     - [RaiseRightHandStabilized,                            OK, LIPMStabilizer::WalkingFSM::StepBackward1, Auto]
+  #     - [LIPMStabilizer::WalkingFSM::StepBackward1,           OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting1, Auto]
+  #     - [LIPMStabilizer::StandingFSM::AlternateFeetLifting1,  OK, RightHandBackgroundStabilized, Auto]
+  #     - [RightHandBackgroundStabilized,                       OK, DrawCircleRightHandStabilized, Auto]
+  #     - [DrawCircleRightHandStabilized,                       OK, PutDownRightShoulderStabilized, Auto]
+  #     - [PutDownRightShoulderStabilized,                      OK, LIPMStabilizer::WalkingFSM::StepForward3, Auto]
+  #     - [LIPMStabilizer::WalkingFSM::StepForward3,            OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting2, Auto]
 
   Dance::ConditionBaseMovement:
     base: AutonomousInteraction
-    robot: hrp4
-    stiffness: 200
-    weight: 1000
-    offset:
-      translation: [0.0, 0.0, 0.0]
 
   Dance::Seq4::ConditionBaseMovement:
     base: Meta
     transitions:
-      - [HalfSitting, OK, Dance::ConditionBaseMovement, Auto]
       - [Dance::ConditionBaseMovement, Seq0, TouchHead, Auto]
       - [Dance::ConditionBaseMovement, Seq1, DrawCircleRightHand, Auto]
       - [Dance::ConditionBaseMovement, Seq2, RaiseRightHand_v2, Auto]
@@ -676,69 +350,69 @@ states:
       - [Dance::ConditionBaseMovement, Seq5, DrawCircleLeftHand, Auto]
       - [Dance::ConditionBaseMovement, Seq6, LeftHeadTilt, Auto]
       - [Dance::ConditionBaseMovement, Seq7, RightHeadTilt, Auto]
-      - [TouchHead, OK, HalfSitting, Auto]
-      - [DrawCircleRightHand, OK, HalfSitting, Auto]
-      - [RaiseRightHand_v2, OK, HalfSitting, Auto]
-      - [TouchHead_L, OK, HalfSitting, Auto]
-      - [RaiseLeftHand, OK, HalfSitting, Auto]
-      - [DrawCircleLeftHand, OK, HalfSitting, Auto]
-      - [LeftHeadTilt, OK, HalfSitting, Auto]
-      - [RightHeadTilt, OK, HalfSitting, Auto]
-    # configs:
-    #   HalfSitting:
-    #     eval: 0.2
-
-  Dance::Standing:
-    base: Parallel
-    states: [HalfSitting, Stabilizer::Standing]
-
-  Dance::Seq0::TESTrosSubscriber:
-    base: LIPMStabilizer::WalkingFSM::StepForward
-
-  Dance::Seq1::TESTrosSubscriber:
-    base: LIPMStabilizer::StandingFSM::AlternateFeetLifting
-
-  Dance::Seq2::TESTrosSubscriber:
-    base: LIPMStabilizer::WalkingFSM::StepBackward
-
-  Dance::Seq3::TESTrosSubscriber:
-    base: Dance::Standing
-
-  Dance::RightHandInteractNormal:
-    base: Parallel
-    states: [Stabilizer::Standing, TouchHead]
-
-  Dance::RightHandInteractCloseToCore:
-    base: Parallel
-    states: [Stabilizer::Standing, DrawCircleRightHand]
-
-  Dance::RightHandInteractFarFromCore:
-    base: Parallel
-    states: [Stabilizer::Standing, RaiseRightHand_v2]
-
-  Dance::LeftHandInteractNormal:
-    base: Parallel
-    states: [Stabilizer::Standing, TouchHead_L]
-
-  Dance::LeftHandInteractCloseToCore:
-    base: Parallel
-    states: [Stabilizer::Standing, RaiseLeftHand]
-
-  Dance::LeftHandInteractFarFromCore:
-    base: Parallel
-    states: [Stabilizer::Standing, DrawCircleLeftHand]
-
-  Dance::LeftHeadTilt:
-    base: Parallel
-    states: [Stabilizer::Standing, LeftHeadTilt]
-
-  Dance::RightHeadTilt:
-    base: Parallel
-    states: [Stabilizer::Standing, RightHeadTilt]
+      - [TouchHead, OK, Dance::ConditionBaseMovement, Auto]
+      - [DrawCircleRightHand, OK, Dance::ConditionBaseMovement, Auto]
+      - [RaiseRightHand_v2, OK, Dance::ConditionBaseMovement, Auto]
+      - [TouchHead_L, OK, Dance::ConditionBaseMovement, Auto]
+      - [RaiseLeftHand, OK, Dance::ConditionBaseMovement, Auto]
+      - [DrawCircleLeftHand, OK, Dance::ConditionBaseMovement, Auto]
+      - [LeftHeadTilt, OK, Dance::ConditionBaseMovement, Auto]
+      - [RightHeadTilt, OK, Dance::ConditionBaseMovement, Auto]
 
   Dance::Seq4::ConditionBaseMovement::withPubSub:
     base: Parallel
-    states: [RosSubscriber, Stabilizer::Standing, Dance::Seq4::ConditionBaseMovement] #[FAIL] to run these two in parallel: cannot do movements when the ros is receiving data at the same time.
+    states: [RosSubscriber, Stabilizer::Standing, LookAtAudience, Dance::Seq4::ConditionBaseMovement] #[FAIL] to run these two in parallel: cannot do movements when the ros is receiving data at the same time.
+    configs:
+      HalfSitting:
+        stiffness: 10
+
+  # Dance::Standing:
+  #   base: Parallel
+  #   states: [HalfSitting, Stabilizer::Standing]
+  #
+  # Dance::Seq0::TESTrosSubscriber:
+  #   base: LIPMStabilizer::WalkingFSM::StepForward
+  #
+  # Dance::Seq1::TESTrosSubscriber:
+  #   base: LIPMStabilizer::StandingFSM::AlternateFeetLifting
+  #
+  # Dance::Seq2::TESTrosSubscriber:
+  #   base: LIPMStabilizer::WalkingFSM::StepBackward
+  #
+  # Dance::Seq3::TESTrosSubscriber:
+  #   base: Dance::Standing
+  #
+  # Dance::RightHandInteractNormal:
+  #   base: Parallel
+  #   states: [Stabilizer::Standing, TouchHead]
+  #
+  # Dance::RightHandInteractCloseToCore:
+  #   base: Parallel
+  #   states: [Stabilizer::Standing, DrawCircleRightHand]
+  #
+  # Dance::RightHandInteractFarFromCore:
+  #   base: Parallel
+  #   states: [Stabilizer::Standing, RaiseRightHand_v2]
+  #
+  # Dance::LeftHandInteractNormal:
+  #   base: Parallel
+  #   states: [Stabilizer::Standing, TouchHead_L]
+  #
+  # Dance::LeftHandInteractCloseToCore:
+  #   base: Parallel
+  #   states: [Stabilizer::Standing, RaiseLeftHand]
+  #
+  # Dance::LeftHandInteractFarFromCore:
+  #   base: Parallel
+  #   states: [Stabilizer::Standing, DrawCircleLeftHand]
+  #
+  # Dance::LeftHeadTilt:
+  #   base: Parallel
+  #   states: [Stabilizer::Standing, LeftHeadTilt]
+  #
+  # Dance::RightHeadTilt:
+  #   base: Parallel
+  #   states: [Stabilizer::Standing, RightHeadTilt]
 
 
 transitions:

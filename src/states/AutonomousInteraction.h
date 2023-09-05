@@ -17,11 +17,7 @@ struct AutonomousInteraction : mc_control::fsm::State
   int segIdx;
   int category_seq_ = 4;
   int capture_charatersN = 1;
-  double stiffness_ = 10;
-  double weight_ = 1000;
   bool debugmode_ = false;
-  std::string robot_{};
-  sva::PTransformd offset_ = sva::PTransformd::Identity();
   std::string SeqName[8] = {"Seq0", "Seq1", "Seq2", "Seq3", "Seq4", "Seq5", "Seq6", "Seq7"};
   std::string subscriber_msg;
 };

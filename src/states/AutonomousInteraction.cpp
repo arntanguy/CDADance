@@ -15,10 +15,6 @@ void AutonomousInteraction::configure(const mc_rtc::Configuration &config)
     mc_rtc::log::info("------ DEBUG enter AutonomousInteraction::configure ------\n");
   }
 
-  config("stiffness", stiffness_);
-  config("robot", robot_);
-  config("offset", offset_);
-
   if (debugmode_)
   {
     mc_rtc::log::info("------ DEBUG leave AutonomousInteraction::configure ------\n");
@@ -49,7 +45,6 @@ bool AutonomousInteraction::run(mc_control::fsm::Controller &ctl_)
   }
 
   auto &ctl = static_cast<LIPMStabilizerController &>(ctl_);
-  auto &robot = ctl.robot(robot_);
 
   try
   {
