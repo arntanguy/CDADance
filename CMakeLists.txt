@@ -20,4 +20,3 @@ add_subdirectory(src)
 set(AROBASE "@")
 configure_file(etc/LIPMStabilizerWinnie.in.yaml "${CMAKE_CURRENT_BINARY_DIR}/etc/LIPMStabilizerWinnie.yaml")
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/etc/LIPMStabilizerWinnie.yaml" DESTINATION "${MC_CONTROLLER_RUNTIME_INSTALL_PREFIX}/etc")
-

@@ -84,7 +84,7 @@ collisions:
     - body1: R_WRIST_Y_LINK
       body2: R_HIP_P_LINK
       iDist: 0.1
-      sDist: 0.08  
+      sDist: 0.08
     - body1: l_wrist
       body2: L_HIP_P_LINK
       iDist: 0.1
@@ -96,7 +96,7 @@ collisions:
     - body1: L_WRIST_Y_LINK
       body2: L_HIP_P_LINK
       iDist: 0.1
-      sDist: 0.08  
+      sDist: 0.08
 # Initial set of contacts
 contacts: []
 
@@ -372,7 +372,7 @@ states:
           frame: r_wrist
         weight: 500
         stiffness: 10
-  
+
   LookAtLeftHand:
     base: MetaTasks
     tasks:
@@ -385,7 +385,7 @@ states:
           frame: l_wrist
         weight: 500
         stiffness: 10
-  
+
   TouchHead:
     base: MetaTasks
     tasks:
@@ -739,9 +739,9 @@ states:
   Dance::Seq4::ConditionBaseMovement::withPubSub:
     base: Parallel
     states: [RosSubscriber, Stabilizer::Standing, Dance::Seq4::ConditionBaseMovement] #[FAIL] to run these two in parallel: cannot do movements when the ros is receiving data at the same time.
-  
 
-transitions: 
+
+transitions:
 - [Dance::Seq4::ConditionBaseMovement::withPubSub, OK, Dance::Seq4::ConditionBaseMovement::withPubSub, Strict]
 ##demo danse seq on real HRP4
 # - [Dance::Standing, DanceSeq1, Dance::Seq1::Walk, Strict] # this line help to show up the bottom control on moveing forward to this state in the simulation interface
