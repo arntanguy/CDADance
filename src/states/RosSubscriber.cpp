@@ -1,7 +1,11 @@
+#include <mc_rtc_ros/ros.h>
 #include "../mc_lipm_stabilizer.h"
 #include "RosSubscriber.h"
 #include <iostream>
 
+
+RosSubscriber::RosSubscriber() : nh_(mc_rtc::ROSBridge::get_node_handle())
+{}
 
 void RosSubscriber::chatterCallBack(const std_msgs::String::ConstPtr& msg)
 {
