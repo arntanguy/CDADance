@@ -66,49 +66,42 @@ states:
         weight: 500
         stiffness: 10
 
+  PostureBase:
+    base: Posture
+    postureTask:
+      type: posture
+      stiffness: 5.0
+      weight: 100.0
+    completion:
+      OR:
+        - timeout: 3.0
+        - AND:
+          - eval: 0.01
+          - speed: 0.01
+
   TouchHead:
-    base: MetaTasks
-    tasks:
-      RightHandToTheHead:
-        type: posture
-        stiffness: 5.0
-        weight: 100.0
-        target:
-          # NECK_P: [0.8]
-          # NECK_Y: [1.2]
-          R_SHOULDER_R: [-0.6]
-          R_SHOULDER_P: [-2.5] #-2.0
-          R_SHOULDER_Y: [1.6] #-3.1
-          R_ELBOW_P: [-2.1]
-          # L_SHOULDER_R: [2.15]
-        completion:
-          OR:
-            - timeout: 3.0
-            - AND:
-              - eval: 0.01
-              - speed: 0.01
+    base: PostureBase
+    postureTask:
+      target:
+        # NECK_P: [0.8]
+        # NECK_Y: [1.2]
+        R_SHOULDER_R: [-0.6]
+        R_SHOULDER_P: [-2.5] #-2.0
+        R_SHOULDER_Y: [1.6] #-3.1
+        R_ELBOW_P: [-2.1]
+        # L_SHOULDER_R: [2.15]
 
   TouchHead_L:
-    base: MetaTasks
-    tasks:
-      RightHandToTheHead:
-        type: posture
-        stiffness: 5.0
-        weight: 100.0
-        target:
-          # NECK_P: [0.8]
-          # NECK_Y: [1.2]
-          L_SHOULDER_R: [1.235]
-          L_SHOULDER_P: [-1.9] #-2.0
-          # L_SHOULDER_Y: [1.6] #-3.1
-          L_ELBOW_P: [-2.12]
-          # L_SHOULDER_R: [2.15]
-        completion:
-          OR:
-            - timeout: 3.0
-            - AND:
-              - eval: 0.01
-              - speed: 0.01
+    base: PostureBase
+    postureTask:
+      target:
+        # NECK_P: [0.8]
+        # NECK_Y: [1.2]
+        L_SHOULDER_R: [1.235]
+        L_SHOULDER_P: [-1.9] #-2.0
+        # L_SHOULDER_Y: [1.6] #-3.1
+        L_ELBOW_P: [-2.12]
+        # L_SHOULDER_R: [2.15]
 
   RaiseRightHand_v2:
     base: MetaTasks
@@ -233,114 +226,37 @@ states:
           timeElapsed: true
 
   PutDownRightShoulder:
-    base: MetaTasks
-    tasks:
-      RightHandToTheHead:
-        type: posture
-        stiffness: 5.0
-        weight: 100.0
-        target:
-          R_SHOULDER_P: [-0.167]
-          R_SHOULDER_R: [-0.31]
-          R_SHOULDER_Y: [0.02]
-          R_ELBOW_P: [-0.18]
-          R_WRIST_R: [0.08]
-        completion:
-          OR:
-            - timeout: 3.0
-            - AND:
-              - eval: 0.1
-              - speed: 0.1
+    base: PostureBase
+    postureTask:
+      target:
+        R_SHOULDER_P: [-0.167]
+        R_SHOULDER_R: [-0.31]
+        R_SHOULDER_Y: [0.02]
+        R_ELBOW_P: [-0.18]
+        R_WRIST_R: [0.08]
 
   LeftHeadTilt:
-    base: MetaTasks
-    tasks:
-      LeftHeadTiltPosture:
-        type: posture
-        stiffness: 5.0
-        weight: 100.0
-        target:
-          NECK_P: [0.7]
-          # NECK_Y: [0.5]
-          # L_SHOULDER_R: [2.15]
-        completion:
-          OR:
-            - timeout: 3.0
-            - AND:
-              - eval: 0.01
-              - speed: 0.01
+    base: PostureBase
+    postureTask:
+      target:
+        NECK_P: [0.7]
+        # NECK_Y: [0.5]
+        # L_SHOULDER_R: [2.15]
 
   RightHeadTilt:
-    base: MetaTasks
-    tasks:
-      RightHeadTiltPosture:
-        type: posture
-        stiffness: 5.0
-        weight: 100.0
-        target:
-          NECK_P: [0.0]
-          # NECK_Y: [-0.1]
-          # L_SHOULDER_R: [2.15]
-        completion:
-          OR:
-            - timeout: 3.0
-            - AND:
-              - eval: 0.01
-              - speed: 0.01
-
-
-  # TouchHeadStabilized:
-  #   base: Parallel
-  #   states: [Stabilizer::Standing, TouchHead]
-  #
-  # RaiseRightHandStabilized:
-  #   base: Parallel
-  #   states: [Stabilizer::Standing, RaiseRightHand]
-  #
-  # RightHandBackgroundStabilized:
-  #   base: Parallel
-  #   states: [Stabilizer::Standing, RightHandBackground]
-  #
-  # DrawCircleRightHandStabilized:
-  #   base: Parallel
-  #   states: [Stabilizer::Standing, DrawCircleRightHand]
-  #
-  # PutDownRightShoulderStabilized:
-  #   base: Parallel
-  #   states: [Stabilizer::Standing, PutDownRightShoulder]
-
-  # Dance::Seq1::Walk:
-  #   base: Meta
-  #   transitions:
-  #     - [LIPMStabilizer::StandingFSM::AlternateFeetLifting, OK, LIPMStabilizer::WalkingFSM::StepForward, Auto]
-  #     - [LIPMStabilizer::WalkingFSM::StepForward, OK, LIPMStabilizer::WalkingFSM::StepForward1, Auto]
-  #     - [LIPMStabilizer::WalkingFSM::StepForward1, OK, LIPMStabilizer::WalkingFSM::StepForward2, Auto]
-  #     - [LIPMStabilizer::WalkingFSM::StepForward2, OK, LIPMStabilizer::WalkingFSM::StepBackward1, Auto]
-  #     - [LIPMStabilizer::WalkingFSM::StepBackward1, OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting1, Auto]
-  #     - [LIPMStabilizer::StandingFSM::AlternateFeetLifting1, OK, LIPMStabilizer::WalkingFSM::StepForward3, Auto]
-  #     - [LIPMStabilizer::WalkingFSM::StepForward3, OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting2, Auto]
-
-  # Dance::Seq3::LookForApples:
-  #   base: Meta
-  #   transitions:
-  #     - [LIPMStabilizer::StandingFSM::AlternateFeetLifting,   OK, LIPMStabilizer::WalkingFSM::StepForward, Auto]
-  #     - [LIPMStabilizer::WalkingFSM::StepForward,             OK, TouchHeadStabilized, Auto]
-  #     - [TouchHeadStabilized,                                 OK, LIPMStabilizer::WalkingFSM::StepForward1, Auto]
-  #     - [LIPMStabilizer::WalkingFSM::StepForward1,            OK, LIPMStabilizer::WalkingFSM::StepForward2, Auto]
-  #     - [LIPMStabilizer::WalkingFSM::StepForward2,            OK, RaiseRightHandStabilized, Auto]
-  #     - [RaiseRightHandStabilized,                            OK, LIPMStabilizer::WalkingFSM::StepBackward1, Auto]
-  #     - [LIPMStabilizer::WalkingFSM::StepBackward1,           OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting1, Auto]
-  #     - [LIPMStabilizer::StandingFSM::AlternateFeetLifting1,  OK, RightHandBackgroundStabilized, Auto]
-  #     - [RightHandBackgroundStabilized,                       OK, DrawCircleRightHandStabilized, Auto]
-  #     - [DrawCircleRightHandStabilized,                       OK, PutDownRightShoulderStabilized, Auto]
-  #     - [PutDownRightShoulderStabilized,                      OK, LIPMStabilizer::WalkingFSM::StepForward3, Auto]
-  #     - [LIPMStabilizer::WalkingFSM::StepForward3,            OK, LIPMStabilizer::StandingFSM::AlternateFeetLifting2, Auto]
+    base: PostureBase
+    postureTask:
+      target:
+        NECK_P: [0.0]
+        # NECK_Y: [-0.1]
+        # L_SHOULDER_R: [2.15]
 
   Dance::ConditionBaseMovement:
     base: AutonomousInteraction
 
   Dance::Seq4::ConditionBaseMovement:
     base: Meta
+    ResetPostures: false
     transitions:
       - [Dance::ConditionBaseMovement, Seq0, TouchHead, Auto]
       - [Dance::ConditionBaseMovement, Seq1, DrawCircleRightHand, Auto]
@@ -350,127 +266,22 @@ states:
       - [Dance::ConditionBaseMovement, Seq5, DrawCircleLeftHand, Auto]
       - [Dance::ConditionBaseMovement, Seq6, LeftHeadTilt, Auto]
       - [Dance::ConditionBaseMovement, Seq7, RightHeadTilt, Auto]
-      - [TouchHead, OK, Dance::ConditionBaseMovement, Auto]
-      - [DrawCircleRightHand, OK, Dance::ConditionBaseMovement, Auto]
-      - [RaiseRightHand_v2, OK, Dance::ConditionBaseMovement, Auto]
-      - [TouchHead_L, OK, Dance::ConditionBaseMovement, Auto]
-      - [RaiseLeftHand, OK, Dance::ConditionBaseMovement, Auto]
-      - [DrawCircleLeftHand, OK, Dance::ConditionBaseMovement, Auto]
-      - [LeftHeadTilt, OK, Dance::ConditionBaseMovement, Auto]
-      - [RightHeadTilt, OK, Dance::ConditionBaseMovement, Auto]
+      - [TouchHead, OK, HalfSitting, Auto]
+      - [DrawCircleRightHand, OK, HalfSitting, Auto]
+      - [RaiseRightHand_v2, OK, HalfSitting, Auto]
+      - [TouchHead_L, OK, HalfSitting, Strict]
+      - [RaiseLeftHand, OK, HalfSitting, Auto]
+      - [DrawCircleLeftHand, OK, HalfSitting, Auto]
+      - [LeftHeadTilt, OK, HalfSitting, Auto]
+      - [RightHeadTilt, OK, HalfSitting, Auto]
+      - [HalfSitting, OK, Dance::ConditionBaseMovement, Strict]
 
   Dance::Seq4::ConditionBaseMovement::withPubSub:
     base: Parallel
-    states: [RosSubscriber, Stabilizer::Standing, LookAtAudience, Dance::Seq4::ConditionBaseMovement] #[FAIL] to run these two in parallel: cannot do movements when the ros is receiving data at the same time.
-    configs:
-      HalfSitting:
-        stiffness: 10
-
-  # Dance::Standing:
-  #   base: Parallel
-  #   states: [HalfSitting, Stabilizer::Standing]
-  #
-  # Dance::Seq0::TESTrosSubscriber:
-  #   base: LIPMStabilizer::WalkingFSM::StepForward
-  #
-  # Dance::Seq1::TESTrosSubscriber:
-  #   base: LIPMStabilizer::StandingFSM::AlternateFeetLifting
-  #
-  # Dance::Seq2::TESTrosSubscriber:
-  #   base: LIPMStabilizer::WalkingFSM::StepBackward
-  #
-  # Dance::Seq3::TESTrosSubscriber:
-  #   base: Dance::Standing
-  #
-  # Dance::RightHandInteractNormal:
-  #   base: Parallel
-  #   states: [Stabilizer::Standing, TouchHead]
-  #
-  # Dance::RightHandInteractCloseToCore:
-  #   base: Parallel
-  #   states: [Stabilizer::Standing, DrawCircleRightHand]
-  #
-  # Dance::RightHandInteractFarFromCore:
-  #   base: Parallel
-  #   states: [Stabilizer::Standing, RaiseRightHand_v2]
-  #
-  # Dance::LeftHandInteractNormal:
-  #   base: Parallel
-  #   states: [Stabilizer::Standing, TouchHead_L]
-  #
-  # Dance::LeftHandInteractCloseToCore:
-  #   base: Parallel
-  #   states: [Stabilizer::Standing, RaiseLeftHand]
-  #
-  # Dance::LeftHandInteractFarFromCore:
-  #   base: Parallel
-  #   states: [Stabilizer::Standing, DrawCircleLeftHand]
-  #
-  # Dance::LeftHeadTilt:
-  #   base: Parallel
-  #   states: [Stabilizer::Standing, LeftHeadTilt]
-  #
-  # Dance::RightHeadTilt:
-  #   base: Parallel
-  #   states: [Stabilizer::Standing, RightHeadTilt]
-
+    states: [RosSubscriber, Stabilizer::Standing, LookAtAudience, Dance::Seq4::ConditionBaseMovement]
 
 transitions:
 - [Dance::Seq4::ConditionBaseMovement::withPubSub, OK, Dance::Seq4::ConditionBaseMovement::withPubSub, Strict]
-##demo danse seq on real HRP4
-# - [Dance::Standing, DanceSeq1, Dance::Seq1::Walk, Strict] # this line help to show up the bottom control on moveing forward to this state in the simulation interface
-# - [Dance::Standing, DanceSeq2, Dance::Seq3::LookForApples, Strict]
-# - [Dance::Seq1::Walk, OK, Dance::Standing, Auto]
-# - [Dance::Seq3::LookForApples, OK, Dance::Standing, Auto]
-
-##condition base movements (prepare to sync with HPE algo)
-# - [Dance::Standing, DanceSeq1, Dance::ConditionBaseMovement, Strict]
-# - [Dance::ConditionBaseMovement, Seq0, Dance::Seq0::TESTrosSubscriber, Auto]
-# - [Dance::ConditionBaseMovement, Seq1, Dance::Seq1::TESTrosSubscriber, Auto]
-# - [Dance::ConditionBaseMovement, Seq2, Dance::Seq2::TESTrosSubscriber, Auto]
-# - [Dance::ConditionBaseMovement, Seq3, Dance::Seq3::TESTrosSubscriber, Auto]
-# - [Dance::Seq0::TESTrosSubscriber, OK, Dance::Standing, Auto]
-# - [Dance::Seq1::TESTrosSubscriber, OK, Dance::Standing, Auto]
-# - [Dance::Seq2::TESTrosSubscriber, OK, Dance::Standing, Auto]
-# - [Dance::Seq3::TESTrosSubscriber, OK, Dance::Standing, Auto]
-
-##condition base movements (syncing with HPE algo)
-# - [Dance::Standing, DanceSeq1, Dance::ConditionBaseMovement, Strict]
-# - [Dance::Standing, DanceSeq1, RosSubscriber, Strict]
-# - [RosSubscriber, DanceSeq2, Dance::ConditionBaseMovement, Strict]
-
-# - [Dance::Standing, OK, RosSubscriber, Auto]
-# - [RosSubscriber, OK, Dance::ConditionBaseMovement, Auto]
-# - [Dance::ConditionBaseMovement, Seq0, Dance::RightHandInteractNormal, Auto]
-# - [Dance::ConditionBaseMovement, Seq1, Dance::RightHandInteractCloseToCore, Auto]
-# - [Dance::ConditionBaseMovement, Seq2, Dance::RightHandInteractFarFromCore, Auto]
-# - [Dance::ConditionBaseMovement, Seq3, Dance::LeftHandInteractNormal, Auto]
-# - [Dance::ConditionBaseMovement, Seq4, Dance::LeftHandInteractCloseToCore, Auto]
-# - [Dance::ConditionBaseMovement, Seq5, Dance::LeftHandInteractFarFromCore, Auto]
-# - [Dance::ConditionBaseMovement, Seq6, Dance::LeftHeadTilt, Auto]
-# - [Dance::ConditionBaseMovement, Seq7, Dance::RightHeadTilt, Auto]
-# - [Dance::RightHandInteractNormal, OK, RosSubscriber, Auto]
-# - [Dance::RightHandInteractCloseToCore, OK, RosSubscriber, Auto]
-# - [Dance::RightHandInteractFarFromCore, OK, RosSubscriber, Auto]
-# - [Dance::LeftHandInteractNormal, OK, RosSubscriber, Auto]
-# - [Dance::LeftHandInteractCloseToCore, OK, RosSubscriber, Auto]
-# - [Dance::LeftHandInteractFarFromCore, OK, RosSubscriber, Auto]
-# - [Dance::LeftHeadTilt, OK, RosSubscriber, Auto]
-# - [Dance::RightHeadTilt, OK, RosSubscriber, Auto]
-# # - [Dance::Standing, DanceSeq1, Dance::RightHandInteractNormal, Strict]
-# # - [Dance::Standing, DanceSeq2, Dance::RightHandInteractCloseToCore, Strict]
-# # - [Dance::Standing, DanceSeq3, Dance::RightHandInteractFarFromCore, Strict]
-# # - [Dance::Standing, DanceSeq4, Dance::LeftHandInteractNormal, Strict]
-# # - [Dance::Standing, DanceSeq5, Dance::LeftHandInteractCloseToCore, Strict]
-# # - [Dance::Standing, DanceSeq6, Dance::LeftHandInteractFarFromCore, Strict]
-# # - [Dance::Standing, DanceSeq7, Dance::LeftHeadTilt, Strict]
-# # - [Dance::Standing, DanceSeq8, Dance::RightHeadTilt, Strict]
-
-#[TODO]: still remain a problem where the standing movements can't finish in a proper way. The final solution might be using "parallel" method.
-
-##condition base movements (syncing with HPE algo + ros-subs/pubs running in back ground)
-# - [Dance::Standing, OK, Dance::Seq4::ConditionBaseMovement::withPubSub, Auto]
-
 
 init: Dance::Seq4::ConditionBaseMovement::withPubSub
 
