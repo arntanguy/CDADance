@@ -10,6 +10,8 @@ StatesFiles:
 - "@MC_STATES_RUNTIME_INSTALL_PREFIX@/data"
 VerboseStateFactory: false
 
+Plugins: [MosquittoPlugin]
+
 # Additional robots to load
 robots:
   ground:
