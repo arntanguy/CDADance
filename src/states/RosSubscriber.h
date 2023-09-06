@@ -30,7 +30,7 @@ struct RosSubscriber : mc_control::fsm::State
   void rosSpinner();
 
  private:
-  mc_rtc::NodeHandlePtr nh_;
+  std::shared_ptr<ros::NodeHandle> nh_;
   std::atomic<bool> active_{true};  // start rosSunscriber on assigning true; while stop: false.
   std::thread spinThread_;
   rosSubscriberData rS_data;

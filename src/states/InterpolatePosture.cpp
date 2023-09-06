@@ -1,20 +1,21 @@
 #include "InterpolatePosture.h"
-#include <mc_control/fsm/Controller.h>
 
-#include <iostream>
-#include <random>
-#include <algorithm>
+#include <mc_control/fsm/Controller.h>
 #include <mc_rtc/io_utils.h>
 
-void InterpolatePosture::start(mc_control::fsm::Controller & ctl)
+#include <algorithm>
+#include <iostream>
+#include <random>
+
+void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
 {
   robotName_ = config_("robot", ctl.robot().name());
-  if(!ctl.hasRobot(robotName_))
+  if (!ctl.hasRobot(robotName_))
   {
     mc_rtc::log::error_and_throw("[{}] No robot named {}", name(), robotName_);
   }
-  auto & robot = ctl.robot(robotName_);
-  if(!config_.has(robot.name()))
+  auto &robot = ctl.robot(robotName_);
+  if (!config_.has(robot.name()))
   {
     mc_rtc::log::error_and_throw("[{}] No configuration for robot {}", name(), robot.name());
   }
@@ -53,7 +54,7 @@ void InterpolatePosture::start(mc_control::fsm::Controller & ctl)
   robotConfig("postureTransitionSpeed", postureTransitionSpeed_);
   robotConfig("enableShake", enableShake_);
   robotConfig("enableLookAt", enableLookAt_);
-  if(ctl.datastore().has("Improvise"))
+  if (ctl.datastore().has("Improvise"))
   {
     improvise_ = ctl.datastore().get<bool>("Improvise");
     ctl.datastore().remove("Improvise");
@@ -63,23 +64,23 @@ void InterpolatePosture::start(mc_control::fsm::Controller & ctl)
   std::vector<PostureConfig> postureSequence = robotConfig("posture_sequence");
 
   // If improvising, shuffle order
-  if(improvise_)
+  if (improvise_)
   {
     std::random_device rd;
     std::mt19937 g{rd()};
-    std::shuffle( postureSequence.begin(), postureSequence.end(), g);
+    std::shuffle(postureSequence.begin(), postureSequence.end(), g);
   }
 
   // Get the list of actuated joints
-  const auto & rjo = robot.refJointOrder();
+  const auto &rjo = robot.refJointOrder();
 
   // Start interpolation from current posture
   PostureConfig initPosture;
   initPosture.t = 0.0;
-  for(int i = 0; i < rjo.size(); ++i)
+  for (int i = 0; i < rjo.size(); ++i)
   {
     std::cout << "Joint " << rjo[i] << std::endl;
-    if(robot.hasJoint(rjo[i]))
+    if (robot.hasJoint(rjo[i]))
     {
       initPosture.posture[rjo[i]] = robot.mbc().q[robot.jointIndexInMBC(i)][0];
     }
@@ -89,7 +90,7 @@ void InterpolatePosture::start(mc_control::fsm::Controller & ctl)
   // Create a vector used to store the desired value for each actuated joint
   Eigen::VectorXd desiredPosture(rjo.size());
   // Initialize with current robot posture
-  for(int i = 0; i < rjo.size(); ++i)
+  for (int i = 0; i < rjo.size(); ++i)
   {
     desiredPosture(i) = robot.mbc().q[robot.jointIndexInMBC(i)][0];
   }
@@ -97,15 +98,16 @@ void InterpolatePosture::start(mc_control::fsm::Controller & ctl)
   // Convert to absolute time
   double t = 0;
   double scaleTime = robotConfig("scaleTime", 1.);
-  for(auto postureConfig : postureSequence)
+  for (auto postureConfig : postureSequence)
   {
-    t += postureConfig.t * scaleTime;;
+    t += postureConfig.t * scaleTime;
+    ;
     postureConfig.t = t;
     postureSequence_.push_back(postureConfig);
   }
 
   // Last posture should be the init posture no matter what
-  if(goBackToInitialPosture_)
+  if (goBackToInitialPosture_)
   {
     initPosture.t = postureSequence_.back().t + 2.0;
     postureSequence_.push_back(initPosture);
@@ -123,16 +125,16 @@ void InterpolatePosture::start(mc_control::fsm::Controller & ctl)
   // }
 
   // For each timed posture in the sequence
-  for(const auto & postureConfig : postureSequence_)
+  for (const auto &postureConfig : postureSequence_)
   {
-    const auto & postureMap = postureConfig.posture;
+    const auto &postureMap = postureConfig.posture;
     // For each actuated joint
-    for(int i = 0; i < rjo.size(); ++i)
+    for (int i = 0; i < rjo.size(); ++i)
     {
-      const auto & actuatedJoint = rjo[i];
-      if(!robot.hasJoint(actuatedJoint)) continue;
+      const auto &actuatedJoint = rjo[i];
+      if (!robot.hasJoint(actuatedJoint)) continue;
       // Check if we have a desired posture in the configuration
-      if(postureMap.count(actuatedJoint))
+      if (postureMap.count(actuatedJoint))
       {
         // If so, put the desired joint value for this actuated joint
         desiredPosture(i) = postureMap.at(actuatedJoint);
@@ -146,7 +148,7 @@ void InterpolatePosture::start(mc_control::fsm::Controller & ctl)
     // Add the current posture to the interpolator values
     interpolatorValues.emplace_back(postureConfig.t, desiredPosture);
     comInterpolatorValues.emplace_back(postureConfig.t, postureConfig.comOffset);
-  }                                                     
+  }
   // Put all desired postures in the interpolator
   interpolator_.values(interpolatorValues);
   comInterpolator_.values(comInterpolatorValues);
@@ -157,54 +159,77 @@ void InterpolatePosture::start(mc_control::fsm::Controller & ctl)
   // Example in yaml:
   //   posture_task:
   //     stiffness: 100
-  auto & postureTask = *ctl.getPostureTask(robot.name());
+  auto &postureTask = *ctl.getPostureTask(robot.name());
   postureTask.load(ctl.solver(), robotConfig("posture_task", mc_rtc::Configuration{}));
 
-  lookAt_ = std::make_shared<mc_tasks::LookAtTask>(ctl.robot().frame("NECK_P_LINK"), Eigen::Vector3d{1,0,0}, 10.0, 100.0);
+  lookAt_ = std::make_shared<mc_tasks::LookAtTask>(ctl.robot().frame("NECK_P_LINK"), Eigen::Vector3d{1, 0, 0}, 10.0, 100.0);
 
   ctl.gui()->addElement(
       this, {name()},
       mc_rtc::gui::Checkbox(
-          "Play", [this]() { return autoplay_; }, [this]() { autoplay_ = !autoplay_; }),
+          "Play", [this]()
+          { return autoplay_; },
+          [this]()
+          { autoplay_ = !autoplay_; }),
       mc_rtc::gui::Checkbox(
-          "Update posture", [this]() { return updatePosture_; }, [this]() { updatePosture_ = !updatePosture_; }),
+          "Update posture", [this]()
+          { return updatePosture_; },
+          [this]()
+          { updatePosture_ = !updatePosture_; }),
       mc_rtc::gui::NumberInput(
-          "Time", [this]() { return t_; }, [this](double t) { t_ = t; }),
+          "Time", [this]()
+          { return t_; },
+          [this](double t)
+          { t_ = t; }),
       mc_rtc::gui::NumberSlider(
-          "Time selector", [this]() { return t_; }, [this](double t) { t_ = t; }, 0,
+          "Time selector", [this]()
+          { return t_; },
+          [this](double t)
+          { t_ = t; },
+          0,
           interpolator_.values().back().first),
-      mc_rtc::gui::Checkbox("Repeat Motion", [this]() { return repeat_; },
-                            [this]() { repeat_ = !repeat_; }),
-      mc_rtc::gui::Checkbox("Improvise next time",
-                            [this, &ctl]()
-                            {
-                              return ctl.datastore().has("Improvise") && ctl.datastore().get<bool>("Improvise");
-                            },
-                            [this, &ctl]()
-                            {
-                              if(!ctl.datastore().has("Improvise"))
-                              {
-                                ctl.datastore().make<bool>("Improvise", true);
-                              }
-                              else
-                              {
-                                ctl.datastore().remove("Improvise");
-                              }
-                            }),
-      mc_rtc::gui::Checkbox("Improvising?", [this]() { return improvise_; },
-                            [this]() {}),
-      mc_rtc::gui::Checkbox("Enable Shake", [this]() { return enableShake_; },
-                            [this]() { enableShake_ = !enableShake_; }),
-      mc_rtc::gui::Checkbox("Enable LookAt", [this]() { return enableLookAt_; },
-                            [this]() { enableLookAt_ = !enableLookAt_; })
-      );
-
+      mc_rtc::gui::Checkbox(
+          "Repeat Motion", [this]()
+          { return repeat_; },
+          [this]()
+          { repeat_ = !repeat_; }),
+      mc_rtc::gui::Checkbox(
+          "Improvise next time",
+          [this, &ctl]()
+          {
+            return ctl.datastore().has("Improvise") && ctl.datastore().get<bool>("Improvise");
+          },
+          [this, &ctl]()
+          {
+            if (!ctl.datastore().has("Improvise"))
+            {
+              ctl.datastore().make<bool>("Improvise", true);
+            }
+            else
+            {
+              ctl.datastore().remove("Improvise");
+            }
+          }),
+      mc_rtc::gui::Checkbox(
+          "Improvising?", [this]()
+          { return improvise_; },
+          [this]() {}),
+      mc_rtc::gui::Checkbox(
+          "Enable Shake", [this]()
+          { return enableShake_; },
+          [this]()
+          { enableShake_ = !enableShake_; }),
+      mc_rtc::gui::Checkbox(
+          "Enable LookAt", [this]()
+          { return enableLookAt_; },
+          [this]()
+          { enableLookAt_ = !enableLookAt_; }));
 }
 
-bool InterpolatePosture::run(mc_control::fsm::Controller & ctl)
+bool InterpolatePosture::run(mc_control::fsm::Controller &ctl)
 {
-  auto & robot = ctl.robot(robotName_);
-  const auto & rjo = robot.refJointOrder();
+  auto &robot = ctl.robot(robotName_);
+  const auto &rjo = robot.refJointOrder();
 
   // Compute the interpolated posture at the current time
   auto desiredPosture = interpolator_.compute(t_);
@@ -212,23 +237,24 @@ bool InterpolatePosture::run(mc_control::fsm::Controller & ctl)
 
   // Shake
   auto currPostureSeq =
-      std::find_if(postureSequence_.begin(), postureSequence_.end(), [this](const auto & p) { return p.t > t_; });
+      std::find_if(postureSequence_.begin(), postureSequence_.end(), [this](const auto &p)
+                   { return p.t > t_; });
   currPostureSeq--;
-  if(currPostureSeq != postureSequence_.end())
+  if (currPostureSeq != postureSequence_.end())
   {
-    if(enableShake_)
+    if (enableShake_)
     {
-      const auto & shakeMap = currPostureSeq->shake;
+      const auto &shakeMap = currPostureSeq->shake;
       // mc_rtc::log::info("Should shake (t={}, posture t= {})", t_, currPostureSeq->t);
       // mc_rtc::log::info("Joints: {}", mc_rtc::io::to_string(shakeMap, [](const auto & m) { return m.first; }));
       // For each actuated joint
-      for(int i = 0; i < rjo.size(); ++i)
+      for (int i = 0; i < rjo.size(); ++i)
       {
         // Shake
-        const auto & actuatedJoint = rjo[i];
-        if(shakeMap.count(actuatedJoint))
+        const auto &actuatedJoint = rjo[i];
+        if (shakeMap.count(actuatedJoint))
         {
-          const auto & shakeConfig = shakeMap.at(actuatedJoint);
+          const auto &shakeConfig = shakeMap.at(actuatedJoint);
           // Shake value such that it starts with
           // - Shake = 0 for t_ = currPostureSeq->t (no motion initially)
           // - It shakes with period shakeConfig.period around the current joint
@@ -243,14 +269,14 @@ bool InterpolatePosture::run(mc_control::fsm::Controller & ctl)
     }
 
     // LookAt task
-    if(enableLookAt_)
+    if (enableLookAt_)
     {
-      const auto & lookAtConfig = currPostureSeq->lookAt;
-      if(lookAtConfig)
+      const auto &lookAtConfig = currPostureSeq->lookAt;
+      if (lookAtConfig)
       {
-        auto lookRobot = lookAtConfig->robot ? * lookAtConfig->robot : ctl.robot().name();
+        auto lookRobot = lookAtConfig->robot ? *lookAtConfig->robot : ctl.robot().name();
         lookAt_->target(ctl.robot(lookRobot).frame(lookAtConfig->frame).position().translation());
-        if(!lookAtActive_)
+        if (!lookAtActive_)
         {
           lookAt_->stiffness(lookAtConfig->stiffness);
           lookAt_->weight(lookAtConfig->weight);
@@ -260,7 +286,7 @@ bool InterpolatePosture::run(mc_control::fsm::Controller & ctl)
       }
       else
       {
-        if(lookAtActive_)
+        if (lookAtActive_)
         {
           ctl.solver().removeTask(lookAt_);
           lookAtActive_ = false;
@@ -270,44 +296,43 @@ bool InterpolatePosture::run(mc_control::fsm::Controller & ctl)
   }
 
   // Get the posture task
-  auto & postureTask = *ctl.getPostureTask(robot.name());
+  auto &postureTask = *ctl.getPostureTask(robot.name());
   // Copy the current posture target
   auto posture = postureTask.posture();
 
   // For each actuated joint
-  for(int i = 0; i < rjo.size(); ++i)
+  for (int i = 0; i < rjo.size(); ++i)
   {
-    const auto & actuatedJoint = rjo[i];
+    const auto &actuatedJoint = rjo[i];
     // Set the posture target for this actuated joint to its interpolated value
     posture[robot.jointIndexInMBC(i)][0] = desiredPosture[i];
   }
 
   // Change the posture target in the posture task
-  if(updatePosture_)
+  if (updatePosture_)
   {
     postureTask.posture(posture);
   }
 
-  if(updateCoM_)
+  if (updateCoM_)
   {
-    if(ctl.datastore().has("StabilizerStandingState::setCoMTarget"))
+    if (ctl.datastore().has("StabilizerStandingState::setCoMTarget"))
     {
       auto comTarget = ctl.datastore().call<const Eigen::Vector3d &>("StabilizerStandingState::getCoMTarget");
-      comTarget.z() = robot.module()._lipmStabilizerConfig.comHeight + desiredCoMOffset.z(); 
+      comTarget.z() = robot.module()._lipmStabilizerConfig.comHeight + desiredCoMOffset.z();
       ctl.datastore().call<void>("StabilizerStandingState::setCoMTarget",
-          static_cast<const Eigen::Vector3d &>(comTarget));
+                                 static_cast<const Eigen::Vector3d &>(comTarget));
     }
   }
 
-  if(autoplay_)
+  if (autoplay_)
   {
     t_ += ctl.timeStep;
   }
 
-  bool finished = (t_ >= interpolator_.values().back().first)
-                && (!usePostureTransitionCriteria_ || postureTask.speed().norm() < postureTransitionSpeed_);
+  bool finished = (t_ >= interpolator_.values().back().first) && (!usePostureTransitionCriteria_ || postureTask.speed().norm() < postureTransitionSpeed_);
 
-  if(repeat_)
+  if (repeat_)
   {
     output("Repeat");
   }
@@ -318,10 +343,10 @@ bool InterpolatePosture::run(mc_control::fsm::Controller & ctl)
   return finished;
 }
 
-void InterpolatePosture::teardown(mc_control::fsm::Controller & ctl)
+void InterpolatePosture::teardown(mc_control::fsm::Controller &ctl)
 {
   ctl.gui()->removeCategory({name()});
-  if(lookAtActive_)
+  if (lookAtActive_)
   {
     ctl.solver().removeTask(lookAt_);
   }
