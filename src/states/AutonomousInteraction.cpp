@@ -10,54 +10,33 @@
 
 void AutonomousInteraction::configure(const mc_rtc::Configuration &config)
 {
-  if (debugmode_)
-  {
-    mc_rtc::log::info("------ DEBUG enter AutonomousInteraction::configure ------\n");
-  }
-
-  if (debugmode_)
-  {
-    mc_rtc::log::info("------ DEBUG leave AutonomousInteraction::configure ------\n");
-  }
+  debug_log("------ DEBUG enter AutonomousInteraction::configure ------\n");
+  debug_log("------ DEBUG leave AutonomousInteraction::configure ------\n");
 }
 
 void AutonomousInteraction::start(mc_control::fsm::Controller &ctl_)
 {
-  if (debugmode_)
-  {
-    mc_rtc::log::info("------ DEBUG enter AutonomousInteraction::start ------\n");
-  }
+  debug_log("------ DEBUG enter AutonomousInteraction::start ------\n");
 
   auto &ctl = static_cast<LIPMStabilizerController &>(ctl_);
   run(ctl);
-
-  if (debugmode_)
-  {
-    mc_rtc::log::info("------ DEBUG leave AutonomousInteraction::start ------\n");
-  }
+  debug_log("------ DEBUG leave AutonomousInteraction::start ------\n");
 }
 
 bool AutonomousInteraction::run(mc_control::fsm::Controller &ctl_)
 {
-  if (debugmode_)
-  {
-    mc_rtc::log::info("------ DEBUG enter AutonomousInteraction::run ------\n");
-  }
+  debug_log("------ DEBUG enter AutonomousInteraction::run ------\n");
 
   auto &ctl = static_cast<LIPMStabilizerController &>(ctl_);
 
-  try
-  {
-    ctl.datastore().get<rosSubscriberData>("rosSubscriber_msg");  // assign receivedMsgObj to false if cannot found "rosSubscriber_msg" in the datastore
-  }
-  catch (...)
+  if (!ctl.datastore().has("rosSubscriber_msg"))
   {
     mc_rtc::log::error("No datastore value for rosSubscriber_msg");
   }
 
   auto &receivedMsgObj = ctl.datastore().get<rosSubscriberData>("rosSubscriber_msg");  // assign receivedMsgObj to false if cannot found "rosSubscriber_msg" in the datastore
   subscriber_msg = receivedMsgObj.val;
-  mc_rtc::log::info("------ ReceivedMsgObj value = {} ------", subscriber_msg);
+  debug_log("------ ReceivedMsgObj value = {} ------", subscriber_msg);
 
   bool find_msg = false;
   while (!find_msg)
@@ -82,10 +61,7 @@ bool AutonomousInteraction::run(mc_control::fsm::Controller &ctl_)
     output(SeqName[segIdx]);
   }
 
-  if (debugmode_)
-  {
-    mc_rtc::log::info("------ DEBUG leave AutonomousInteraction::run ------\n");
-  }
+  debug_log("------ DEBUG leave AutonomousInteraction::run ------\n");
 
   return true;
 }

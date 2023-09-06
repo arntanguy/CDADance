@@ -1,5 +1,6 @@
 #include <mc_control/fsm/State.h>
 #include <mc_tasks/EndEffectorTask.h>
+#include <spdlog/common.h>
 
 struct AutonomousInteraction : mc_control::fsm::State
 {
@@ -10,6 +11,15 @@ struct AutonomousInteraction : mc_control::fsm::State
   bool run(mc_control::fsm::Controller& ctl) override;
 
   void teardown(mc_control::fsm::Controller& ctl) override;
+
+  template <typename... Args>
+  void debug_log(Args&&... args)
+  {
+    if (debugmode_)
+    {
+      mc_rtc::log::info(std::forward<Args>(args)...);
+    }
+  }
 
  private:
   float rand_val;
