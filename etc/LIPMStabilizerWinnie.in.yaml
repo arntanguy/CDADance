@@ -269,12 +269,12 @@ states:
       - [TouchHead, OK, HalfSitting, Auto]
       - [DrawCircleRightHand, OK, HalfSitting, Auto]
       - [RaiseRightHand_v2, OK, HalfSitting, Auto]
-      - [TouchHead_L, OK, HalfSitting, Strict]
+      - [TouchHead_L, OK, HalfSitting, Auto]
       - [RaiseLeftHand, OK, HalfSitting, Auto]
       - [DrawCircleLeftHand, OK, HalfSitting, Auto]
       - [LeftHeadTilt, OK, HalfSitting, Auto]
       - [RightHeadTilt, OK, HalfSitting, Auto]
-      - [HalfSitting, OK, Dance::ConditionBaseMovement, Strict]
+      - [HalfSitting, OK, Dance::ConditionBaseMovement, Auto]
 
   Dance::Seq4::ConditionBaseMovement::withPubSub:
     base: Parallel
