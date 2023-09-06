@@ -256,6 +256,69 @@ states:
   Dance::ConditionBaseMovement:
     base: AutonomousInteraction
 
+  Salutations:
+    base: InterpolatePosture
+    hrp4:
+      scaleTime: 1.0
+      posture_task:
+        stiffness: 200
+      posture_sequence:
+        - time: 5.0
+          posture: {}
+          comOffset: [0, 0, -0.2]
+        - time: 5.0
+          posture:
+            R_SHOULDER_R: -0.662
+            R_SHOULDER_Y: -0.52
+            L_SHOULDER_R: 0.617
+            L_SHOULDER_Y: 0.356
+          comOffset: [0, 0, -0.2]
+        - time: 5.0
+          posture:
+            R_SHOULDER_R: -0.206
+            R_SHOULDER_Y: 0.156
+            L_SHOULDER_R: 0.162
+            L_SHOULDER_Y: 0.082
+            R_ELBOW_P: -1.329
+            L_ELBOW_P: -1.2679
+          comOffset: [0, 0, -0.2]
+        - time: 5.0
+          posture:
+            R_SHOULDER_R: -0.438
+            L_SHOULDER_R: 0.405
+            NECK_Y: 0.946
+          comOffset: [0, 0, -0.2]
+        - time: 5.0
+          posture:
+            NECK_Y: -1.02
+          comOffset: [0, 0, -0.2]
+        - time: 5.0
+          posture:
+            NECK_P: 0.607
+          comOffset: [0, 0, -0.2]
+          # shake:
+          #   NECK_P:
+          #     period: 10 # [s]
+          #     amplitude: 0.2 # rad
+        - time: 5.0
+          posture:
+            NECK_P: -0.607
+          # shake:
+          #   NECK_P:
+          #     period: 10 # [s]
+          #     amplitude: 0.2 # rad
+          comOffset: [0, 0, -0.2]
+
+  Dance::Demo::FSM:
+    base: Meta
+    ResetPostures: false
+    transitions:
+      - [Salutations, OK, Dance::Seq4::ConditionBaseMovement::withPubSub, Strict]
+
+  Dance::Demo::StabilizedFSM:
+    base: Parallel
+    states: [Stabilizer::Standing, Dance::Demo::FSM]
+
   Dance::Seq4::ConditionBaseMovement:
     base: Meta
     ResetPostures: false
@@ -278,14 +341,16 @@ states:
       - [RightHeadTilt, OK, HalfSitting, Auto]
       - [HalfSitting, OK, Dance::ConditionBaseMovement, Auto]
 
+
+
   Dance::Seq4::ConditionBaseMovement::withPubSub:
     base: Parallel
-    states: [RosSubscriber, Stabilizer::Standing, LookAtAudience, Dance::Seq4::ConditionBaseMovement]
+    states: [RosSubscriber, LookAtAudience, Dance::Seq4::ConditionBaseMovement]
 
 transitions:
-- [Dance::Seq4::ConditionBaseMovement::withPubSub, OK, Dance::Seq4::ConditionBaseMovement::withPubSub, Strict]
+  - [Dance::Demo::StabilizedFSM, OK, Dance::Demo::StabilizedFSM, Strict]
 
-init: Dance::Seq4::ConditionBaseMovement::withPubSub
+init: Dance::Demo::StabilizedFSM
 
 ObserverPipelines:
 - name: "MainPipeline"
