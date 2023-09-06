@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.1)
 set(CXX_DISABLE_WERROR 1)
 set(CMAKE_CXX_STANDARD 17)
 
-set(PROJECT_NAME LIPMStabilizer)
-set(PROJECT_DESCRIPTION "LIPMStabilizer")
+set(PROJECT_NAME LIPMStabilizerWinnie)
+set(PROJECT_DESCRIPTION "LIPMStabilizerWinnie")
 set(PROJECT_URL "")
 
 project(${PROJECT_NAME} CXX)
