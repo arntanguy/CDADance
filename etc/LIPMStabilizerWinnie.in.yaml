@@ -296,10 +296,6 @@ states:
           posture:
             NECK_P: 0.607
           comOffset: [0, 0, -0.2]
-          # shake:
-          #   NECK_P:
-          #     period: 10 # [s]
-          #     amplitude: 0.2 # rad
         - time: 5.0
           posture:
             NECK_P: -0.607
@@ -308,6 +304,63 @@ states:
           #     period: 10 # [s]
           #     amplitude: 0.2 # rad
           comOffset: [0, 0, -0.2]
+        - time: 5.0
+          posture:
+            R_SHOULDER_P: -1.375
+            R_WRIST_Y: 1.284
+            R_ELBOW_P: -1.415
+        - time: 5.0
+          posture: 
+            NECK_P: 0.82
+            shake:
+            NECK_P:
+              period: 8 # [s]
+              amplitude: 0.2 # rad
+        - time: 5.0
+          posture: 
+            R_SHOULDER_P: -0.227
+            R_ELBOW_P: -0.586
+        - time: 5.0
+          posture:
+            NECK_Y: 0.608
+            NECK_P: -0.384
+            L_SHOULDER_P: -1.412
+            L_ELBOW_P: -1.688
+            shake:
+            L_SHOULDER_P:
+              period: 10 # [s]
+              amplitude: 0.2 # rad
+        - time: 3.0
+          posture:
+            NECK_Y: -0.01
+            NECK_P: -0.05
+            L_SHOULDER_P: -0.21
+            L_ELBOW_P: -1.037
+            R_ELBOW_P: -1.115
+            R_SHOULDER_P: -0.383
+        - time: 5.0
+          posture:
+            L_SHOULDER_R: 0.703
+            R_SHOULDER_R: -0.851
+            shake:
+            L_SHOULDER_R:
+            R_SHOULDER_R:
+              period: 10 # [s]
+              amplitude: 0.2 # rad
+        - time: 5.0
+          posture:
+            NECK_Y: -0.553
+            NECK_P: -0.333
+            R_SHOULDER_P: -1.267
+            R_SHOULDER_R: -0.193
+            R_SHOULDER_Y: 0.78
+            R_ELBOW_P: -0.548
+            L_SHOULDER_R: 0.176
+            shake:
+            NECK_P:
+              period: 10 # [s]
+              amplitude: 0.2 # rad           
+
 
   Dance::Demo::FSM:
     base: Meta
