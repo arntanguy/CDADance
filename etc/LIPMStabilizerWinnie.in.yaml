@@ -324,7 +324,7 @@ states:
   Salutations:
     base: InterpolatePosture
     hrp4:
-      scaleTime: 1.0
+      scaleTime: 0.5
       posture_task:
         stiffness: 200
       posture_sequence:
@@ -445,23 +445,32 @@ states:
             R_ELBOW_P: -1.589
             L_SHOULDER_P: 0.623
             L_ELBOW_P: -1.589
-        - time: 5.0
+        - time: 1.0
           posture:
-            NECK_Y: -0.483
-            R_SHOULDER_P: -0.811
+            NECK_Y: 0
+            R_SHOULDER_P: 0
             R_ELBOW_P: -1.589
-            L_SHOULDER_P: 0.623
+            L_SHOULDER_P: 0
+            L_ELBOW_P: -1.589
+        - time: 240.0
+          posture:
+            NECK_Y: 0
+            R_SHOULDER_P: 0
+            R_ELBOW_P: -1.589
+            L_SHOULDER_P: 0
             L_ELBOW_P: -1.589
           shake:
             R_SHOULDER_P:
-              period: 15 # [s]
-              amplitude: 0.5 # rad356
+              period: 4 # [s]
+              amplitude: 0.5
+              direction: -1
             L_SHOULDER_P:
-              period: 15 # [s]
-              amplitude: 0.5 # rad356
+              period: 4 # [s]
+              amplitude: 0.5
+              direction: 1
             NECK_Y:
-              period: 10 # [s]
-              amplitude: 0.2 # rad356
+              period: 4 # [s]
+              amplitude: 0.8
           comOffset: [0, 0, -0.2]
 
 
@@ -469,15 +478,20 @@ states:
     base: Meta
     ResetPostures: false
     transitions:
-      - [Salutations, OK, Dance::Seq4::ConditionBaseMovement::withPubSub, Auto]
+      - [HalfSitting, Salutation, Salutations, Strict]
+      - [HalfSitting, PetiteDanse, PetiteDanse, Strict]
+      - [HalfSitting, ConditionBaseMovement, Dance::Seq4::ConditionBaseMovement::withPubSub, Strict]
+      - [Salutations, OK, HalfSitting, Auto]
+      - [PetiteDanse, OK, HalfSitting, Auto]
+      - [Dance::Seq4::ConditionBaseMovement::withPubSub, OK, HalfSitting, Auto]
+    configs:
+      HalfSitting:
+        stiffness: 10.0
+        eval: 0.1
 
   Dance::Demo::StabilizedFSM:
     base: Parallel
     states: [Stabilizer::Standing, Dance::Demo::FSM]
-
-  Dance::Seq5::PetiteDanse:
-    base: Parallel
-    states: [Stabilizer::Standing, PetiteDanse]
 
   Dance::Seq4::ConditionBaseMovement:
     base: Meta

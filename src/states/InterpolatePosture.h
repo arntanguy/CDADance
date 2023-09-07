@@ -13,11 +13,13 @@ struct Shake
 {
   double period = 1;
   double amplitude = 1.0;
+  int direction = 1;  // should be 1 or -1
 
   void load(const mc_rtc::Configuration& config)
   {
     period = config("period");
     amplitude = config("amplitude");
+    config("direction", direction);
   }
 
   mc_rtc::Configuration save() const
@@ -25,6 +27,7 @@ struct Shake
     mc_rtc::Configuration c;
     c.add("period", period);
     c.add("amplitude", amplitude);
+    c.add("direction", direction);
     return c;
   }
 };

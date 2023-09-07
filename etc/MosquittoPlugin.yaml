@@ -4,7 +4,7 @@ port: 1883
 topic: "robot_state"
 client_id: "mc_rtc_publisher"
 rate: 0.01
-autoconnect: false
+autoconnect: true
 publishEncoders: true
 forceSensors:
   - LeftHandForceSensor

@@ -239,7 +239,7 @@ bool InterpolatePosture::run(mc_control::fsm::Controller &ctl)
   auto currPostureSeq =
       std::find_if(postureSequence_.begin(), postureSequence_.end(), [this](const auto &p)
                    { return p.t > t_; });
-  currPostureSeq--;
+  // currPostureSeq--;
   if (currPostureSeq != postureSequence_.end())
   {
     if (enableShake_)
@@ -262,7 +262,7 @@ bool InterpolatePosture::run(mc_control::fsm::Controller &ctl)
           // - It shakes with amplitude shakeConfig.amplitude
           double shakeVal =
               shakeConfig.amplitude * sin(2 * mc_rtc::constants::PI / shakeConfig.period * (t_ - currPostureSeq->t));
-          desiredPosture(i) += shakeVal;
+          desiredPosture(i) += shakeConfig.direction * shakeVal;
           // mc_rtc::log::info("Shaking joint {} : {}", actuatedJoint, shakeVal);
         }
       }

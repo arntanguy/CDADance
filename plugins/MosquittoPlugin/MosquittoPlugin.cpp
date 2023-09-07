@@ -61,6 +61,12 @@ void MosquittoPlugin::init(mc_control::MCGlobalController& gc, const mc_rtc::Con
 void MosquittoPlugin::connect()
 {
   connected_ = false;
+
+  /* if(client_) */
+  /* { // disconnect from existing client */
+  /*   auto disconnect_token_ = client_->disconnect(1000); */
+  /* } */
+
   std::string address = fmt::format("tcp://{}:{}", address_, port_);
   mc_rtc::log::info("Initializing for server '{}'...", address);
   client_ = std::make_unique<mqtt::async_client>(address, client_id_, persist_dir_);
