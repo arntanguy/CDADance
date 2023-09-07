@@ -107,6 +107,7 @@ void MosquittoPlugin::before(mc_control::MCGlobalController& gc)
   {
     mc_rtc::Configuration msgConfig;
     std::map<std::string, double> encoders;
+    std::map<std::string, double> encoders_normalized;
     const auto& outputRobot = ctl.outputRobot();
 
     if (publishEncoders_)
@@ -114,9 +115,16 @@ void MosquittoPlugin::before(mc_control::MCGlobalController& gc)
       for (unsigned int i = 0; i < robot.refJointOrder().size(); i++)
       {
         const auto& jName = robot.refJointOrder()[i];
-        encoders[jName] = robot.encoderValues()[i];
+        const auto& jLimits = robot.module().bounds();
+        auto jInf = jLimits[0].at(jName)[0];
+        auto jSup = jLimits[1].at(jName)[0];
+        auto q = robot.encoderValues()[i];
+        auto jNormalized = std::fabs(q - jInf) / std::fabs(jSup - jInf);
+        encoders[jName] = jNormalized;
+        encoders_normalized[jName] = jNormalized;
       }
       msgConfig.add("encoders", encoders);
+      msgConfig.add("encoders_normalized", encoders_normalized);
     }
     if (forceSensors_.size())
     {
