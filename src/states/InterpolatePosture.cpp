@@ -338,7 +338,7 @@ bool InterpolatePosture::run(mc_control::fsm::Controller &ctl)
   }
   else
   {
-    output("Stop");
+    output("OK");
   }
   return finished;
 }

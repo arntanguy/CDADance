@@ -105,6 +105,21 @@ states:
         L_ELBOW_P: [-2.12]
         # L_SHOULDER_R: [2.15]
 
+  RaiseRightHand_v2::Posture:
+    base: InterpolatePosture
+    hrp4:
+      scaleTime: 1.0
+      posture_task:
+        stiffness: 200
+      posture_sequence:
+        - time: 2.0
+          posture:
+            R_SHOULDER_P: -1.150
+        - time: 2.0
+          posture:
+            R_SHOULDER_P: -1.150
+            R_SHOULDER_R: -1.47
+
   RaiseRightHand_v2:
     base: MetaTasks
     tasks:
@@ -165,6 +180,23 @@ states:
         completion:
           timeElapsed: true
 
+  RaiseLeftHand::Posture:
+    base: InterpolatePosture
+    hrp4:
+      scaleTime: 1.0
+      posture_task:
+        stiffness: 200
+      posture_sequence:
+        - time: 2.0
+          posture:
+            L_SHOULDER_P: -0.585
+        - time: 2.0
+          posture:
+            L_SHOULDER_P: 0.382
+            L_SHOULDER_R: 0.627
+            L_SHOULDER_Y: 0.819
+            L_ELBOW_P: -0.601
+
   RightHandBackground:
     base: LookAtRightHand
     tasks:
@@ -207,6 +239,23 @@ states:
         completion:
           timeElapsed: true
 
+  DrawCircleRightHand::Posture:
+    base: InterpolatePosture
+    hrp4:
+      scaleTime: 1.0
+      posture_task:
+        stiffness: 200
+      posture_sequence:
+        - time: 2.0
+          posture:
+            R_SHOULDER_P: -0.971
+            R_SHOULDER_R: -0.071
+        - time: 2.0
+          posture:
+            R_SHOULDER_P: -1.551
+            R_SHOULDER_R: -0.503
+            R_SHOULDER_Y: 0.132
+
   DrawCircleLeftHand:
     base: MetaTasks
     tasks:
@@ -226,6 +275,22 @@ states:
         # oriWaypoints: [[3.5, [-1.57,  0, 1.57]]]
         completion:
           timeElapsed: true
+
+  DrawCircleLeftHand::Posture:
+    base: InterpolatePosture
+    hrp4:
+      scaleTime: 1.0
+      posture_task:
+        stiffness: 200
+      posture_sequence:
+        - time: 2.0
+          posture:
+            L_SHOULDER_P: -1.127
+        - time: 2.0
+          posture:
+            L_SHOULDER_P: -1.127
+            L_SHOULDER_R: 0.603
+            L_SHOULDER_Y: -0.841
 
   PutDownRightShoulder:
     base: PostureBase
@@ -310,14 +375,14 @@ states:
             R_WRIST_Y: 1.284
             R_ELBOW_P: -1.415
         - time: 5.0
-          posture: 
+          posture:
             NECK_P: 0.82
-            shake:
+          shake:
             NECK_P:
               period: 8 # [s]
               amplitude: 0.2 # rad
         - time: 5.0
-          posture: 
+          posture:
             R_SHOULDER_P: -0.227
             R_ELBOW_P: -0.586
         - time: 5.0
@@ -326,7 +391,7 @@ states:
             NECK_P: -0.384
             L_SHOULDER_P: -1.412
             L_ELBOW_P: -1.688
-            shake:
+          shake:
             L_SHOULDER_P:
               period: 10 # [s]
               amplitude: 0.2 # rad
@@ -342,8 +407,10 @@ states:
           posture:
             L_SHOULDER_R: 0.703
             R_SHOULDER_R: -0.851
-            shake:
+          shake:
             L_SHOULDER_R:
+              period: 10 # [s]
+              amplitude: 0.2 # rad
             R_SHOULDER_R:
               period: 10 # [s]
               amplitude: 0.2 # rad
@@ -356,17 +423,17 @@ states:
             R_SHOULDER_Y: 0.78
             R_ELBOW_P: -0.548
             L_SHOULDER_R: 0.176
-            shake:
+          shake:
             NECK_P:
               period: 10 # [s]
-              amplitude: 0.2 # rad           
+              amplitude: 0.2 # rad
 
 
   Dance::Demo::FSM:
     base: Meta
     ResetPostures: false
     transitions:
-      - [Salutations, OK, Dance::Seq4::ConditionBaseMovement::withPubSub, Strict]
+      - [Salutations, OK, Dance::Seq4::ConditionBaseMovement::withPubSub, Auto]
 
   Dance::Demo::StabilizedFSM:
     base: Parallel
@@ -375,21 +442,22 @@ states:
   Dance::Seq4::ConditionBaseMovement:
     base: Meta
     ResetPostures: false
+    StepByStep: false
     transitions:
       - [Dance::ConditionBaseMovement, Seq0, TouchHead, Auto]
-      - [Dance::ConditionBaseMovement, Seq1, DrawCircleRightHand, Auto]
-      - [Dance::ConditionBaseMovement, Seq2, RaiseRightHand_v2, Auto]
+      - [Dance::ConditionBaseMovement, Seq1, DrawCircleRightHand::Posture, Auto]
+      - [Dance::ConditionBaseMovement, Seq2, RaiseRightHand_v2::Posture, Auto]
       - [Dance::ConditionBaseMovement, Seq3, TouchHead_L, Auto]
-      - [Dance::ConditionBaseMovement, Seq4, RaiseLeftHand, Auto]
-      - [Dance::ConditionBaseMovement, Seq5, DrawCircleLeftHand, Auto]
+      - [Dance::ConditionBaseMovement, Seq4, RaiseLeftHand::Posture, Auto]
+      - [Dance::ConditionBaseMovement, Seq5, DrawCircleLeftHand::Posture, Auto]
       - [Dance::ConditionBaseMovement, Seq6, LeftHeadTilt, Auto]
       - [Dance::ConditionBaseMovement, Seq7, RightHeadTilt, Auto]
       - [TouchHead, OK, HalfSitting, Auto]
-      - [DrawCircleRightHand, OK, HalfSitting, Auto]
-      - [RaiseRightHand_v2, OK, HalfSitting, Auto]
+      - [DrawCircleRightHand::Posture, OK, HalfSitting, Auto]
+      - [RaiseRightHand_v2::Posture, OK, HalfSitting, Auto]
       - [TouchHead_L, OK, HalfSitting, Auto]
-      - [RaiseLeftHand, OK, HalfSitting, Auto]
-      - [DrawCircleLeftHand, OK, HalfSitting, Auto]
+      - [RaiseLeftHand::Posture, OK, HalfSitting, Auto]
+      - [DrawCircleLeftHand::Posture, OK, HalfSitting, Auto]
       - [LeftHeadTilt, OK, HalfSitting, Auto]
       - [RightHeadTilt, OK, HalfSitting, Auto]
       - [HalfSitting, OK, Dance::ConditionBaseMovement, Auto]

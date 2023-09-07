@@ -133,7 +133,13 @@ void MosquittoPlugin::before(mc_control::MCGlobalController& gc)
     std::string msg = msgConfig.dump();
     if (!pub_token_)
     {
-      pub_token_ = client_->publish(topic_, msg.data(), msg.size(), QOS, false);
+      try
+      {
+        pub_token_ = client_->publish(topic_, msg.data(), msg.size(), QOS, false);
+      }
+      catch (...)
+      {
+      }
     }
     else if (pub_token_ && pub_token_->is_complete())
     {
