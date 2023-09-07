@@ -428,6 +428,39 @@ states:
               period: 10 # [s]
               amplitude: 0.2 # rad
 
+  PetiteDanse:
+    base: InterpolatePosture
+    hrp4:
+      scaleTime: 1.0
+      posture_task:
+        stiffness: 200
+      posture_sequence:
+        - time: 5.0
+          posture:
+            NECK_Y: -0.483
+            R_SHOULDER_P: -0.811
+            R_ELBOW_P: -1.589
+            L_SHOULDER_P: 0.623
+            L_ELBOW_P: -1.589
+        - time: 5.0
+          posture:
+            NECK_Y: -0.483
+            R_SHOULDER_P: -0.811
+            R_ELBOW_P: -1.589
+            L_SHOULDER_P: 0.623
+            L_ELBOW_P: -1.589
+          shake:
+            R_SHOULDER_P:
+              period: 15 # [s]
+              amplitude: 0.5 # rad356
+            L_SHOULDER_P:
+              period: 15 # [s]
+              amplitude: 0.5 # rad356
+            NECK_Y:
+              period: 10 # [s]
+              amplitude: 0.2 # rad356
+          comOffset: [0, 0, -0.2]
+
 
   Dance::Demo::FSM:
     base: Meta
@@ -438,6 +471,10 @@ states:
   Dance::Demo::StabilizedFSM:
     base: Parallel
     states: [Stabilizer::Standing, Dance::Demo::FSM]
+
+  Dance::Seq5::PetiteDanse:
+    base: Parallel
+    states: [Stabilizer::Standing, PetiteDanse]
 
   Dance::Seq4::ConditionBaseMovement:
     base: Meta
@@ -461,8 +498,6 @@ states:
       - [LeftHeadTilt, OK, HalfSitting, Auto]
       - [RightHeadTilt, OK, HalfSitting, Auto]
       - [HalfSitting, OK, Dance::ConditionBaseMovement, Auto]
-
-
 
   Dance::Seq4::ConditionBaseMovement::withPubSub:
     base: Parallel
