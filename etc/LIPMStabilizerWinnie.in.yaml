@@ -337,7 +337,6 @@ states:
             R_SHOULDER_Y: -0.52
             L_SHOULDER_R: 0.617
             L_SHOULDER_Y: 0.356
-          comOffset: [0, 0, -0.2]
         - time: 5.0
           posture:
             R_SHOULDER_R: -0.206
@@ -346,29 +345,33 @@ states:
             L_SHOULDER_Y: 0.082
             R_ELBOW_P: -1.329
             L_ELBOW_P: -1.2679
-          comOffset: [0, 0, -0.2]
         - time: 5.0
           posture:
             R_SHOULDER_R: -0.438
             L_SHOULDER_R: 0.405
             NECK_Y: 0.946
-          comOffset: [0, 0, -0.2]
         - time: 5.0
           posture:
             NECK_Y: -1.02
-          comOffset: [0, 0, -0.2]
         - time: 5.0
           posture:
             NECK_P: 0.607
-          comOffset: [0, 0, -0.2]
         - time: 5.0
+          posture:
+            NECK_P: -0.607
+        - time: 2.5
+          posture:
+            NECK_Y: -1.02
+        - time: 2.5
+          posture:
+            NECK_P: 0.607
+        - time: 2.5
           posture:
             NECK_P: -0.607
           # shake:
           #   NECK_P:
           #     period: 10 # [s]
           #     amplitude: 0.2 # rad
-          comOffset: [0, 0, -0.2]
         - time: 5.0
           posture:
             R_SHOULDER_P: -1.375
