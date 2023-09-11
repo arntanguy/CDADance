@@ -4,18 +4,25 @@
 
 #pragma once
 
+#include <ismpc_walking/Walking_controller.h>
+#include <lipm_walking/Controller.h>
+#include <mc_control/MCController.h>
 #include <mc_control/api.h>
 #include <mc_control/fsm/Controller.h>
 #include <mc_control/fsm/states/Pause.h>
 #include <mc_control/fsm/states/StabilizerStandingState.h>
 #include <mc_control/mc_controller.h>
 
-struct MC_CONTROL_DLLAPI LIPMStabilizerController : public mc_control::fsm::Controller
-{
-  LIPMStabilizerController(mc_rbdyn::RobotModulePtr rm, double dt, const mc_rtc::Configuration& config);
+#include "WalkingInterface.h"
 
-  void supported_robots(std::vector<std::string>& out) const override
-  {
-    out = {"jvrc1", "hrp2_drc", "hrp4", "hrp5_p"};
-  }
+template <typename WalkingCtl>
+struct MC_CONTROL_DLLAPI LIPMStabilizerController : public WalkingCtl
+{
+  LIPMStabilizerController(mc_rbdyn::RobotModulePtr rm, double dt, const mc_rtc::Configuration& config, const mc_control::ControllerParameters& params = mc_control::ControllerParameters{});
+
+ protected:
+  WalkingInterfacePtr walking_interface_;
 };
+
+extern template struct LIPMStabilizerController<lipm_walking::Controller>;
+extern template struct LIPMStabilizerController<Walking_controller>;

@@ -18,16 +18,13 @@ void AutonomousInteraction::start(mc_control::fsm::Controller &ctl_)
 {
   debug_log("------ DEBUG enter AutonomousInteraction::start ------\n");
 
-  auto &ctl = static_cast<LIPMStabilizerController &>(ctl_);
-  run(ctl);
+  run(ctl_);
   debug_log("------ DEBUG leave AutonomousInteraction::start ------\n");
 }
 
-bool AutonomousInteraction::run(mc_control::fsm::Controller &ctl_)
+bool AutonomousInteraction::run(mc_control::fsm::Controller &ctl)
 {
   debug_log("------ DEBUG enter AutonomousInteraction::run ------\n");
-
-  auto &ctl = static_cast<LIPMStabilizerController &>(ctl_);
 
   if (!ctl.datastore().has("rosSubscriber_msg"))
   {
@@ -68,7 +65,6 @@ bool AutonomousInteraction::run(mc_control::fsm::Controller &ctl_)
 
 void AutonomousInteraction::teardown(mc_control::fsm::Controller &ctl_)
 {
-  auto &ctl = static_cast<LIPMStabilizerController &>(ctl_);
 }
 
 EXPORT_SINGLE_STATE("AutonomousInteraction", AutonomousInteraction)

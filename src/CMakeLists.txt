@@ -11,6 +11,8 @@ set(controller_HDR
 add_library(${PROJECT_NAME} SHARED ${controller_SRC} ${controller_HDR})
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-DMyFirstAdmittance_EXPORTS")
 target_link_libraries(${PROJECT_NAME} PUBLIC mc_rtc::mc_control_fsm mc_rtc::mc_rtc_ros)
+target_link_libraries(${PROJECT_NAME} PUBLIC lipm_walking_controller::lipm_walking_controller)
+target_link_libraries(${PROJECT_NAME} PUBLIC ismpc_walking::ismpc_walking)
 
 install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION "${MC_RTC_LIBDIR}"

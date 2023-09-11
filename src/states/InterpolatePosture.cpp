@@ -7,6 +7,8 @@
 #include <iostream>
 #include <random>
 
+#include "../WalkingInterface.h"
+
 void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
 {
   robotName_ = config_("robot", ctl.robot().name());
@@ -316,12 +318,18 @@ bool InterpolatePosture::run(mc_control::fsm::Controller &ctl)
 
   if (updateCoM_)
   {
+    auto desiredCoMHeight = robot.module()._lipmStabilizerConfig.comHeight + desiredCoMOffset.z();
     if (ctl.datastore().has("StabilizerStandingState::setCoMTarget"))
     {
       auto comTarget = ctl.datastore().call<const Eigen::Vector3d &>("StabilizerStandingState::getCoMTarget");
-      comTarget.z() = robot.module()._lipmStabilizerConfig.comHeight + desiredCoMOffset.z();
+      comTarget.z() = desiredCoMHeight;
       ctl.datastore().call<void>("StabilizerStandingState::setCoMTarget",
                                  static_cast<const Eigen::Vector3d &>(comTarget));
+    }
+    else if (ctl.datastore().has("WalkingInterface"))
+    {
+      auto walk = ctl.datastore().get<WalkingInterfacePtr>("WalkingInterface");
+      walk->set_com_height(desiredCoMHeight);
     }
   }
 

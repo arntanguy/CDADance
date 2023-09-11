@@ -4,4 +4,39 @@
 
 #include "mc_lipm_stabilizer.h"
 
-CONTROLLER_CONSTRUCTOR("LIPMStabilizerWinnie", LIPMStabilizerController)
+extern "C"
+{
+  CONTROLLER_MODULE_API void MC_RTC_CONTROLLER(std::vector<std::string>& names)
+  {
+    CONTROLLER_CHECK_VERSION("LIPMStabilizerWinnie")
+    names = {"LIPMStabilizerWinnie", "LIPMStabilizerWinnie_ismpc"};
+  }
+
+  CONTROLLER_MODULE_API void destroy(mc_control::MCController* ptr)
+  {
+    delete ptr;
+  }
+
+  CONTROLLER_MODULE_API unsigned int create_args_required()
+  {
+    return 4;
+  }
+
+  CONTROLLER_MODULE_API mc_control::MCController* create(const std::string& name,
+                                                         const mc_rbdyn::RobotModulePtr& robot,
+                                                         const double& dt,
+                                                         const mc_control::Configuration& conf)
+  {
+    if (name == "LIPMStabilizerWinnie")
+    {
+      return new LIPMStabilizerController<lipm_walking::Controller>(robot, dt, conf);
+    }
+    if (name == "LIPMStabilizerWinnie_ismpc")
+    {
+      return new LIPMStabilizerController<Walking_controller>(robot, dt, conf,
+                                                              mc_control::ControllerParameters{}.load_robot_config_into({}).overwrite_config(true));
+    }
+    mc_rtc::log::error("This library cannot create a controller named {}", name);
+    return nullptr;
+  }
+}

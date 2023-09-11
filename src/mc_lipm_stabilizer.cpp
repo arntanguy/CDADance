@@ -4,9 +4,204 @@
 
 #include "mc_lipm_stabilizer.h"
 
-LIPMStabilizerController::LIPMStabilizerController(mc_rbdyn::RobotModulePtr rm,
-                                                   double dt,
-                                                   const mc_rtc::Configuration& config)
-    : mc_control::fsm::Controller(rm, dt, config)
+#include <mc_control/MCController.h>
+
+#include "WalkingInterface.h"
+
+// Patch the config so it's compatible with LIPMWalking
+static inline mc_rtc::Configuration patch_config(mc_rtc::Configuration config)
 {
+  config.add("robot_models", config("stabilizer")("robot"));
+  return config;
 }
+
+template <typename WalkingCtl>
+struct WalkingInterfaceImpl : public WalkingInterface
+{
+  static constexpr bool is_lipm = std::is_same_v<WalkingCtl, lipm_walking::Controller>;
+  static constexpr bool is_ismpc = std::is_same_v<WalkingCtl, Walking_controller>;
+
+  static_assert(is_lipm || is_ismpc, "Write WalkingInterfaceImpl to support another walking base");
+
+  WalkingInterfaceImpl(LIPMStabilizerController<WalkingCtl> &ctl) : ctl_(ctl) {}
+
+  bool is_walking() final
+  {
+    if constexpr (is_lipm)
+    {
+      return ctl_.walkingState == lipm_walking::WalkingState::SingleSupport || ctl_.walkingState == lipm_walking::WalkingState::DoubleSupport;
+    }
+    if constexpr (is_ismpc)
+    {
+      return ctl_.datastore().template call<bool>("ismpc_walking::robot_walking");
+    }
+    __builtin_unreachable();
+  }
+
+  bool is_double_support() final
+  {
+    if constexpr (is_lipm)
+    {
+      return ctl_.walkingState == lipm_walking::WalkingState::DoubleSupport || ctl_.walkingState == lipm_walking::WalkingState::Standing;
+    }
+    if constexpr (is_ismpc)
+    {
+      return ctl_.datastore().template call<bool>("ismpc_walking::double_support");
+    }
+    __builtin_unreachable();
+  }
+
+  bool is_stopping() final
+  {
+    if constexpr (is_lipm)
+    {
+      return is_walking() && ctl_.pauseWalking;
+    }
+    if constexpr (is_ismpc)
+    {
+      return ctl_.datastore().template call<bool>("ismpc_walking::stop_phase");
+    }
+    __builtin_unreachable();
+  }
+
+  bool is_stopped() final
+  {
+    return !is_walking();
+  }
+
+  void start_stop_walking() final
+  {
+    if constexpr (is_lipm)
+    {
+      if (ctl_.walkingState == lipm_walking::WalkingState::Standing)
+      {
+        if (!ctl_.startWalking)
+        {
+          mc_rtc::log::success("Start walking");
+          ctl_.pauseWalking = false;
+          ctl_.startWalking = true;
+        }
+      }
+      else
+      {
+        if (!ctl_.pauseWalking)
+        {
+          mc_rtc::log::success("Stop walking");
+          ctl_.pauseWalking = true;
+        }
+      }
+      return;
+    }
+    if constexpr (is_ismpc)
+    {
+      return ctl_.datastore().template call<void>("ismpc_walking::start/stop");
+    }
+    __builtin_unreachable();
+  }
+
+  void set_planner_ref_vel(const Eigen::Vector3d &v) final
+  {
+    if constexpr (is_lipm)
+    {
+      if (ctl_.datastore().has("HybridPlanner::SetVelocity"))
+      {
+        auto &fn =
+            ctl_.datastore().template get<std::function<void(const Eigen::Vector3d &)>>("HybridPlanner::SetVelocity");
+        fn(v);
+      }
+      return;
+    }
+    if constexpr (is_ismpc)
+    {
+      return ctl_.datastore().template call<void, Eigen::Vector3d>("ismpc_walking::set_ref_vel", v);
+    }
+    __builtin_unreachable();
+  }
+
+  void set_torso_pitch(double p) final
+  {
+    if constexpr (is_lipm)
+    {
+      ctl_.stabilizer()->torsoPitch(p);
+      return ctl_.plan.torsoPitch(p);
+    }
+    if constexpr (is_ismpc)
+    {
+      return ctl_.datastore().template call<void, const double &>("ismpc_walking::set_torso_pitch", p);
+    }
+    __builtin_unreachable();
+  }
+
+  double get_com_height() final
+  {
+    if constexpr (is_lipm)
+    {
+      return ctl_.plan.comHeight();
+    }
+    if constexpr (is_ismpc)
+    {
+      auto &cfg = ctl_.datastore().template call<ControllerConfiguration &>("ismpc_walking::get_config");
+      return cfg.Stab_config.comHeight;
+    }
+    __builtin_unreachable();
+  }
+
+  void set_com_height(double h) final
+  {
+    if constexpr (is_lipm)
+    {
+      return ctl_.plan.comHeight(h);
+    }
+    if constexpr (is_ismpc)
+    {
+      return ctl_.datastore().template call<void, const double &>("ismpc_walking::set_com_height", h);
+    }
+    __builtin_unreachable();
+  }
+
+  std::string get_support_foot() final
+  {
+    if constexpr (is_lipm)
+    {
+      return ctl_.plan.supportContact().surfaceName;
+    }
+    if constexpr (is_ismpc)
+    {
+      return ctl_.datastore().template call<std::string>("ismpc_walking::support_foot_name");
+    }
+    __builtin_unreachable();
+  }
+
+  Eigen::Vector3d get_zmp_target() final
+  {
+    if constexpr (is_lipm)
+    {
+      return ctl_.stabilizer()->targetZMP();
+    }
+    if constexpr (is_ismpc)
+    {
+      return ctl_.MPCState().Pzk;
+    }
+    __builtin_unreachable();
+  }
+
+ private:
+  LIPMStabilizerController<WalkingCtl> &ctl_;
+};
+
+template <typename WalkingCtl>
+LIPMStabilizerController<WalkingCtl>::LIPMStabilizerController(mc_rbdyn::RobotModulePtr rm,
+                                                               double dt,
+                                                               const mc_rtc::Configuration &config,
+                                                               const mc_control::ControllerParameters &params)
+    : WalkingCtl(rm, dt, patch_config(config), params)
+{
+  mc_rtc::log::info("CONFIG IS {}", mc_control::MCController::config().dump(true, true));
+
+  walking_interface_ = std::make_shared<WalkingInterfaceImpl<WalkingCtl>>(*this);
+  this->datastore().template make<WalkingInterfacePtr>("WalkingInterface", walking_interface_);
+}
+
+/** Explicit instanciation of the controllers */
+template struct LIPMStabilizerController<lipm_walking::Controller>;
+template struct LIPMStabilizerController<Walking_controller>;
