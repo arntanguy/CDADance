@@ -1,8 +1,8 @@
-Dance::XsensRetargetting:
+XsensRetargetting::Standing:
   base: XsensRetargetting
   robot: hrp4
   unactiveJoints: [R_HIP_P, R_HIP_R, R_HIP_Y, R_KNEE_P, R_ANKLE_P, L_HIP_P, L_HIP_R, L_HIP_Y, L_KNEE_P, L_ANKLE_P, CHEST_P]
-  stiffness: 200
+  stiffness: 20
   weight: 1000
   offset:
     translation: [0.0, 0.0, 0.1]
@@ -21,6 +21,85 @@ Dance::XsensRetargetting:
   fixedBodies:
     - body
   fixBaseLink: true
-  fixed_stiffness: 200
-  fixed_weight: 10000
+  fixed_stiffness: 150
+  fixed_weight: 8000
   initialStiffnessInterpolationDuration: 5
+
+
+Dance::XsensRetargetting::Salutations:
+  base: XsensRetargetting::Standing
+  log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio02_fix_from_4_to_53.bin
+  start_time: 10.765
+  robot: hrp4
+  stiffness: 100
+  weight: 1000
+  offset:
+    translation: [0.0, 0.0, 0.1]
+    rotation: [0.0, 0.34, 0.0]
+
+Dance::XsensRetargetting::Flying:
+  base: XsensRetargetting
+  log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio08_fix_cutSecondPart_from_34_to_120.bin
+  start_time: 7.0
+  robot: hrp4
+  stiffness: 15
+  weight: 1000
+  offset:
+    translation: [0.0, 0.0, 0.1]
+    rotation: [0.0, 0.34, 0.0]
+  fixBaseLink: true
+  initialStiffnessInterpolationDuration: 5
+  RemoveContacts:
+  - r1: hrp4
+    r1Surface: LeftFootCenter
+    r2: ground
+    r2Surface: AllGround
+  - r1: hrp4
+    r1Surface: RightFootCenter
+    r2: ground
+    r2Surface: AllGround
+
+Dance::XsensRetargetting::ListenToRobot:
+  base: XsensRetargetting::Standing
+  log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio04_fix_from_5_to_31.bin
+  start_time: 6.8
+  robot: hrp4
+  stiffness: 15
+  weight: 1000
+  offset:
+    translation: [0.0, 0.0, 0.1]
+    rotation: [0.0, 0.4, 0.0]
+
+Dance::XsensRetargetting::PetiteDance:
+  base: XsensRetargetting::Standing
+  log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio05_fix_from_3_to_132.bin
+  start_time: 6.4
+  robot: hrp4
+  stiffness: 100
+  weight: 1000
+  offset:
+    translation: [0.0, 0.0, 0.1]
+    rotation: [0.0, 0.5, 0.0]
+
+Dance::XsensRetargetting::PetiteDanceEnervee:
+  base: XsensRetargetting::Standing
+  log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio06_fix_from_3_to_63.bin
+  start_time: 4.7
+  robot: hrp4
+  stiffness: 100
+  weight: 1000
+  offset:
+    translation: [0.0, 0.0, 0.1]
+    rotation: [0.0, 0.5, 0.0]
+
+
+Dance::XsensRetargetting::Presence:
+  base: XsensRetargetting::Standing
+  log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio03_fix_from_8_to_28.bin
+  start_time: 3.965
+  robot: hrp4
+  stiffness: 100
+  weight: 1000
+  offset:
+    translation: [0.0, 0.0, 0.1]
+    rotation: [0.0, 0.4, 0.0]

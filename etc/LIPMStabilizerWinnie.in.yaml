@@ -15,14 +15,23 @@ VerboseStateFactory: false
 Plugins: [footsteps_planner_plugin,mc_joystick_plugin,MosquittoPlugin, Replay, XsensPlugin]
 
 Replay:
-  # log: /home/dell/workspace/mc_xsens_sample_controller/etc/mc-control-XsensSampleController-latest.bin
-  # log: /home/dell/workspace/mc_xsens_sample_controller/etc/my_log_out_from_15_to_25.bin
-  log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio02_fix_from_4_to_53.bin
-  pause: true
+  # Salutations
+  # log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio02_fix_from_4_to_53.bin
+  # Flying
+  # log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio08_fix_cutSecondPart_from_34_to_120.bin
+  # ListenToRobot
+  # log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio04_fix_from_5_to_31.bin
+  # PetiteDanse
+  # log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio05_fix_from_3_to_132.bin
+  # PetiteDanceEnervee
+  # log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio06_fix_from_3_to_63.bin
+  # Presence
+  # log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio03_fix_from_8_to_28.bin
   with-inputs: false
   with-gui-inputs: false
   with-outputs: false
   with-datastore-config: /home/arnaud/src/huiting/lipmstabilizerwinnie/etc/datastore-to-replay.yaml
+  pause: false
 
 Xsens:
   liveMode: false
@@ -941,17 +950,35 @@ states:
   Dance::Demo::FSM:
     base: Meta
     ResetPostures: false
+    # Interaction?
+    # Salutations
+    # Toucher
+    # Marcher
+    # Presence
+    # PetiteDance
+    # PetiteDanceEnervee
+    # Flying
     transitions:
       - [HalfSitting, Salutation, Salutations, Strict]
       - [HalfSitting, PetiteDanse, PetiteDanse, Strict]
       - [HalfSitting, ConditionBaseMovement, Dance::Seq4::ConditionBaseMovement::withPubSub, Strict]
       - [HalfSitting, FollowMe, Walk::FollowMe, Strict]
-      - [HalfSitting, TestXsens, Dance::XsensRetargetting, Strict]
+      - [HalfSitting, XsensSalutation, Dance::XsensRetargetting::Salutations, Strict]
+      - [HalfSitting, XsensFlying, Dance::XsensRetargetting::Flying, Strict]
+      - [HalfSitting, XsensListenToRobot, Dance::XsensRetargetting::ListenToRobot, Strict]
+      - [HalfSitting, XsensPresence, Dance::XsensRetargetting::Presence, Strict]
+      - [HalfSitting, XsensPetiteDance, Dance::XsensRetargetting::PetiteDance, Strict]
+      - [HalfSitting, XsensPetiteDanceEnervee, Dance::XsensRetargetting::PetiteDanceEnervee, Strict]
       - [Salutations, OK, HalfSitting, Auto]
       - [PetiteDanse, OK, HalfSitting, Auto]
       - [Dance::Seq4::ConditionBaseMovement::withPubSub, OK, HalfSitting, Auto]
       - [Walk::FollowMe, OK, HalfSitting, Auto]
-      - [Dance::XsensRetargetting, OK, HalfSitting, Auto]
+      - [Dance::XsensRetargetting::Salutations, OK, HalfSitting, Auto]
+      - [Dance::XsensRetargetting::Flying, OK, HalfSitting, Auto]
+      - [Dance::XsensRetargetting::ListenToRobot, OK, HalfSitting, Auto]
+      - [Dance::XsensRetargetting::PetiteDance, OK, HalfSitting, Auto]
+      - [Dance::XsensRetargetting::PetiteDanceEnervee, OK, HalfSitting, Auto]
+      - [Dance::XsensRetargetting::Presence, OK, HalfSitting, Auto]
     configs:
       HalfSitting:
         stiffness: 10.0

@@ -1,6 +1,7 @@
 #include "XsensRetargetting.h"
 
 #include <mc_control/fsm/Controller.h>
+#include <mc_rtc/logging.h>
 #include <mc_tasks/TransformTask.h>
 
 void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
@@ -17,7 +18,26 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
   config_("activeBodies", activeBodies_);
   if (config_.has("log"))
   {
-    // FIXME start replay only here
+    if (!ds.has("Replay::SetStartTime"))
+    {
+      mc_rtc::log::error_and_throw("[{}] The datastore call Replay::SetStartTime does not exist in the Replay plugin");
+    }
+    if (!ds.has("Replay::SetEndTime"))
+    {
+      mc_rtc::log::error_and_throw("[{}] The datastore call Replay::SetEndTime does not exist in the Replay plugin");
+    }
+    if (!ds.has("Replay::SetLog"))
+    {
+      mc_rtc::log::error_and_throw("[{}] The datastore call Replay::SetLog does not exist in the Replay plugin");
+    }
+    const std::string &logName = config_("log");
+    ds.call<void>("Replay::pause", config_("pause", false));
+    ds.call<void>("Replay::SetStartTime", static_cast<double>(config_("start_time", 0.0)));
+    if (config_.has("end_time"))
+    {
+      ds.call<void>("Replay::SetEndTime", static_cast<double>(config_("end_time")));
+    }
+    ds.call<void>("Replay::SetLog", logName);
   }
 
   if (robot_.empty())
@@ -43,10 +63,11 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
                         mc_rtc::gui::RPYInput("Offset RPY", offset_.rotation()));
 
   auto robotConfig = static_cast<std::map<std::string, mc_rtc::Configuration>>(ctl.config()("Xsens")(robot.name()));
+  bool addActive = activeBodies_.empty();
   for (const auto &bodyConfig : robotConfig)
   {
     const auto &bodyName = bodyConfig.first;
-    if (activeBodies_.empty()) activeBodies_.push_back(bodyName);
+    if (addActive) activeBodies_.push_back(bodyName);
     const auto &bodyConf = bodyConfig.second;
     bodyConfigurations_[bodyName] = XsensBodyConfiguration{};
     auto &bodyC = bodyConfigurations_[bodyName];
