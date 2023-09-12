@@ -6,9 +6,9 @@ struct Walk : mc_control::fsm::State
   bool run(mc_control::fsm::Controller& ctl) override;
   void teardown(mc_control::fsm::Controller& ctl) override;
 
-  protected:
-    bool autoWalk_ = true;
-    double stopDistance_ = 1;
-    bool useStopDistance_ = true;
-    Eigen::Vector3d startPos_;
+ protected:
+  bool autoWalk_ = true;
+  double stopDistance_ = 1;
+  bool useStopDistance_ = true;
+  Eigen::Vector3d startPos_;
 };

@@ -74,18 +74,18 @@ Xsens:
       offset:
         translation: [0,0,0]
         rotation: [1.57, 0, 0]
-    # R_HIP_P_LINK:
-    #   segment: "Right Upper Leg"
-    # R_KNEE_P_LINK:
-    #   segment: "Right Lower Leg"
-    # r_ankle:
-    #   segment: "Right Foot"
-    # L_HIP_P_LINK:
-    #   segment: "Left Upper Leg"
-    # L_KNEE_P_LINK:
-    #   segment: "Left Lower Leg"
-    # l_ankle:
-    #   segment: "Left Foot"
+    R_HIP_P_LINK:
+      segment: "Right Upper Leg"
+    R_KNEE_P_LINK:
+      segment: "Right Lower Leg"
+    r_ankle:
+      segment: "Right Foot"
+    L_HIP_P_LINK:
+      segment: "Left Upper Leg"
+    L_KNEE_P_LINK:
+      segment: "Left Lower Leg"
+    l_ankle:
+      segment: "Left Foot"
 
 
 

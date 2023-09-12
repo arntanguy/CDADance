@@ -7,5 +7,20 @@ Dance::XsensRetargetting:
   offset:
     translation: [0.0, 0.0, 0.1]
     rotation: [0.0, 0.34, 0.0]
+  activeBodies:
+    - torso
+    - NECK_P_LINK
+    - R_SHOULDER_R_LINK
+    - R_SHOULDER_Y_LINK
+    - R_ELBOW_P_LINK
+    - r_wrist
+    - L_SHOULDER_R_LINK
+    - L_SHOULDER_Y_LINK
+    - L_ELBOW_P_LINK
+    - l_wrist
+  fixedBodies:
+    - body
   fixBaseLink: true
-  log: test.log
+  fixed_stiffness: 200
+  fixed_weight: 10000
+  initialStiffnessInterpolationDuration: 5
