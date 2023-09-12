@@ -1,7 +1,9 @@
 #include "InterpolatePosture.h"
 
 #include <mc_control/fsm/Controller.h>
+#include <mc_rtc/gui/StateBuilder.h>
 #include <mc_rtc/io_utils.h>
+#include <mc_tasks/PostureTask.h>
 
 #include <algorithm>
 #include <iostream>
@@ -91,19 +93,16 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
 
   // Create a vector used to store the desired value for each actuated joint
   Eigen::VectorXd desiredPosture(rjo.size());
+  double t = 0;
   // Initialize with current robot posture
   for (int i = 0; i < rjo.size(); ++i)
   {
     desiredPosture(i) = robot.mbc().q[robot.jointIndexInMBC(i)][0];
   }
 
-  // Convert to absolute time
-  double t = 0;
-  double scaleTime = robotConfig("scaleTime", 1.);
   for (auto postureConfig : postureSequence)
   {
-    t += postureConfig.t * scaleTime;
-    ;
+    t += postureConfig.t;
     postureConfig.t = t;
     postureSequence_.push_back(postureConfig);
   }
@@ -111,8 +110,20 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
   // Last posture should be the init posture no matter what
   if (goBackToInitialPosture_)
   {
-    initPosture.t = postureSequence_.back().t + 2.0;
+    t += 2.0;
+    initPosture.t = t;
     postureSequence_.push_back(initPosture);
+  }
+
+  // Convert to absolute time
+  double scaleTime = robotConfig("scaleTime", 1.);
+  if (robotConfig.has("duration"))
+  {
+    scaleTime = static_cast<double>(robotConfig("duration")) / postureSequence_.back().t;
+  }
+  for (auto &postureConfig : postureSequence_)
+  {
+    postureConfig.t = postureConfig.t * scaleTime;
   }
 
   // Create the interpolator values
@@ -161,8 +172,10 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
   // Example in yaml:
   //   posture_task:
   //     stiffness: 100
-  auto &postureTask = *ctl.getPostureTask(robot.name());
-  postureTask.load(ctl.solver(), robotConfig("posture_task", mc_rtc::Configuration{}));
+  postureTask_ = std::make_shared<mc_tasks::PostureTask>(ctl.solver(), robot.robotIndex());
+  postureTask_->load(ctl.solver(), robotConfig("posture_task", mc_rtc::Configuration{}));
+  postureTask_->reset();
+  ctl.solver().addTask(postureTask_);
 
   lookAt_ = std::make_shared<mc_tasks::LookAtTask>(ctl.robot().frame("NECK_P_LINK"), Eigen::Vector3d{1, 0, 0}, 10.0, 100.0);
 
@@ -182,7 +195,10 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
           "Time", [this]()
           { return t_; },
           [this](double t)
-          { t_ = t; }),
+          { t_ = t; }));
+
+  ctl.gui()->addElement(
+      this, {name()}, mc_rtc::gui::ElementsStacking::Horizontal,
       mc_rtc::gui::NumberSlider(
           "Time selector", [this]()
           { return t_; },
@@ -190,6 +206,11 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
           { t_ = t; },
           0,
           interpolator_.values().back().first),
+      mc_rtc::gui::Label("/", [this]()
+                         { return postureSequence_.back().t; }));
+
+  ctl.gui()->addElement(
+      this, {name()},
       mc_rtc::gui::Checkbox(
           "Repeat Motion", [this]()
           { return repeat_; },
@@ -300,7 +321,7 @@ bool InterpolatePosture::run(mc_control::fsm::Controller &ctl)
   // Get the posture task
   auto &postureTask = *ctl.getPostureTask(robot.name());
   // Copy the current posture target
-  auto posture = postureTask.posture();
+  auto posture = postureTask_->posture();
 
   // For each actuated joint
   for (int i = 0; i < rjo.size(); ++i)
@@ -313,7 +334,7 @@ bool InterpolatePosture::run(mc_control::fsm::Controller &ctl)
   // Change the posture target in the posture task
   if (updatePosture_)
   {
-    postureTask.posture(posture);
+    postureTask_->posture(posture);
   }
 
   if (updateCoM_)
@@ -338,7 +359,7 @@ bool InterpolatePosture::run(mc_control::fsm::Controller &ctl)
     t_ += ctl.timeStep;
   }
 
-  bool finished = (t_ >= interpolator_.values().back().first) && (!usePostureTransitionCriteria_ || postureTask.speed().norm() < postureTransitionSpeed_);
+  bool finished = (t_ >= interpolator_.values().back().first) && (!usePostureTransitionCriteria_ || postureTask_->speed().norm() < postureTransitionSpeed_);
 
   if (repeat_)
   {
@@ -358,6 +379,7 @@ void InterpolatePosture::teardown(mc_control::fsm::Controller &ctl)
   {
     ctl.solver().removeTask(lookAt_);
   }
+  ctl.solver().removeTask(postureTask_);
 }
 
 EXPORT_SINGLE_STATE("InterpolatePosture", InterpolatePosture)

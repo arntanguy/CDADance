@@ -2,6 +2,7 @@
 
 #include <mc_control/fsm/State.h>
 #include <mc_tasks/LookAtFrameTask.h>
+#include <mc_tasks/PostureTask.h>
 #include <mc_trajectory/SequenceInterpolator.h>
 
 #include <Eigen/Core>
@@ -180,6 +181,7 @@ struct InterpolatePosture : mc_control::fsm::State
  private:
   using PostureInterpolator = mc_trajectory::SequenceInterpolator<Eigen::VectorXd>;
   using CoMInterpolator = mc_trajectory::SequenceInterpolator<Eigen::Vector3d>;
+  mc_tasks::PostureTaskPtr postureTask_;
   PostureInterpolator interpolator_;
   CoMInterpolator comInterpolator_;
   double t_{0};

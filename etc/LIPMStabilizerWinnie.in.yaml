@@ -413,6 +413,10 @@ plans:
 
 # Implement some additional text states
 states:
+  InterpolatePosture::Base:
+    base: InterpolatePosture
+    goBackToInitialPosture: false
+
   LookAtRightHand:
     base: MetaTasks
     tasks:
@@ -488,7 +492,7 @@ states:
         # L_SHOULDER_R: [2.15]
 
   RaiseRightHand_v2::Posture:
-    base: InterpolatePosture
+    base: InterpolatePosture::Base
     hrp4:
       scaleTime: 1.0
       posture_task:
@@ -563,7 +567,7 @@ states:
           timeElapsed: true
 
   RaiseLeftHand::Posture:
-    base: InterpolatePosture
+    base: InterpolatePosture::Base
     hrp4:
       scaleTime: 1.0
       posture_task:
@@ -622,7 +626,7 @@ states:
           timeElapsed: true
 
   DrawCircleRightHand::Posture:
-    base: InterpolatePosture
+    base: InterpolatePosture::Base
     hrp4:
       scaleTime: 1.0
       posture_task:
@@ -659,7 +663,7 @@ states:
           timeElapsed: true
 
   DrawCircleLeftHand::Posture:
-    base: InterpolatePosture
+    base: InterpolatePosture::Base
     hrp4:
       scaleTime: 1.0
       posture_task:
@@ -704,9 +708,9 @@ states:
     base: AutonomousInteraction
 
   Salutations:
-    base: InterpolatePosture
+    base: InterpolatePosture::Base
     hrp4:
-      scaleTime: 0.5
+      duration: 30
       posture_task:
         stiffness: 200
       posture_sequence:
@@ -814,9 +818,9 @@ states:
               amplitude: 0.2 # rad
 
   PetiteDanse:
-    base: InterpolatePosture
+    base: InterpolatePosture::Base
     hrp4:
-      scaleTime: 1.0
+      duration: 120
       posture_task:
         stiffness: 200
       posture_sequence:

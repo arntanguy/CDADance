@@ -2,3 +2,6 @@ add_fsm_state_simple(AutonomousInteraction)
 add_fsm_state_simple(RosSubscriber)
 target_link_libraries(RosSubscriber PUBLIC mc_rtc::mc_rtc_ros)
 add_fsm_state_simple(InterpolatePosture)
+add_fsm_state_simple(Walk)
+
+add_fsm_data_directory(data)

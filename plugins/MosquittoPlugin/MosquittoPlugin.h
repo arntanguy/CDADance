@@ -79,7 +79,7 @@ struct callback : public virtual mqtt::callback
 
   void delivery_complete(mqtt::delivery_token_ptr tok) override
   {
-    mc_rtc::log::info("Delivery complete for token: {}", tok ? tok->get_message_id() : -1);
+    /* mc_rtc::log::info("Delivery complete for token: {}", tok ? tok->get_message_id() : -1); */
   }
 
  protected:

@@ -5,6 +5,7 @@
 #include "mc_lipm_stabilizer.h"
 
 #include <mc_control/MCController.h>
+#include <mc_rtc/logging.h>
 
 #include "WalkingInterface.h"
 
@@ -24,6 +25,19 @@ struct WalkingInterfaceImpl : public WalkingInterface
   static_assert(is_lipm || is_ismpc, "Write WalkingInterfaceImpl to support another walking base");
 
   WalkingInterfaceImpl(LIPMStabilizerController<WalkingCtl> &ctl) : ctl_(ctl) {}
+
+  void load_plan(const std::string &name)
+  {
+    if constexpr (is_lipm)
+    {
+      ctl_.loadFootstepPlan(name);
+      // ctl_.updatePlan();
+    }
+    if constexpr (is_ismpc)
+    {
+      mc_rtc::log::error_and_throw("WalkingInterface: load_plan is not supported in ismpc");
+    }
+  }
 
   bool is_walking() final
   {
@@ -67,6 +81,22 @@ struct WalkingInterfaceImpl : public WalkingInterface
   bool is_stopped() final
   {
     return !is_walking();
+  }
+
+  void start_walking()
+  {
+    if (is_stopped())
+    {
+      start_stop_walking();
+    }
+  }
+
+  void stop_walking()
+  {
+    if (is_walking())
+    {
+      start_stop_walking();
+    }
   }
 
   void start_stop_walking() final
@@ -196,7 +226,7 @@ LIPMStabilizerController<WalkingCtl>::LIPMStabilizerController(mc_rbdyn::RobotMo
                                                                const mc_control::ControllerParameters &params)
     : WalkingCtl(rm, dt, patch_config(config), params)
 {
-  mc_rtc::log::info("CONFIG IS {}", mc_control::MCController::config().dump(true, true));
+  /* mc_rtc::log::info("FULL CONFIG IS {}", mc_control::MCController::config().dump(true, true)); */
 
   walking_interface_ = std::make_shared<WalkingInterfaceImpl<WalkingCtl>>(*this);
   this->datastore().template make<WalkingInterfacePtr>("WalkingInterface", walking_interface_);
