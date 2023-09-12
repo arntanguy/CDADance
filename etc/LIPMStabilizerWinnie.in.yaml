@@ -12,7 +12,83 @@ StatesFiles:
 - "@LIPM_WALKING_STATES_FILES@"
 VerboseStateFactory: false
 
-Plugins: [footsteps_planner_plugin,mc_joystick_plugin,MosquittoPlugin]
+Plugins: [footsteps_planner_plugin,mc_joystick_plugin,MosquittoPlugin, Replay, XsensPlugin]
+
+Replay:
+  # log: /home/dell/workspace/mc_xsens_sample_controller/etc/mc-control-XsensSampleController-latest.bin
+  # log: /home/dell/workspace/mc_xsens_sample_controller/etc/my_log_out_from_15_to_25.bin
+  log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio02_fix_from_4_to_53.bin
+  with-inputs: false
+  with-gui-inputs: false
+  with-outputs: false
+  with-datastore-config: /home/arnaud/src/huiting/lipmstabilizerwinnie/etc/datastore-to-replay.yaml
+
+Xsens:
+  liveMode: false
+  hrp4:
+    body:
+      segment: "Pelvis"
+      offset:
+        translation: [0,0,0]
+      # weight: 10
+      # stiffness: 10
+    torso:
+      segment: "T8" # Sternum
+      # weight: 10
+      # stiffness: 10
+    NECK_P_LINK:
+      segment: "Head"
+    R_SHOULDER_R_LINK:
+      segment: "Right Shoulder"
+    R_SHOULDER_Y_LINK:
+      segment: "Right Upper Arm"
+      offset:
+        translation: [0,0,0]
+        # rotation: [-1.57, 0, 0] #livemode
+        # rotation: [0, 0, 0] #offlinemode: further adaptation
+    R_ELBOW_P_LINK:
+      segment: "Right Forearm"
+      offset:
+        translation: [0,0,0]
+        rotation: [-1.57, 0, 0]
+    r_wrist:
+      segment: "Right Hand"
+      offset:
+        translation: [0,0,0]
+        rotation: [-1.57, 0, 0]
+    L_SHOULDER_R_LINK:
+      segment: "Left Shoulder"
+    L_SHOULDER_Y_LINK:
+      segment: "Left Upper Arm"
+      offset:
+        translation: [0,0,0]
+        # rotation: [1.57, 0, 0] #livemode
+        # rotation: [0, 0, 0] #offlinemode: further adaptation
+    L_ELBOW_P_LINK:
+      segment: "Left Forearm"
+      offset:
+        translation: [0,0,0]
+        rotation: [1.57, 0, 0]
+    l_wrist:
+      segment: "Left Hand"
+      offset:
+        translation: [0,0,0]
+        rotation: [1.57, 0, 0]
+    # R_HIP_P_LINK:
+    #   segment: "Right Upper Leg"
+    # R_KNEE_P_LINK:
+    #   segment: "Right Lower Leg"
+    # r_ankle:
+    #   segment: "Right Foot"
+    # L_HIP_P_LINK:
+    #   segment: "Left Upper Leg"
+    # L_KNEE_P_LINK:
+    #   segment: "Left Lower Leg"
+    # l_ankle:
+    #   segment: "Left Foot"
+
+
+
 
 # Additional robots to load
 robots:
@@ -869,10 +945,12 @@ states:
       - [HalfSitting, PetiteDanse, PetiteDanse, Strict]
       - [HalfSitting, ConditionBaseMovement, Dance::Seq4::ConditionBaseMovement::withPubSub, Strict]
       - [HalfSitting, FollowMe, Walk::FollowMe, Strict]
+      - [HalfSitting, TestXsens, Dance::XsensRetargetting, Strict]
       - [Salutations, OK, HalfSitting, Auto]
       - [PetiteDanse, OK, HalfSitting, Auto]
       - [Dance::Seq4::ConditionBaseMovement::withPubSub, OK, HalfSitting, Auto]
       - [Walk::FollowMe, OK, HalfSitting, Auto]
+      - [Dance::XsensRetargetting, OK, HalfSitting, Auto]
     configs:
       HalfSitting:
         stiffness: 10.0

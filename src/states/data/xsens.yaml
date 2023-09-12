@@ -1,0 +1,11 @@
+Dance::XsensRetargetting:
+  base: XsensRetargetting
+  robot: hrp4
+  unactiveJoints: [R_HIP_P, R_HIP_R, R_HIP_Y, R_KNEE_P, R_ANKLE_P, L_HIP_P, L_HIP_R, L_HIP_Y, L_KNEE_P, L_ANKLE_P, CHEST_P]
+  stiffness: 200
+  weight: 1000
+  offset:
+    translation: [0.0, 0.0, 0.1]
+    rotation: [0.0, 0.34, 0.0]
+  fixBaseLink: true
+  log: test.log
