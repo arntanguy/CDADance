@@ -416,6 +416,12 @@ states:
   InterpolatePosture::Base:
     base: InterpolatePosture
     goBackToInitialPosture: false
+    hrp4:
+      posture_task:
+        stiffness: 200
+        activeJoints: [L_SHOULDER_P, L_SHOULDER_R, L_SHOULDER_Y, L_ELBOW_P, L_WRIST_P, L_WRIST_R, L_WRIST_Y,
+                       R_SHOULDER_P, R_SHOULDER_R, R_SHOULDER_Y, R_ELBOW_P, R_WRIST_P, R_WRIST_R, R_WRIST_Y,
+                       CHEST_P, NECK_P, NECK_Y]
 
   LookAtRightHand:
     base: MetaTasks
@@ -495,8 +501,6 @@ states:
     base: InterpolatePosture::Base
     hrp4:
       scaleTime: 1.0
-      posture_task:
-        stiffness: 200
       posture_sequence:
         - time: 2.0
           posture:
@@ -570,8 +574,6 @@ states:
     base: InterpolatePosture::Base
     hrp4:
       scaleTime: 1.0
-      posture_task:
-        stiffness: 200
       posture_sequence:
         - time: 2.0
           posture:
@@ -629,8 +631,6 @@ states:
     base: InterpolatePosture::Base
     hrp4:
       scaleTime: 1.0
-      posture_task:
-        stiffness: 200
       posture_sequence:
         - time: 2.0
           posture:
@@ -666,8 +666,6 @@ states:
     base: InterpolatePosture::Base
     hrp4:
       scaleTime: 1.0
-      posture_task:
-        stiffness: 200
       posture_sequence:
         - time: 2.0
           posture:
@@ -711,8 +709,6 @@ states:
     base: InterpolatePosture::Base
     hrp4:
       duration: 30
-      posture_task:
-        stiffness: 200
       posture_sequence:
         - time: 5.0
           posture: {}
@@ -821,8 +817,6 @@ states:
     base: InterpolatePosture::Base
     hrp4:
       duration: 120
-      posture_task:
-        stiffness: 200
       posture_sequence:
         - time: 5.0
           posture:
@@ -859,6 +853,10 @@ states:
               amplitude: 0.8
           comOffset: [0, 0, -0.2]
 
+  Walk::FollowMe:
+    base: Walk
+    plan: custom_forward
+    useStopDistance: false
 
   Dance::Demo::FSM:
     base: Meta
@@ -867,9 +865,11 @@ states:
       - [HalfSitting, Salutation, Salutations, Strict]
       - [HalfSitting, PetiteDanse, PetiteDanse, Strict]
       - [HalfSitting, ConditionBaseMovement, Dance::Seq4::ConditionBaseMovement::withPubSub, Strict]
+      - [HalfSitting, FollowMe, Walk::FollowMe, Strict]
       - [Salutations, OK, HalfSitting, Auto]
       - [PetiteDanse, OK, HalfSitting, Auto]
       - [Dance::Seq4::ConditionBaseMovement::withPubSub, OK, HalfSitting, Auto]
+      - [Walk::FollowMe, OK, HalfSitting, Auto]
     configs:
       HalfSitting:
         stiffness: 10.0

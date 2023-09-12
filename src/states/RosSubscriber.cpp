@@ -19,11 +19,10 @@ void RosSubscriber::chatterCallBack(const std_msgs::String::ConstPtr &msg)
 
 void RosSubscriber::rosSpinner()
 {
-  ros::Rate rate(12);
   mc_rtc::log::info("ROS spinner thread created");
 
-  auto &n = *mc_rtc::ROSBridge::get_node_handle();
-  ros::Subscriber sub = n.subscribe("HPE_communicator_Winnie", 1000, &RosSubscriber::chatterCallBack, this);
+  ros::Rate rate(12);
+  ros::Subscriber sub = nh_->subscribe("HPE_communicator_Winnie", 1000, &RosSubscriber::chatterCallBack, this);
   mc_rtc::log::info("[ROS listener]; topic = {}", sub.getTopic());
 
   while (active_ && ros::ok())
