@@ -423,8 +423,14 @@ states:
                        R_SHOULDER_P, R_SHOULDER_R, R_SHOULDER_Y, R_ELBOW_P, R_WRIST_P, R_WRIST_R, R_WRIST_Y,
                        CHEST_P, NECK_P, NECK_Y]
 
-  LookAtRightHand:
+  LookAt::Base:
     base: MetaTasks
+    tasks:
+      LookAt:
+        activeJoints: [NECK_P, NECK_Y]
+
+  LookAtRightHand:
+    base: LookAt::Base
     tasks:
       LookAt:
         type: lookAtFrame
@@ -437,7 +443,7 @@ states:
         stiffness: 10
 
   LookAtLeftHand:
-    base: MetaTasks
+    base: LookAt::Base
     tasks:
       LookAt:
         type: lookAtFrame
@@ -450,7 +456,7 @@ states:
         stiffness: 10
 
   LookAtAudience:
-    base: MetaTasks
+    base: LookAt::Base
     tasks:
       LookAt:
         type: lookAt
@@ -460,42 +466,33 @@ states:
         weight: 500
         stiffness: 10
 
-  PostureBase:
-    base: Posture
-    postureTask:
-      type: posture
-      stiffness: 5.0
-      weight: 100.0
-    completion:
-      OR:
-        - timeout: 3.0
-        - AND:
-          - eval: 0.01
-          - speed: 0.01
-
   TouchHead:
-    base: PostureBase
-    postureTask:
-      target:
-        # NECK_P: [0.8]
-        # NECK_Y: [1.2]
-        R_SHOULDER_R: [-0.6]
-        R_SHOULDER_P: [-2.5] #-2.0
-        R_SHOULDER_Y: [1.6] #-3.1
-        R_ELBOW_P: [-2.1]
-        # L_SHOULDER_R: [2.15]
+    base: InterpolatePosture::Base
+    hrp4:
+      posture_sequence:
+        - time: 2.0
+          posture:
+            # NECK_P: 0.8
+            # NECK_Y: 1.2
+            R_SHOULDER_R: -0.6
+            R_SHOULDER_P: -2.5 #-2.0
+            R_SHOULDER_Y: 1.6 #-3.1
+            R_ELBOW_P: -2.1
+            # L_SHOULDER_R: 2.15
 
   TouchHead_L:
-    base: PostureBase
-    postureTask:
-      target:
-        # NECK_P: [0.8]
-        # NECK_Y: [1.2]
-        L_SHOULDER_R: [1.235]
-        L_SHOULDER_P: [-1.9] #-2.0
-        # L_SHOULDER_Y: [1.6] #-3.1
-        L_ELBOW_P: [-2.12]
-        # L_SHOULDER_R: [2.15]
+    base: InterpolatePosture::Base
+    hrp4:
+      posture_sequence:
+      - time: 2.0
+        posture:
+          # NECK_P: 0.8
+          # NECK_Y: 1.2
+          L_SHOULDER_R: 1.235
+          L_SHOULDER_P: -1.9 #-2.0
+          # L_SHOULDER_Y: 1.6 #-3.1
+          L_ELBOW_P: -2.12
+          # L_SHOULDER_R: 2.15
 
   RaiseRightHand_v2::Posture:
     base: InterpolatePosture::Base
@@ -677,30 +674,36 @@ states:
             L_SHOULDER_Y: -0.841
 
   PutDownRightShoulder:
-    base: PostureBase
-    postureTask:
-      target:
-        R_SHOULDER_P: [-0.167]
-        R_SHOULDER_R: [-0.31]
-        R_SHOULDER_Y: [0.02]
-        R_ELBOW_P: [-0.18]
-        R_WRIST_R: [0.08]
+    base: InterpolatePosture::Base
+    hrp4:
+      posture_sequence:
+        - time: 2.0
+          posture:
+            R_SHOULDER_P: -0.167
+            R_SHOULDER_R: -0.31
+            R_SHOULDER_Y: 0.02
+            R_ELBOW_P: -0.18
+            R_WRIST_R: 0.08
 
   LeftHeadTilt:
-    base: PostureBase
-    postureTask:
-      target:
-        NECK_P: [0.7]
-        # NECK_Y: [0.5]
-        # L_SHOULDER_R: [2.15]
+    base: InterpolatePosture::Base
+    hrp4:
+      posture_sequence:
+        - time: 2.0
+          posture:
+            NECK_P: 0.7
+            # NECK_Y: 0.5
+            # L_SHOULDER_R: 2.15
 
   RightHeadTilt:
-    base: PostureBase
-    postureTask:
-      target:
-        NECK_P: [0.0]
-        # NECK_Y: [-0.1]
-        # L_SHOULDER_R: [2.15]
+    base: InterpolatePosture::Base
+    hrp4:
+      posture_sequence:
+        - time: 2.0
+          posture:
+            NECK_P: 0.0
+            # NECK_Y: -0.1
+            # L_SHOULDER_R: 2.15
 
   Dance::ConditionBaseMovement:
     base: AutonomousInteraction
