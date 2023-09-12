@@ -18,6 +18,7 @@ Replay:
   # log: /home/dell/workspace/mc_xsens_sample_controller/etc/mc-control-XsensSampleController-latest.bin
   # log: /home/dell/workspace/mc_xsens_sample_controller/etc/my_log_out_from_15_to_25.bin
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio02_fix_from_4_to_53.bin
+  pause: true
   with-inputs: false
   with-gui-inputs: false
   with-outputs: false

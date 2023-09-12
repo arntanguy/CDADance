@@ -100,6 +100,10 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
                         mc_rtc::gui::Button("Finished", [this]()
                                             { finished_ = true; }));
 
+  stiffnessInterpolator_.values(
+      {{0.0, config_("initialStiffness", 0.1)},
+       {config_("initialStiffnessInterpolationDuration", 2.0), 1.}});
+
   // Initialize tasks
   for (auto &bodyName : activeBodies_)
   {
@@ -108,7 +112,7 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
 
     if (robot.hasBody(bodyName))
     {
-      auto task = std::unique_ptr<mc_tasks::EndEffectorTask>(new mc_tasks::EndEffectorTask(bodyName, ctl.robots(), robot.robotIndex(), body.stiffness, body.weight));
+      auto task = std::make_unique<mc_tasks::TransformTask>(robot.frame(bodyName), body.stiffness, body.weight);
       task->name(fmt::format("{}", bodyName));
       task->reset();
       task->selectUnactiveJoints(ctl.solver(), unactiveJoints_);
@@ -137,6 +141,7 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
     ctl.solver().addTask(task.get());
     fixedTasks_[fixedBody] = std::move(task);
   }
+
   initPosW_ = robot.posW();
   run(ctl);
 }
@@ -154,11 +159,14 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
     const auto &body = bodyConfigurations_[bodyName];
     const auto &segmentName = body.segmentName;
 
+    double percentStiffness = stiffnessInterpolator_.compute(t_);
+
     if (robot.hasBody(bodyName))
     {
       try
       {
         tasks_[bodyName]->dimWeight(dimW);
+        tasks_[bodyName]->stiffness(percentStiffness * body.stiffness);
 
         const auto segmentPose = ctl.datastore().call<sva::PTransformd>("XsensPlugin::GetSegmentPose", segmentName);
 
@@ -166,11 +174,11 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
         {                                                                     // Apply all xsens MVN poses w.r.t a fixed initial robot base link
           auto X_blSP_segmentPose = segmentPose * baseLinkSegmentPose.inv();  // blSP: BaseLink_segmentationPose
           auto X_0_target = body.offset * X_blSP_segmentPose * offset_ * initPosW_;
-          tasks_[bodyName]->set_ef_pose(X_0_target);
+          tasks_[bodyName]->target(X_0_target);
         }
         else
-        {                                                                      // Directly apply world segment pose as obtained from w.r.t a fixed initial robot base linkom Xsens MVN
-          tasks_[bodyName]->set_ef_pose(body.offset * segmentPose * offset_);  // change the target position
+        {                                                                 // Directly apply world segment pose as obtained from w.r.t a fixed initial robot base linkom Xsens MVN
+          tasks_[bodyName]->target(body.offset * segmentPose * offset_);  // change the target position
         }
       }
       catch (...)
@@ -183,6 +191,8 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
       mc_rtc::log::error("[{}] No body named {}", name(), bodyName);
     }
   }
+
+  t_ += ctl.timeStep;
   output("OK");
   return finished_;
 }

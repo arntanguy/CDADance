@@ -3,6 +3,7 @@
 #include <mc_control/fsm/State.h>
 #include <mc_tasks/EndEffectorTask.h>
 #include <mc_tasks/TransformTask.h>
+#include <mc_trajectory/SequenceInterpolator.h>
 
 struct XsensBodyConfiguration
 {
@@ -26,7 +27,7 @@ struct XsensRetargetting : mc_control::fsm::State
 
  private:
   std::map<std::string, XsensBodyConfiguration> bodyConfigurations_;
-  std::map<std::string, std::unique_ptr<mc_tasks::EndEffectorTask>> tasks_;
+  std::map<std::string, std::unique_ptr<mc_tasks::TransformTask>> tasks_;
   std::map<std::string, std::unique_ptr<mc_tasks::TransformTask>> fixedTasks_;
   double fixedStiffness_ = 200;
   double fixedWeight_ = 1000;
@@ -41,5 +42,8 @@ struct XsensRetargetting : mc_control::fsm::State
   std::vector<std::string> unactiveJoints_ = {};
   std::vector<std::string> activeBodies_ = {};
 
+  mc_trajectory::SequenceInterpolator<double> stiffnessInterpolator_;
+
   bool debugmode_ = false;
+  double t_ = 0;
 };
