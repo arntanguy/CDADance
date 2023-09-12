@@ -943,9 +943,16 @@ states:
           comOffset: [0, 0, -0.2]
 
   Walk::FollowMe:
-    base: Walk
-    plan: custom_forward
-    useStopDistance: false
+    base: Meta
+    transitions:
+      - [HalfSitting, OK, Walk, Auto]
+    configs:
+      Walk:
+        plan: custom_forward
+        useStopDistance: false
+      HalfSitting:
+        stiffness: 10.0
+        eval: 0.2
 
   Dance::Demo::FSM:
     base: Meta
@@ -979,6 +986,37 @@ states:
       - [Dance::XsensRetargetting::PetiteDance, OK, HalfSitting, Auto]
       - [Dance::XsensRetargetting::PetiteDanceEnervee, OK, HalfSitting, Auto]
       - [Dance::XsensRetargetting::Presence, OK, HalfSitting, Auto]
+    configs:
+      HalfSitting:
+        stiffness: 10.0
+        eval: 0.1
+
+  HalfSitting2:
+    base: HalfSitting
+    stiffness: 10.0
+    eval: 0.1
+
+  Dance::Demo::FSM::FullSequence:
+    base: Meta
+    ResetPostures: false
+    # Interaction?
+    # Salutations
+    # Toucher
+    # Marcher
+    # Presence
+    # PetiteDance
+    # PetiteDanceEnervee
+    # Flying
+    transitions:
+      - [HalfSitting, OK, Dance::XsensRetargetting::Salutations, Strict]
+      - [Dance::XsensRetargetting::Salutations, OK, Dance::XsensRetargetting::ListenToRobot, Strict]
+      - [Dance::XsensRetargetting::ListenToRobot, OK, Walk::FollowMe, Strict]
+      - [Walk::FollowMe, OK, Dance::XsensRetargetting::Presence, Strict]
+      - [Dance::XsensRetargetting::Presence, OK, Dance::XsensRetargetting::PetiteDance, Strict]
+      - [Dance::XsensRetargetting::PetiteDance, OK, Dance::XsensRetargetting::PetiteDanceEnervee, Strict]
+        # TODO XXX IMPORTANT figure out how to remove the stabilizer first
+      - [Dance::XsensRetargetting::PetiteDanceEnervee, OK, Dance::XsensRetargetting::Flying, Strict]
+      - [Dance::XsensRetargetting::Flying, OK, HalfSitting2, Auto]
     configs:
       HalfSitting:
         stiffness: 10.0
@@ -1035,14 +1073,22 @@ states:
     base: Meta
     transitions:
       - [LIPMWalking::Initial, Standing, LIPMWalking::StabilizedWalkInternal, Auto]
+    configs:
+      LIPMWalking::Initial:
+        autoplay: true
 
   Demo::LIPMWalking::Dance:
     base: Parallel
     states: [Demo::LIPMWalking::WalkFSM, Dance::Demo::FSM]
 
+  Demo::LIPMWalking::Dance::FullSequence:
+    base: Parallel
+    states: [Demo::LIPMWalking::WalkFSM, Dance::Demo::FSM::FullSequence]
+
 transitions:
   - [Pause, LIPMWalking, Demo::LIPMWalking::Dance, Strict]
-  - [Pause, ISMPC, Dance::Demo::FSM, Strict]
+  - [Pause, LIPMWalkingFullSequence, Demo::LIPMWalking::Dance::FullSequence, Strict]
+  #- [Pause, ISMPC, Dance::Demo::FSM, Strict]
 
 init: Pause
 

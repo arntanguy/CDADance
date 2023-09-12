@@ -29,7 +29,7 @@ XsensRetargetting::Standing:
 Dance::XsensRetargetting::Salutations:
   base: XsensRetargetting::Standing
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio02_fix_from_4_to_53.bin
-  start_time: 10.765
+  start_time: 15.0
   robot: hrp4
   stiffness: 100
   weight: 1000
