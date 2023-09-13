@@ -7,6 +7,7 @@ struct Walk : mc_control::fsm::State
   void teardown(mc_control::fsm::Controller& ctl) override;
 
  protected:
+  bool walking_ = false;
   bool autoWalk_ = true;
   double stopDistance_ = 1;
   bool useStopDistance_ = true;

@@ -963,6 +963,19 @@ states:
         stiffness: 10.0
         eval: 0.2
 
+  Walk::FaceScene:
+    base: Meta
+    transitions:
+      - [HalfSitting, OK, Walk, Auto]
+    configs:
+      Walk:
+        autoWalk: false
+        plan: custom_forward
+        useStopDistance: false
+      HalfSitting:
+        stiffness: 10.0
+        eval: 0.2
+
   Dance::Demo::FSM:
     base: Meta
     ResetPostures: false
@@ -1028,8 +1041,9 @@ states:
       - [Dance::Seq4::ConditionBaseMovement::withPubSub, OK, Dance::XsensRetargetting::PetiteDance, Auto]
       - [Dance::XsensRetargetting::PetiteDance, OK, Dance::XsensRetargetting::PetiteDanceEnervee, Auto]
       - [Dance::XsensRetargetting::PetiteDanceEnervee, OK, Dance::XsensRetargetting::FinDance, Auto]
-      - [Dance::XsensRetargetting::FinDance, OK, Dance::PrepareFlying, Auto]
-      - [Dance::XsensRetargetting::PrepareFlying, OK, Dance::XsensRetargetting::Flying, Strict]
+      - [Dance::XsensRetargetting::FinDance, OK, Walk::FaceScene, Auto]
+      - [Walk::FaceScene, OK, Dance::PrepareFlying, Auto]
+      - [Dance::PrepareFlying, OK, Dance::XsensRetargetting::Flying, Strict]
       - [Dance::XsensRetargetting::Flying, OK, HalfSitting::Final, Auto]
     configs:
       HalfSitting:

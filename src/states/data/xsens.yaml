@@ -79,7 +79,7 @@ Dance::XsensRetargetting::PetiteDanceEnervee:
   base: XsensRetargetting::Standing
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio06_fix_from_3_to_63.bin
   start_time: 4.7
-  end_time: 58.4
+  end_time: 50.87
   robot: hrp4
   stiffness: 100
   weight: 1000
@@ -91,7 +91,7 @@ Dance::XsensRetargetting::FinDance:
   base: XsensRetargetting::Standing
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio06_fix_from_3_to_63.bin
   # TODO adjust timings
-  start_time: 4.7
+  start_time: 50.87 
   end_time: 58.4
   robot: hrp4
   stiffness: 100

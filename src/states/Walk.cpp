@@ -13,8 +13,8 @@ void Walk::start(mc_control::fsm::Controller &ctl)
                         {},
                         mc_rtc::gui::Label("Is walking?", [&walk]()
                                            { return walk.is_walking(); }),
-                        mc_rtc::gui::Button("START WALKING", [&walk]()
-                                            { walk.start_walking(); }),
+                        mc_rtc::gui::Button("START WALKING", [this, &walk]()
+                                            { walk.start_walking(); walking_ = true; }),
                         mc_rtc::gui::Button("STOP WALKING",
                                             [&walk]()
                                             {
@@ -39,6 +39,7 @@ void Walk::start(mc_control::fsm::Controller &ctl)
   if (autoWalk_)
   {
     walk.start_walking();
+    walking_ = true;
   }
   output("OK");
   run(ctl);
@@ -47,6 +48,7 @@ void Walk::start(mc_control::fsm::Controller &ctl)
 bool Walk::run(mc_control::fsm::Controller &ctl)
 {
   auto &walk = *ctl.datastore().get<WalkingInterfacePtr>("WalkingInterface");
+  if(!walking_) { return false; }
 
   if (useStopDistance_ && (ctl.robot().posW().translation() - startPos_).norm() >= stopDistance_)
   {
