@@ -48,7 +48,10 @@ void Walk::start(mc_control::fsm::Controller &ctl)
 bool Walk::run(mc_control::fsm::Controller &ctl)
 {
   auto &walk = *ctl.datastore().get<WalkingInterfacePtr>("WalkingInterface");
-  if(!walking_) { return false; }
+  if (!walking_)
+  {
+    return false;
+  }
 
   if (useStopDistance_ && (ctl.robot().posW().translation() - startPos_).norm() >= stopDistance_)
   {

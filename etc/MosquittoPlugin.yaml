@@ -3,7 +3,7 @@ address: "10.4.5.2"
 port: 1883
 topic: "robot_state"
 client_id: "mc_rtc_publisher"
-rate: 0.01
+rate: 0.1
 autoconnect: true
 publishEncoders: true
 forceSensors:

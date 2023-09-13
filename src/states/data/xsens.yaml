@@ -38,6 +38,11 @@ Dance::XsensRetargetting::Salutations:
     translation: [0.0, 0.0, 0.1]
     rotation: [0.0, 0.34, 0.0]
 
+Dance::XsensRetargetting::Salutations::HalfSitting:
+  base: HalfSitting
+  eval: 0.2
+  stiffness: 10
+
 Dance::XsensRetargetting::ListenToRobot:
   base: XsensRetargetting::Standing
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio04_fix_from_5_to_31.bin
@@ -49,6 +54,11 @@ Dance::XsensRetargetting::ListenToRobot:
   offset:
     translation: [0.0, 0.0, 0.1]
     rotation: [0.0, 0.4, 0.0]
+
+Dance::XsensRetargetting::ListenToRobot::HalfSitting:
+  base: HalfSitting
+  eval: 0.2
+  stiffness: 10
 
 Dance::XsensRetargetting::Doute:
   base: XsensRetargetting::Standing
@@ -62,6 +72,13 @@ Dance::XsensRetargetting::Doute:
     translation: [0.0, 0.0, 0.1]
     rotation: [0.0, 0.4, 0.0]
 
+Dance::XsensRetargetting::Doute::HalfSitting:
+  base: HalfSitting
+  eval: 0.2
+  stiffness: 10
+
+Dance::XsensRetargetting::Doute2:
+  base: Dance::XsensRetargetting::Doute
 
 Dance::XsensRetargetting::PetiteDance:
   base: XsensRetargetting::Standing
@@ -90,7 +107,7 @@ Dance::XsensRetargetting::PetiteDanceEnervee:
 Dance::XsensRetargetting::FinDance:
   base: XsensRetargetting::Standing
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio06_fix_from_3_to_63.bin
-  start_time: 50.87 
+  start_time: 50.87
   end_time: 58.4
   robot: hrp4
   stiffness: 100
@@ -98,6 +115,9 @@ Dance::XsensRetargetting::FinDance:
   offset:
     translation: [0.0, 0.0, 0.1]
     rotation: [0.0, 0.5, 0.0]
+
+Dance::XsensRetargetting::FinDance2:
+  base: Dance::XsensRetargetting::FinDance
 
 Dance::PrepareFlying:
   base: Meta
