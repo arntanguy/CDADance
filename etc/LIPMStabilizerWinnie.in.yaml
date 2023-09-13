@@ -792,6 +792,14 @@ states:
             # NECK_Y: -0.1
             # L_SHOULDER_R: 2.15
 
+  Dance::LookRight:
+    base: InterpolatePosture::Base
+    hrp4:
+      posture_sequence:
+        - time: 2.0
+          posture:
+            NECK_Y: -1.0
+
   Dance::ConditionBaseMovement:
     base: AutonomousInteraction
 
@@ -962,7 +970,8 @@ states:
     # Salutations
     # Toucher
     # Marcher
-    # Presence
+    # Doute
+    # Interaction
     # PetiteDance
     # PetiteDanceEnervee
     # Flying
@@ -974,7 +983,7 @@ states:
       - [HalfSitting, XsensSalutation, Dance::XsensRetargetting::Salutations, Strict]
       - [HalfSitting, XsensFlying, Dance::XsensRetargetting::Flying, Strict]
       - [HalfSitting, XsensListenToRobot, Dance::XsensRetargetting::ListenToRobot, Strict]
-      - [HalfSitting, XsensPresence, Dance::XsensRetargetting::Presence, Strict]
+      - [HalfSitting, XsensDoute, Dance::XsensRetargetting::Doute, Strict]
       - [HalfSitting, XsensPetiteDance, Dance::XsensRetargetting::PetiteDance, Strict]
       - [HalfSitting, XsensPetiteDanceEnervee, Dance::XsensRetargetting::PetiteDanceEnervee, Strict]
       - [Salutations, OK, HalfSitting, Auto]
@@ -986,7 +995,7 @@ states:
       - [Dance::XsensRetargetting::ListenToRobot, OK, HalfSitting, Auto]
       - [Dance::XsensRetargetting::PetiteDance, OK, HalfSitting, Auto]
       - [Dance::XsensRetargetting::PetiteDanceEnervee, OK, HalfSitting, Auto]
-      - [Dance::XsensRetargetting::Presence, OK, HalfSitting, Auto]
+      - [Dance::XsensRetargetting::Doute, OK, HalfSitting, Auto]
     configs:
       HalfSitting:
         stiffness: 10.0
@@ -1004,7 +1013,8 @@ states:
     # Salutations
     # Toucher
     # Marcher
-    # Presence
+    # Doute
+    # Interaction
     # PetiteDance
     # PetiteDanceEnervee
     # Flying
@@ -1012,11 +1022,13 @@ states:
       - [Pause_2s, OK, Dance::XsensRetargetting::Salutations, Auto]
       - [Dance::XsensRetargetting::Salutations, OK, Dance::XsensRetargetting::ListenToRobot, Auto]
       - [Dance::XsensRetargetting::ListenToRobot, OK, Walk::FollowMe, Auto]
-      - [Walk::FollowMe, OK, Dance::XsensRetargetting::Presence, Auto]
-      - [Dance::XsensRetargetting::Presence, OK, Dance::XsensRetargetting::PetiteDance, Auto]
+      - [Walk::FollowMe, OK, Dance::LookRight, Auto]
+      - [Dance::LookRight, OK, Dance::XsensRetargetting::Doute, Auto]
+      - [Dance::XsensRetargetting::Doute, OK, Dance::Seq4::ConditionBaseMovement::withPubSub, Auto]
+      - [Dance::Seq4::ConditionBaseMovement::withPubSub, OK, Dance::XsensRetargetting::PetiteDance, Auto]
       - [Dance::XsensRetargetting::PetiteDance, OK, Dance::XsensRetargetting::PetiteDanceEnervee, Auto]
-        # TODO XXX IMPORTANT figure out how to remove the stabilizer first
-      - [Dance::XsensRetargetting::PetiteDanceEnervee, OK, Dance::PrepareFlying, Auto]
+      - [Dance::XsensRetargetting::PetiteDanceEnervee, OK, Dance::XsensRetargetting::FinDance, Auto]
+      - [Dance::XsensRetargetting::FinDance, OK, Dance::PrepareFlying, Auto]
       - [Dance::XsensRetargetting::PrepareFlying, OK, Dance::XsensRetargetting::Flying, Strict]
       - [Dance::XsensRetargetting::Flying, OK, HalfSitting::Final, Auto]
     configs:

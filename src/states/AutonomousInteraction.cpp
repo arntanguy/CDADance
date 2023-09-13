@@ -18,6 +18,13 @@ void AutonomousInteraction::start(mc_control::fsm::Controller &ctl_)
 {
   debug_log("------ DEBUG enter AutonomousInteraction::start ------\n");
 
+  ctl_.gui()->addElement(
+      this,
+      {},
+      mc_rtc::gui::Button("FINISH INTERACTION", [this]()
+                          { finished_ = true; }));
+
+  output("OK");
   run(ctl_);
   debug_log("------ DEBUG leave AutonomousInteraction::start ------\n");
 }
@@ -36,7 +43,7 @@ bool AutonomousInteraction::run(mc_control::fsm::Controller &ctl)
   debug_log("------ ReceivedMsgObj value = {} ------", subscriber_msg);
 
   bool find_msg = false;
-  while (!find_msg)
+  while (!finished_ && !find_msg)
   {
     if (subscriber_msg != "")
     {
@@ -46,25 +53,29 @@ bool AutonomousInteraction::run(mc_control::fsm::Controller &ctl)
     }
     else
     {
-      mc_rtc::log::info("------ subscriber_msg = NULL ------\n");
-      output("Null");
+      debug_log("------ subscriber_msg = NULL ------");
       return false;
     }
   }
 
   if (find_msg)
   {
-    mc_rtc::log::info("------ Return Index = {}; output = {} ------\n", segIdx, SeqName[segIdx]);
+    debug_log("------ Return Index = {}; output = {} ------", segIdx, SeqName[segIdx]);
     output(SeqName[segIdx]);
   }
 
-  debug_log("------ DEBUG leave AutonomousInteraction::run ------\n");
+  debug_log("------ DEBUG leave AutonomousInteraction::run ------");
 
-  return true;
+  if (finished_)
+  {
+    output("OK");
+  }
+  return finished_;
 }
 
 void AutonomousInteraction::teardown(mc_control::fsm::Controller &ctl_)
 {
+  ctl_.gui()->removeElements(this);
 }
 
 EXPORT_SINGLE_STATE("AutonomousInteraction", AutonomousInteraction)

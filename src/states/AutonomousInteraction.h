@@ -30,4 +30,5 @@ struct AutonomousInteraction : mc_control::fsm::State
   bool debugmode_ = false;
   std::string SeqName[8] = {"Seq0", "Seq1", "Seq2", "Seq3", "Seq4", "Seq5", "Seq6", "Seq7"};
   std::string subscriber_msg;
+  bool finished_ = false;
 };

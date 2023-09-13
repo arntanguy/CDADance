@@ -58,7 +58,8 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
     mc_rtc::log::error_and_throw<std::runtime_error>("[{}] This state requires the XsensPlugin", name());
   }
 
-  ctl.gui()->addElement({"Xsens", robot_, "Offset base_link"},
+  ctl.gui()->addElement(this,
+                        {"Xsens", robot_, "Offset base_link"},
                         mc_rtc::gui::ArrayInput("Offset Translation", offset_.translation()),
                         mc_rtc::gui::RPYInput("Offset RPY", offset_.rotation()));
 
@@ -93,7 +94,8 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
 
     if (isActiveBody(bodyName))
     {
-      ctl.gui()->addElement({"Xsens", robot_, "Bodies", bodyName},
+      ctl.gui()->addElement(this,
+                            {"Xsens", robot_, "Bodies", bodyName},
                             mc_rtc::gui::ArrayInput(
                                 "Offset translation [m]",
                                 [&bodyC]()
@@ -117,7 +119,8 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
     }
   }
 
-  ctl.gui()->addElement({},
+  ctl.gui()->addElement(this,
+                        {},
                         mc_rtc::gui::Button("Finished", [this]()
                                             { finished_ = true; }));
 
@@ -170,7 +173,7 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
 
 bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
 {
-  auto & ds = ctl.datastore();
+  auto &ds = ctl.datastore();
   auto &robot = ctl.robot(robot_);
   Eigen::VectorXd dimW = Eigen::VectorXd::Ones(6);
 
@@ -229,6 +232,7 @@ void XsensRetargetting::teardown(mc_control::fsm::Controller &ctl)
   {
     ctl.solver().removeTask(task.second.get());
   }
+  ctl.gui()->removeElements(this);
 }
 
 EXPORT_SINGLE_STATE("XsensRetargetting", XsensRetargetting)
