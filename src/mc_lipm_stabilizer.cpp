@@ -215,6 +215,14 @@ struct WalkingInterfaceImpl : public WalkingInterface
     __builtin_unreachable();
   }
 
+  void remove_stabilizer_task() final
+  {
+    if constexpr (is_lipm)
+    {
+      return ctl_.solver().removeTask(ctl_.stabilizer());
+    }
+  }
+
  private:
   LIPMStabilizerController<WalkingCtl> &ctl_;
 };

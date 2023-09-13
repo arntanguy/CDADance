@@ -45,6 +45,9 @@ struct WalkingInterface
 
   /** Get current ZMP target */
   virtual Eigen::Vector3d get_zmp_target() = 0;
+
+  /** Disable stabilizer task (remove from QP) */
+  virtual void remove_stabilizer_task() = 0;
 };
 
 using WalkingInterfacePtr = std::shared_ptr<WalkingInterface>;

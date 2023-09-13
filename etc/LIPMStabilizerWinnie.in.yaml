@@ -992,7 +992,7 @@ states:
         stiffness: 10.0
         eval: 0.1
 
-  HalfSitting2:
+  HalfSitting::Final:
     base: HalfSitting
     stiffness: 10.0
     eval: 0.1
@@ -1009,15 +1009,16 @@ states:
     # PetiteDanceEnervee
     # Flying
     transitions:
-      - [HalfSitting, OK, Dance::XsensRetargetting::Salutations, Auto]
+      - [Pause_2s, OK, Dance::XsensRetargetting::Salutations, Auto]
       - [Dance::XsensRetargetting::Salutations, OK, Dance::XsensRetargetting::ListenToRobot, Auto]
       - [Dance::XsensRetargetting::ListenToRobot, OK, Walk::FollowMe, Auto]
       - [Walk::FollowMe, OK, Dance::XsensRetargetting::Presence, Auto]
       - [Dance::XsensRetargetting::Presence, OK, Dance::XsensRetargetting::PetiteDance, Auto]
       - [Dance::XsensRetargetting::PetiteDance, OK, Dance::XsensRetargetting::PetiteDanceEnervee, Auto]
         # TODO XXX IMPORTANT figure out how to remove the stabilizer first
-      - [Dance::XsensRetargetting::PetiteDanceEnervee, OK, Dance::XsensRetargetting::Flying, Strict]
-      - [Dance::XsensRetargetting::Flying, OK, HalfSitting2, Auto]
+      - [Dance::XsensRetargetting::PetiteDanceEnervee, OK, Dance::PrepareFlying, Auto]
+      - [Dance::XsensRetargetting::PrepareFlying, OK, Dance::XsensRetargetting::Flying, Strict]
+      - [Dance::XsensRetargetting::Flying, OK, HalfSitting::Final, Auto]
     configs:
       HalfSitting:
         stiffness: 10.0
