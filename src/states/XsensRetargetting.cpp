@@ -3,6 +3,7 @@
 #include <mc_control/fsm/Controller.h>
 #include <mc_rtc/logging.h>
 #include <mc_tasks/TransformTask.h>
+
 #include <SpaceVecAlg/SpaceVecAlg>
 #include <state-observation/tools/rigid-body-kinematics.hpp>
 
@@ -140,7 +141,7 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
    * - in translation:
    *   - has the same height as the default robot attitude
    *   - in x/y plane is the point in-between both feet center
-   * This should ensure that the Xsens trajectory is always retargetted w.r.t a 
+   * This should ensure that the Xsens trajectory is always retargetted w.r.t a
    * meaningful base_link frame
    */
   auto posW = robot.posW();
@@ -149,7 +150,7 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
   auto midFootPosW = sva::interpolate(leftFootPosW, rightFootPosW, 0.5);
   Eigen::Matrix3d R_above_feet_yaw =
       stateObservation::kine::mergeRoll1Pitch1WithYaw2(Eigen::Matrix3d::Identity(), midFootPosW.rotation());
-  Eigen::Vector3d t_above_feet = Eigen::Vector3d{midFootPosW.translation().x(), midFootPosW.translation().y(), robot.module().default_attitude()[6] };
+  Eigen::Vector3d t_above_feet = Eigen::Vector3d{midFootPosW.translation().x(), midFootPosW.translation().y(), robot.module().default_attitude()[6]};
   initPosW_ = sva::PTransformd{R_above_feet_yaw, t_above_feet};
 
   // Initialize tasks
@@ -179,9 +180,9 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
     }
   }
 
-  const auto & baseLinkName = robot.mb().body(0).name();
+  const auto &baseLinkName = robot.mb().body(0).name();
   auto fixedBodies = config_("fixedBodies", std::vector<std::string>{});
-  if(fixBaseLink_ && 
+  if (fixBaseLink_ &&
       std::find(fixedBodies.begin(), fixedBodies.end(), baseLinkName) == fixedBodies.end())
   {
     fixedBodies.push_back(baseLinkName);
@@ -194,7 +195,7 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
     task->name(fmt::format("fixed_{}", fixedBody));
     task->selectUnactiveJoints(ctl.solver(), unactiveJoints_);
     ctl.solver().addTask(task.get());
-    if(fixedBody == baseLinkName)
+    if (fixedBody == baseLinkName)
     {
       task->target(initPosW_);
     }
@@ -251,33 +252,32 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
     }
   }
 
-  for (const auto & [fixedBodyName, fixedBodyTask] : fixedTasks_)
+  for (const auto &[fixedBodyName, fixedBodyTask] : fixedTasks_)
   {
     fixedBodyTask->stiffness(percentStiffness * fixedStiffness_);
   }
 
-  if(finished_ || ds.call<bool>("Replay::is_finished"))
-  { // REDUCE STIFFNESS BEFORE STOPPING TO PREVENT DISCONTINUITIES
-    static double tend = t_;
-    // trajectory is finised here, reduce stiffness
-    double endPercentStiffness = endStiffnessInterpolator_.compute(t_ - tend);
+  auto currentTime = ds.call<double>("Replay::GetCurrentTime");
+  auto endTime = ds.call<double>("Replay::GetEndTime");
+  double interpolationDuration = endStiffnessInterpolator_.values().back().first;
+  // REDUCE STIFFNESS BEFORE STOPPING TO PREVENT DISCONTINUITIES
+  // Here the trajectory is almost finished
+  if (endTime - currentTime <= interpolationDuration)
+  {
+    double endPercentStiffness = endStiffnessInterpolator_.compute(interpolationDuration - (endTime - currentTime));
     for (const auto &bodyName : activeBodies_)
     {
-      tasks_[bodyName]->stiffness(endPercentStiffness);
+      const auto &body = bodyConfigurations_[bodyName];
+      tasks_[bodyName]->stiffness(endPercentStiffness * body.stiffness);
     }
-    for (const auto & [fixedBodyName, fixedBodyTask] : fixedTasks_)
+    for (const auto &[fixedBodyName, fixedBodyTask] : fixedTasks_)
     {
       fixedBodyTask->stiffness(endPercentStiffness * fixedStiffness_);
-    }
-    if(t_-tend > endStiffnessInterpolator_.values().back().first)
-    {
-      mc_rtc::log::warning("FINISHED");
-      return true;
     }
   }
 
   t_ += ctl.timeStep;
-  return false; 
+  return finished_ || ds.call<bool>("Replay::is_finished");
 }
 
 void XsensRetargetting::teardown(mc_control::fsm::Controller &ctl)

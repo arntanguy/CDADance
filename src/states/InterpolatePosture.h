@@ -112,7 +112,7 @@ struct ConfigurationLoader<LookAtConfig>
 struct PostureConfig
 {
   double t;
-  bool halfsitting = false; // when halfsitting is true, ignore posture and use halfsitting instead
+  bool halfsitting = false;  // when halfsitting is true, ignore posture and use halfsitting instead
   std::map<std::string, double> posture;
   std::map<std::string, Shake> shake;
   Eigen::Vector3d comOffset = Eigen::Vector3d::Zero();
@@ -122,7 +122,7 @@ struct PostureConfig
   {
     t = config("time");
     halfsitting = config("halfsitting", false);
-    if(!halfsitting)
+    if (!halfsitting)
     {
       posture = config("posture");
     }

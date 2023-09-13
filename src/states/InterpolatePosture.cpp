@@ -108,12 +108,12 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
   {
     t += postureConfig.t;
     postureConfig.t = t;
-    if(postureConfig.halfsitting)
+    if (postureConfig.halfsitting)
     {
       for (int i = 0; i < rjo.size(); ++i)
       {
-        const auto & hsStance = robot.module().stance();
-        const auto & jName = rjo[i];
+        const auto &hsStance = robot.module().stance();
+        const auto &jName = rjo[i];
         if (robot.hasJoint(jName))
         {
           postureConfig.posture[jName] = hsStance.at(jName)[0];
@@ -188,7 +188,7 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
   // Example in yaml:
   //   posture_task:
   //     stiffness: 100
-  if(useDefaultPostureTask_)
+  if (useDefaultPostureTask_)
   {
     postureTask_ = ctl.getPostureTask(robot.name());
   }
@@ -199,7 +199,7 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
   }
   initialPostureStiffness_ = postureTask_->stiffness();
   initialPostureWeight_ = postureTask_->weight();
-  //postureTask_->load(ctl.solver(), robotConfig("posture_task", mc_rtc::Configuration{}));
+  postureTask_->load(ctl.solver(), robotConfig("posture_task", mc_rtc::Configuration{}));
   postureTask_->reset();
 
   lookAt_ = std::make_shared<mc_tasks::LookAtTask>(ctl.robot().frame("NECK_P_LINK"), Eigen::Vector3d{1, 0, 0}, 10.0, 100.0);
@@ -360,7 +360,7 @@ bool InterpolatePosture::run(mc_control::fsm::Controller &ctl)
   // Change the posture target in the posture task
   if (updatePosture_)
   {
-    // postureTask_->posture(posture);
+    postureTask_->posture(posture);
   }
 
   if (updateCoM_)
@@ -405,11 +405,11 @@ void InterpolatePosture::teardown(mc_control::fsm::Controller &ctl)
   {
     ctl.solver().removeTask(lookAt_);
   }
-  if(!useDefaultPostureTask_)
+  if (!useDefaultPostureTask_)
   {
     ctl.solver().removeTask(postureTask_);
   }
-  if(restorePostureGains_ && useDefaultPostureTask_)
+  if (restorePostureGains_ && useDefaultPostureTask_)
   {
     postureTask_->stiffness(initialPostureStiffness_);
     postureTask_->weight(initialPostureWeight_);

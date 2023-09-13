@@ -35,7 +35,7 @@ void Walk::start(mc_control::fsm::Controller &ctl)
     walk.load_plan(config_("plan"));
   }
   /* mc_rtc::log::info("refVel is {}", refVel); */
-  //walk.set_planner_ref_vel(refVel);
+  // walk.set_planner_ref_vel(refVel);
   Eigen::Vector3d startPos_ = ctl.robot().posW().translation();
   if (autoWalk_)
   {
@@ -51,13 +51,10 @@ bool Walk::run(mc_control::fsm::Controller &ctl)
   auto &walk = *ctl.datastore().get<WalkingInterfacePtr>("WalkingInterface");
   if (!walking_)
   {
-    if(!walk.is_walking()) return false;
-    else walking_ = true;
-  }
-
-  if(walk.is_walking())
-  {
-    mc_rtc::log::info("IS WALKING");
+    if (!walk.is_walking())
+      return false;
+    else
+      walking_ = true;
   }
 
   /* if (useStopDistance_ && (ctl.robot().posW().translation() - startPos_).norm() >= stopDistance_) */

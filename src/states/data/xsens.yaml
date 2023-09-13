@@ -76,7 +76,7 @@ Dance::XsensRetargetting::PetiteDance:
   base: XsensRetargetting::Standing
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio05_fix_from_3_to_132.bin
   start_time: 6.4
-  end_time: 66.4 
+  end_time: 66.4
   #end_time: 124.5
   robot: hrp4
   stiffness: 100
@@ -88,7 +88,7 @@ Dance::XsensRetargetting::PetiteDance:
 Dance::XsensRetargetting::GrandeDance:
   base: Dance::XsensRetargetting::PetiteDance
   start_time: 66.4
-  end_time: 124.5 
+  end_time: 124.5
 
 # PetiteDanceEnervee
 Dance::XsensRetargetting::Deception:
@@ -151,4 +151,3 @@ Dance::XsensRetargetting::Flying:
     rotation: [0.0, 0.34, 0.0]
   fixBaseLink: true
   initialStiffnessInterpolationDuration: 5
-
