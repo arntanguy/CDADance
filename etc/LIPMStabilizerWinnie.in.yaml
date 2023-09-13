@@ -15,18 +15,19 @@ VerboseStateFactory: false
 Plugins: [footsteps_planner_plugin,mc_joystick_plugin,MosquittoPlugin, Replay, XsensPlugin]
 
 Replay:
-  # Salutations
-  # log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio02_fix_from_4_to_53.bin
-  # Flying
-  # log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio08_fix_cutSecondPart_from_34_to_120.bin
-  # ListenToRobot
-  # log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio04_fix_from_5_to_31.bin
-  # PetiteDanse
-  # log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio05_fix_from_3_to_132.bin
-  # PetiteDanceEnervee
-  # log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio06_fix_from_3_to_63.bin
-  # Presence
-  # log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio03_fix_from_8_to_28.bin
+  preload_logs:
+    # Salutations
+    - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio02_fix_from_4_to_53.bin
+    # Flying
+    - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio08_fix_cutSecondPart_from_34_to_120.bin
+    # ListenToRobot
+    - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio04_fix_from_5_to_31.bin
+    # PetiteDanse
+    - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio05_fix_from_3_to_132.bin
+    # PetiteDanceEnervee
+    - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio06_fix_from_3_to_63.bin
+    # Presence
+    - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio03_fix_from_8_to_28.bin
   with-inputs: false
   with-gui-inputs: false
   with-outputs: false

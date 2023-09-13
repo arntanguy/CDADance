@@ -169,6 +169,7 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
 
 bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
 {
+  auto & ds = ctl.datastore();
   auto &robot = ctl.robot(robot_);
   Eigen::VectorXd dimW = Eigen::VectorXd::Ones(6);
 
@@ -215,7 +216,7 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
 
   t_ += ctl.timeStep;
   output("OK");
-  return finished_;
+  return ds.call<bool>("Replay::is_finished");
 }
 
 void XsensRetargetting::teardown(mc_control::fsm::Controller &ctl)
