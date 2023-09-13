@@ -90,7 +90,6 @@ Dance::XsensRetargetting::PetiteDanceEnervee:
 Dance::XsensRetargetting::FinDance:
   base: XsensRetargetting::Standing
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio06_fix_from_3_to_63.bin
-  # TODO adjust timings
   start_time: 50.87 
   end_time: 58.4
   robot: hrp4

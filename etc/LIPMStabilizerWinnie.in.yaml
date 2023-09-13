@@ -1032,17 +1032,17 @@ states:
     # PetiteDanceEnervee
     # Flying
     transitions:
-      - [Pause_2s, OK, Dance::XsensRetargetting::Salutations, Auto]
-      - [Dance::XsensRetargetting::Salutations, OK, Dance::XsensRetargetting::ListenToRobot, Auto]
-      - [Dance::XsensRetargetting::ListenToRobot, OK, Walk::FollowMe, Auto]
-      - [Walk::FollowMe, OK, Dance::LookRight, Auto]
-      - [Dance::LookRight, OK, Dance::XsensRetargetting::Doute, Auto]
-      - [Dance::XsensRetargetting::Doute, OK, Dance::Seq4::ConditionBaseMovement::withPubSub, Auto]
-      - [Dance::Seq4::ConditionBaseMovement::withPubSub, OK, Dance::XsensRetargetting::PetiteDance, Auto]
-      - [Dance::XsensRetargetting::PetiteDance, OK, Dance::XsensRetargetting::PetiteDanceEnervee, Auto]
-      - [Dance::XsensRetargetting::PetiteDanceEnervee, OK, Dance::XsensRetargetting::FinDance, Auto]
-      - [Dance::XsensRetargetting::FinDance, OK, Walk::FaceScene, Auto]
-      - [Walk::FaceScene, OK, Dance::PrepareFlying, Auto]
+      - [Pause_2s, OK, Dance::XsensRetargetting::Salutations, Strict]
+      - [Dance::XsensRetargetting::Salutations, OK, Dance::XsensRetargetting::ListenToRobot, Strict]
+      - [Dance::XsensRetargetting::ListenToRobot, OK, Walk::FollowMe, Strict]
+      - [Walk::FollowMe, OK, Dance::LookRight, Strict]
+      - [Dance::LookRight, OK, Dance::XsensRetargetting::Doute, Strict]
+      - [Dance::XsensRetargetting::Doute, OK, Dance::Seq4::ConditionBaseMovement::withPubSub, Strict]
+      - [Dance::Seq4::ConditionBaseMovement::withPubSub, OK, Dance::XsensRetargetting::PetiteDance, Strict]
+      - [Dance::XsensRetargetting::PetiteDance, OK, Dance::XsensRetargetting::PetiteDanceEnervee, Strict]
+      - [Dance::XsensRetargetting::PetiteDanceEnervee, OK, Dance::XsensRetargetting::FinDance, Strict]
+      - [Dance::XsensRetargetting::FinDance, OK, Walk::FaceScene, Strict]
+      - [Walk::FaceScene, OK, Dance::PrepareFlying, Strict]
       - [Dance::PrepareFlying, OK, Dance::XsensRetargetting::Flying, Strict]
       - [Dance::XsensRetargetting::Flying, OK, HalfSitting::Final, Auto]
     configs:
