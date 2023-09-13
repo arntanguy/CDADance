@@ -164,6 +164,7 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
   }
 
   initPosW_ = robot.posW();
+  output("OK");
   run(ctl);
 }
 
@@ -215,8 +216,7 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
   }
 
   t_ += ctl.timeStep;
-  output("OK");
-  return ds.call<bool>("Replay::is_finished");
+  return finished_ || ds.call<bool>("Replay::is_finished");
 }
 
 void XsensRetargetting::teardown(mc_control::fsm::Controller &ctl)

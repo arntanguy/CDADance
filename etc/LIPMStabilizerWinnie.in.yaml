@@ -1009,12 +1009,12 @@ states:
     # PetiteDanceEnervee
     # Flying
     transitions:
-      - [HalfSitting, OK, Dance::XsensRetargetting::Salutations, Strict]
-      - [Dance::XsensRetargetting::Salutations, OK, Dance::XsensRetargetting::ListenToRobot, Strict]
-      - [Dance::XsensRetargetting::ListenToRobot, OK, Walk::FollowMe, Strict]
-      - [Walk::FollowMe, OK, Dance::XsensRetargetting::Presence, Strict]
-      - [Dance::XsensRetargetting::Presence, OK, Dance::XsensRetargetting::PetiteDance, Strict]
-      - [Dance::XsensRetargetting::PetiteDance, OK, Dance::XsensRetargetting::PetiteDanceEnervee, Strict]
+      - [HalfSitting, OK, Dance::XsensRetargetting::Salutations, Auto]
+      - [Dance::XsensRetargetting::Salutations, OK, Dance::XsensRetargetting::ListenToRobot, Auto]
+      - [Dance::XsensRetargetting::ListenToRobot, OK, Walk::FollowMe, Auto]
+      - [Walk::FollowMe, OK, Dance::XsensRetargetting::Presence, Auto]
+      - [Dance::XsensRetargetting::Presence, OK, Dance::XsensRetargetting::PetiteDance, Auto]
+      - [Dance::XsensRetargetting::PetiteDance, OK, Dance::XsensRetargetting::PetiteDanceEnervee, Auto]
         # TODO XXX IMPORTANT figure out how to remove the stabilizer first
       - [Dance::XsensRetargetting::PetiteDanceEnervee, OK, Dance::XsensRetargetting::Flying, Strict]
       - [Dance::XsensRetargetting::Flying, OK, HalfSitting2, Auto]
