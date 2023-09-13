@@ -3,6 +3,8 @@
 #include <mc_control/fsm/Controller.h>
 #include <mc_rtc/logging.h>
 #include <mc_tasks/TransformTask.h>
+#include <SpaceVecAlg/SpaceVecAlg>
+#include <state-observation/tools/rigid-body-kinematics.hpp>
 
 void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
 {
@@ -128,6 +130,25 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
       {{0.0, config_("initialStiffness", 0.1)},
        {config_("initialStiffnessInterpolationDuration", 2.0), 1.}});
 
+  /**
+   * COMPUTE INITIAL POSE FOR THE BASE LINK
+   * This pose is:
+   * - horizontal in both pitch and roll, and has the same yaw as the frame in-between both feet center
+   * - in translation:
+   *   - has the same height as the default robot attitude
+   *   - in x/y plane is the point in-between both feet center
+   * This should ensure that the Xsens trajectory is always retargetted w.r.t a 
+   * meaningful base_link frame
+   */
+  auto posW = robot.posW();
+  auto leftFootPosW = robot.frame("LeftFootCenter").position();
+  auto rightFootPosW = robot.frame("RightFootCenter").position();
+  auto midFootPosW = sva::interpolate(leftFootPosW, rightFootPosW, 0.5);
+  Eigen::Matrix3d R_above_feet_yaw =
+      stateObservation::kine::mergeRoll1Pitch1WithYaw2(Eigen::Matrix3d::Identity(), midFootPosW.rotation());
+  Eigen::Vector3d t_above_feet = Eigen::Vector3d{midFootPosW.translation().x(), midFootPosW.translation().y(), robot.module().default_attitude()[6] };
+  initPosW_ = sva::PTransformd{R_above_feet_yaw, t_above_feet};
+
   // Initialize tasks
   for (auto &bodyName : activeBodies_)
   {
@@ -155,7 +176,14 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
     }
   }
 
-  for (const auto &fixedBody : config_("fixedBodies", std::vector<std::string>{}))
+  const auto & baseLinkName = robot.mb().body(0).name();
+  auto fixedBodies = config_("fixedBodies", std::vector<std::string>{});
+  if(fixBaseLink_ && 
+      std::find(fixedBodies.begin(), fixedBodies.end(), baseLinkName) == fixedBodies.end())
+  {
+    fixedBodies.push_back(baseLinkName);
+  }
+  for (const auto &fixedBody : fixedBodies)
   {
     mc_rtc::log::info("[{}] Fixed body: {}", fixedBody);
     auto task = std::make_unique<mc_tasks::TransformTask>(ctl.robot().frame(fixedBody), fixedStiffness_, fixedWeight_);
@@ -163,10 +191,13 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
     task->name(fmt::format("fixed_{}", fixedBody));
     task->selectUnactiveJoints(ctl.solver(), unactiveJoints_);
     ctl.solver().addTask(task.get());
+    if(fixedBody == baseLinkName)
+    {
+      task->target(initPosW_);
+    }
     fixedTasks_[fixedBody] = std::move(task);
   }
 
-  initPosW_ = robot.posW();
   output("OK");
   run(ctl);
 }
@@ -179,13 +210,12 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
 
   std::string baseLinkSegment = "Pelvis";
   const auto baseLinkSegmentPose = bodyConfigurations_["body"].offset * ctl.datastore().call<sva::PTransformd>("XsensPlugin::GetSegmentPose", static_cast<const std::string &>(baseLinkSegment));
+  double percentStiffness = stiffnessInterpolator_.compute(t_);
 
   for (const auto &bodyName : activeBodies_)
   {
     const auto &body = bodyConfigurations_[bodyName];
     const auto &segmentName = body.segmentName;
-
-    double percentStiffness = stiffnessInterpolator_.compute(t_);
 
     if (robot.hasBody(bodyName))
     {
@@ -216,6 +246,11 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
     {
       mc_rtc::log::error("[{}] No body named {}", name(), bodyName);
     }
+  }
+
+  for (const auto & [fixedBodyName, fixedBodyTask] : fixedTasks_)
+  {
+    fixedBodyTask->stiffness(percentStiffness * fixedStiffness_);
   }
 
   t_ += ctl.timeStep;

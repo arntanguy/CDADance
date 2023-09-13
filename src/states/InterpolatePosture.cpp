@@ -45,6 +45,8 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
   //          amplitude: 1 # rad
   config_("autoplay", autoplay_);
   config_("repeat", repeat_);
+  config_("useDefaultPostureTask", useDefaultPostureTask_);
+  config_("restorePostureGains", restorePostureGains_);
   config_("goBackToInitialPosture", goBackToInitialPosture_);
   config_("usePostureTransitionCriteria", usePostureTransitionCriteria_);
   config_("postureTransitionSpeed", postureTransitionSpeed_);
@@ -54,6 +56,8 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
   robotConfig("autoplay", autoplay_);
   robotConfig("improvise", improvise_);
   robotConfig("goBackToInitialPosture", goBackToInitialPosture_);
+  robotConfig("useDefaultPostureTask", useDefaultPostureTask_);
+  robotConfig("restorePostureGains", restorePostureGains_);
   robotConfig("usePostureTransitionCriteria", usePostureTransitionCriteria_);
   robotConfig("postureTransitionSpeed", postureTransitionSpeed_);
   robotConfig("enableShake", enableShake_);
@@ -83,9 +87,9 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
   initPosture.t = 0.0;
   for (int i = 0; i < rjo.size(); ++i)
   {
-    std::cout << "Joint " << rjo[i] << std::endl;
     if (robot.hasJoint(rjo[i]))
     {
+      std::cout << "Joint " << rjo[i] << std::endl;
       initPosture.posture[rjo[i]] = robot.mbc().q[robot.jointIndexInMBC(i)][0];
     }
   }
@@ -104,6 +108,18 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
   {
     t += postureConfig.t;
     postureConfig.t = t;
+    if(postureConfig.halfsitting)
+    {
+      for (int i = 0; i < rjo.size(); ++i)
+      {
+        const auto & hsStance = robot.module().stance();
+        const auto & jName = rjo[i];
+        if (robot.hasJoint(jName))
+        {
+          postureConfig.posture[jName] = hsStance.at(jName)[0];
+        }
+      }
+    }
     postureSequence_.push_back(postureConfig);
   }
 
@@ -172,10 +188,19 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
   // Example in yaml:
   //   posture_task:
   //     stiffness: 100
-  postureTask_ = std::make_shared<mc_tasks::PostureTask>(ctl.solver(), robot.robotIndex());
-  postureTask_->load(ctl.solver(), robotConfig("posture_task", mc_rtc::Configuration{}));
+  if(useDefaultPostureTask_)
+  {
+    postureTask_ = ctl.getPostureTask(robot.name());
+  }
+  else
+  {
+    postureTask_ = std::make_shared<mc_tasks::PostureTask>(ctl.solver(), robot.robotIndex());
+    ctl.solver().addTask(postureTask_);
+  }
+  initialPostureStiffness_ = postureTask_->stiffness();
+  initialPostureWeight_ = postureTask_->weight();
+  //postureTask_->load(ctl.solver(), robotConfig("posture_task", mc_rtc::Configuration{}));
   postureTask_->reset();
-  ctl.solver().addTask(postureTask_);
 
   lookAt_ = std::make_shared<mc_tasks::LookAtTask>(ctl.robot().frame("NECK_P_LINK"), Eigen::Vector3d{1, 0, 0}, 10.0, 100.0);
 
@@ -247,6 +272,7 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
           { return enableLookAt_; },
           [this]()
           { enableLookAt_ = !enableLookAt_; }));
+  run(ctl);
 }
 
 bool InterpolatePosture::run(mc_control::fsm::Controller &ctl)
@@ -334,7 +360,7 @@ bool InterpolatePosture::run(mc_control::fsm::Controller &ctl)
   // Change the posture target in the posture task
   if (updatePosture_)
   {
-    postureTask_->posture(posture);
+    // postureTask_->posture(posture);
   }
 
   if (updateCoM_)
@@ -379,7 +405,15 @@ void InterpolatePosture::teardown(mc_control::fsm::Controller &ctl)
   {
     ctl.solver().removeTask(lookAt_);
   }
-  ctl.solver().removeTask(postureTask_);
+  if(!useDefaultPostureTask_)
+  {
+    ctl.solver().removeTask(postureTask_);
+  }
+  if(restorePostureGains_ && useDefaultPostureTask_)
+  {
+    postureTask_->stiffness(initialPostureStiffness_);
+    postureTask_->weight(initialPostureWeight_);
+  }
 }
 
 EXPORT_SINGLE_STATE("InterpolatePosture", InterpolatePosture)

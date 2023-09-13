@@ -112,6 +112,7 @@ struct ConfigurationLoader<LookAtConfig>
 struct PostureConfig
 {
   double t;
+  bool halfsitting = false; // when halfsitting is true, ignore posture and use halfsitting instead
   std::map<std::string, double> posture;
   std::map<std::string, Shake> shake;
   Eigen::Vector3d comOffset = Eigen::Vector3d::Zero();
@@ -120,7 +121,11 @@ struct PostureConfig
   void load(const mc_rtc::Configuration& config)
   {
     t = config("time");
-    posture = config("posture");
+    halfsitting = config("halfsitting", false);
+    if(!halfsitting)
+    {
+      posture = config("posture");
+    }
     if (config.has("shake"))
     {
       shake = config("shake");
@@ -142,6 +147,7 @@ struct PostureConfig
     c.add("time", t);
     c.add("posture", posture);
     c.add("shake", shake);
+    c.add("halfsitting", halfsitting);
     if (lookAt)
     {
       c.add("lookAt", *lookAt);
@@ -181,6 +187,10 @@ struct InterpolatePosture : mc_control::fsm::State
  private:
   using PostureInterpolator = mc_trajectory::SequenceInterpolator<Eigen::VectorXd>;
   using CoMInterpolator = mc_trajectory::SequenceInterpolator<Eigen::Vector3d>;
+  bool useDefaultPostureTask_ = false;
+  bool restorePostureGains_ = false;
+  double initialPostureWeight_ = 0;
+  double initialPostureStiffness_ = 0;
   mc_tasks::PostureTaskPtr postureTask_;
   PostureInterpolator interpolator_;
   CoMInterpolator comInterpolator_;

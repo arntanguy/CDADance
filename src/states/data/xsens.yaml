@@ -18,8 +18,6 @@ XsensRetargetting::Standing:
     - L_SHOULDER_Y_LINK
     - L_ELBOW_P_LINK
     - l_wrist
-  fixedBodies:
-    - body
   fixBaseLink: true
   fixed_stiffness: 150
   fixed_weight: 8000
@@ -39,9 +37,7 @@ Dance::XsensRetargetting::Salutations:
     rotation: [0.0, 0.34, 0.0]
 
 Dance::XsensRetargetting::Salutations::HalfSitting:
-  base: HalfSitting
-  eval: 0.2
-  stiffness: 10
+  base: HalfSitting::Interpolation
 
 Dance::XsensRetargetting::ListenToRobot:
   base: XsensRetargetting::Standing
@@ -56,9 +52,7 @@ Dance::XsensRetargetting::ListenToRobot:
     rotation: [0.0, 0.4, 0.0]
 
 Dance::XsensRetargetting::ListenToRobot::HalfSitting:
-  base: HalfSitting
-  eval: 0.2
-  stiffness: 10
+  base: HalfSitting::Interpolation
 
 Dance::XsensRetargetting::Doute:
   base: XsensRetargetting::Standing
@@ -73,9 +67,7 @@ Dance::XsensRetargetting::Doute:
     rotation: [0.0, 0.4, 0.0]
 
 Dance::XsensRetargetting::Doute::HalfSitting:
-  base: HalfSitting
-  eval: 0.2
-  stiffness: 10
+  base: HalfSitting::Interpolation
 
 Dance::XsensRetargetting::Doute2:
   base: Dance::XsensRetargetting::Doute
@@ -135,11 +127,7 @@ Dance::XsensRetargetting::FinDance2:
 Dance::PrepareFlying:
   base: Meta
   transitions:
-    - [HalfSitting, OK, DisableWalk, Auto]
-  configs:
-    HalfSitting:
-      stiffness: 20
-      eval: 0.2
+    - [HalfSitting::Interpolation, OK, DisableWalk, Auto]
   RemoveContacts:
   - r1: hrp4
     r1Surface: LeftFootCenter

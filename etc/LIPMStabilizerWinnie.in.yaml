@@ -1261,15 +1261,12 @@ states:
   Walk::Base:
     base: Meta
     transitions:
-      - [HalfSitting, OK, Walk, Auto]
+      - [HalfSitting::Interpolation, OK, Walk, Auto]
     configs:
       Walk:
         plan: warmup
         useStopDistance: false
         autoWalk: true
-      HalfSitting:
-        stiffness: 10.0
-        eval: 0.2
 
   Walk::FollowMe:
     base: Walk::Base
@@ -1280,7 +1277,7 @@ states:
   Walk::FaceScene:
     base: Walk::Base
     transitions:
-      - [HalfSitting, OK, Walk, Auto]
+      - [HalfSitting::Interpolation, OK, Walk, Auto]
     configs:
       Walk:
         autoWalk: true
@@ -1300,48 +1297,8 @@ states:
         autoWalk: true
         plan: forward_and_left
 
-  Dance::Demo::FSM:
-    base: Meta
-    ResetPostures: false
-    # Interaction?
-    # Salutations
-    # Toucher
-    # Marcher
-    # Doute
-    # Interaction
-    # PetiteDance
-    # PetiteDanceEnervee
-    # Flying
-    transitions:
-      - [HalfSitting, Salutation, Salutations, Strict]
-      - [HalfSitting, PetiteDanse, PetiteDanse, Strict]
-      - [HalfSitting, ConditionBaseMovement, Dance::Seq4::ConditionBaseMovement::withPubSub, Strict]
-      - [HalfSitting, FollowMe, Walk::FollowMe, Strict]
-      - [HalfSitting, XsensSalutation, Dance::XsensRetargetting::Salutations, Strict]
-      - [HalfSitting, XsensFlying, Dance::XsensRetargetting::Flying, Strict]
-      - [HalfSitting, XsensListenToRobot, Dance::XsensRetargetting::ListenToRobot, Strict]
-      - [HalfSitting, XsensDoute, Dance::XsensRetargetting::Doute, Strict]
-      - [HalfSitting, XsensPetiteDance, Dance::XsensRetargetting::PetiteDance, Strict]
-      - [HalfSitting, XsensPetiteDanceEnervee, Dance::XsensRetargetting::PetiteDanceEnervee, Strict]
-      - [Salutations, OK, HalfSitting, Auto]
-      - [PetiteDanse, OK, HalfSitting, Auto]
-      - [Dance::Seq4::ConditionBaseMovement::withPubSub, OK, HalfSitting, Auto]
-      - [Walk::FollowMe, OK, HalfSitting, Auto]
-      - [Dance::XsensRetargetting::Salutations, OK, HalfSitting, Auto]
-      - [Dance::XsensRetargetting::Flying, OK, HalfSitting, Auto]
-      - [Dance::XsensRetargetting::ListenToRobot, OK, HalfSitting, Auto]
-      - [Dance::XsensRetargetting::PetiteDance, OK, HalfSitting, Auto]
-      - [Dance::XsensRetargetting::PetiteDanceEnervee, OK, HalfSitting, Auto]
-      - [Dance::XsensRetargetting::Doute, OK, HalfSitting, Auto]
-    configs:
-      HalfSitting:
-        stiffness: 10.0
-        eval: 0.1
-
   HalfSitting::Final:
-    base: HalfSitting
-    stiffness: 10.0
-    eval: 0.1
+    base: HalfSitting::Interpolation
 
   Demo::WaitForStart:
     base: Pause
@@ -1417,14 +1374,12 @@ states:
       - [Demo::WaitForStart, OK, Dance::XsensRetargetting::Salutations, Strict]
       - [Dance::XsensRetargetting::Salutations, OK, Dance::XsensRetargetting::Salutations::HalfSitting, Auto]
       - [Dance::XsensRetargetting::Salutations::HalfSitting, OK, Dance::XsensRetargetting::ListenToRobot, Strict]
-      - [Dance::XsensRetargetting::ListenToRobot, OK, Dance::XsensRetargetting::ListenToRobot::HalfSitting, Auto]
-      - [Dance::XsensRetargetting::ListenToRobot::HalfSitting, OK, Walk::FollowMe, Strict]
-      - [Walk::FollowMe, OK, Dance::LookRight, Auto] ## XXX duplicated halfsitting here
+      - [Dance::XsensRetargetting::ListenToRobot, OK, Walk::FollowMe, Strict]
+      - [Walk::FollowMe, OK, Dance::LookRight, Auto]
       - [Dance::LookRight, OK, Walk::BackAndTurn, Strict]
       - [Walk::BackAndTurn, OK, Dance::XsensRetargetting::Doute, Strict]
-      - [Dance::XsensRetargetting::Doute, OK, Dance::XsensRetargetting::Doute::HalfSitting, Auto]
-      - [Dance::XsensRetargetting::Doute::HalfSitting, OK, Walk::ForwardAndLeft, Strict] # XXX duplicated halfsitting here
-      - [Walk::ForwardAndLeft, OK, Dance::Seq4::ConditionBaseMovement::withPubSub, Strict]
+      - [Dance::XsensRetargetting::Doute, OK,  Walk::ForwardAndLeft, Strict]
+      - [Walk::ForwardAndLeft, OK, Dance::Seq4::ConditionBaseMovement::withPubSub, Auto]
       - [Dance::Seq4::ConditionBaseMovement::withPubSub, OK, Dance::XsensRetargetting::PetiteDance, Strict]
       - [Dance::XsensRetargetting::PetiteDance, OK, Dance::XsensRetargetting::GrandeDance, Strict]
       - [Dance::XsensRetargetting::GrandeDance, OK, Dance::XsensRetargetting::Deception, Strict]
@@ -1459,19 +1414,15 @@ states:
       - [Dance::ConditionBaseMovement, Seq5, DrawCircleLeftHand::Posture, Auto]
       - [Dance::ConditionBaseMovement, Seq6, LeftHeadTilt, Auto]
       - [Dance::ConditionBaseMovement, Seq7, RightHeadTilt, Auto]
-      - [TouchHead, OK, HalfSitting, Auto]
-      - [DrawCircleRightHand::Posture, OK, HalfSitting, Auto]
-      - [RaiseRightHand_v2::Posture, OK, HalfSitting, Auto]
-      - [TouchHead_L, OK, HalfSitting, Auto]
-      - [RaiseLeftHand::Posture, OK, HalfSitting, Auto]
-      - [DrawCircleLeftHand::Posture, OK, HalfSitting, Auto]
-      - [LeftHeadTilt, OK, HalfSitting, Auto]
-      - [RightHeadTilt, OK, HalfSitting, Auto]
-      - [HalfSitting, OK, Dance::ConditionBaseMovement, Auto]
-    configs:
-      HalfSitting:
-        stiffness: 10
-        eval: 0.25
+      - [TouchHead, OK, HalfSitting::Interpolation, Auto]
+      - [DrawCircleRightHand::Posture, OK, HalfSitting::Interpolation, Auto]
+      - [RaiseRightHand_v2::Posture, OK, HalfSitting::Interpolation, Auto]
+      - [TouchHead_L, OK, HalfSitting::Interpolation, Auto]
+      - [RaiseLeftHand::Posture, OK, HalfSitting::Interpolation, Auto]
+      - [DrawCircleLeftHand::Posture, OK, HalfSitting::Interpolation, Auto]
+      - [LeftHeadTilt, OK, HalfSitting::Interpolation, Auto]
+      - [RightHeadTilt, OK, HalfSitting::Interpolation, Auto]
+      - [HalfSitting::Interpolation, OK, Dance::ConditionBaseMovement, Auto]
 
   Dance::Seq4::ConditionBaseMovement::withPubSub:
     base: Parallel
