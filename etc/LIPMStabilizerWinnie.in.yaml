@@ -201,6 +201,67 @@ mpc:
 
 plans:
   hrp4:
+    follow_me:
+      com_height: 0.78
+      contacts:
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.03691597504138209, -0.0915817197714014, 0.0]
+            rotation: [1.0, -1.153591111524577e-16, 0.0, 1.153591111524577e-16, 1.0, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.03588793630829561, 0.08779337469175638, 0.0]
+            rotation: [0.9999896683463084, -0.004545679337587398, 0.0, 0.004545679337587398, 0.9999896683463084, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.11930369353557803, -0.09208283678949093, 0.0]
+            rotation: [0.9999974168520106, -0.0022729472730504114, 0.0, 0.0022729472730504114, 0.9999974168520106, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.10416666666666667, 0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.28660587514241606, 0.08753735815859586, 0.0]
+            rotation: [0.9999974168520106, -0.0022729472730504114, 0.0, 0.0022729472730504114, 0.9999974168520106, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.20833333333333335, 0.0, 0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.4530897957309559, -0.0928415169600412, 0.0]
+            rotation: [0.9999974168520106, -0.0022729472730504114, 0.0, 0.0022729472730504114, 0.9999974168520106, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.10416666666666667, 0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.5366052293554187, 0.08696912134033325, 0.0]
+            rotation: [0.9999974168520106, -0.0022729472730504114, 0.0, 0.0022729472730504114, 0.9999974168520106, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.5361960988462696, -0.09303041369302867, 0.0]
+            rotation: [0.9999974168520106, -0.0022729472730504114, 0.0, 0.0022729472730504114, 0.9999974168520106, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: RightFootCenter
+      double_support_duration: 0.1
+      final_dsp_duration: 0.6
+      init_dsp_duration: 0.6
+      landing_duration: 0.15
+      landing_pitch: 0.0
+      single_support_duration: 0.7
+      swing_height: 0.04
+      takeoff_duration: 0.05
+      takeoff_pitch: 0.0
     back_and_turn:
       com_height: 0.78
       contacts:
@@ -1203,8 +1264,9 @@ states:
       - [HalfSitting, OK, Walk, Auto]
     configs:
       Walk:
-        plan: custom_forward
+        plan: warmup
         useStopDistance: false
+        autoWalk: true
       HalfSitting:
         stiffness: 10.0
         eval: 0.2
@@ -1213,7 +1275,7 @@ states:
     base: Walk::Base
     configs:
       Walk:
-        plan: custom_forward
+        plan: follow_me
 
   Walk::FaceScene:
     base: Walk::Base
@@ -1284,6 +1346,61 @@ states:
   Demo::WaitForStart:
     base: Pause
 
+  Dance::PlaceHolder::MemoireRobot:
+    base: InterpolatePosture::Base
+    hrp4:
+      duration: 60
+      posture_sequence:
+        - time: 2.0
+          posture:
+            NECK_P: -1.0
+        - time: 2.0
+          posture:
+            NECK_P: 1.0
+        - time: 2.0
+          posture:
+            NECK_P: -1.0
+        - time: 2.0
+          posture:
+            NECK_P: 1.0
+        - time: 2.0
+          posture:
+            NECK_P: -1.0
+        - time: 2.0
+          posture:
+            NECK_P: 1.0
+        - time: 2.0
+          posture:
+            NECK_P: -1.0
+        - time: 2.0
+          posture:
+            NECK_P: 1.0
+        - time: 2.0
+          posture:
+            NECK_P: -1.0
+        - time: 2.0
+          posture:
+            NECK_P: 1.0
+        - time: 2.0
+          posture:
+            NECK_P: -1.0
+        - time: 2.0
+          posture:
+            NECK_P: 1.0
+        - time: 2.0
+          posture:
+            NECK_P: -1.0
+        - time: 2.0
+          posture:
+            NECK_P: 1.0
+        - time: 2.0
+          posture:
+            NECK_P: -1.0
+        - time: 2.0
+          posture:
+            NECK_P: 1.0
+
+
   Dance::Demo::FSM::FullSequence:
     base: Meta
     ResetPostures: false
@@ -1308,13 +1425,15 @@ states:
       - [Dance::XsensRetargetting::Doute, OK, Dance::XsensRetargetting::Doute::HalfSitting, Auto]
       - [Dance::XsensRetargetting::Doute::HalfSitting, OK, Walk::ForwardAndLeft, Strict] # XXX duplicated halfsitting here
       - [Walk::ForwardAndLeft, OK, Dance::Seq4::ConditionBaseMovement::withPubSub, Strict]
-      - [Dance::Seq4::ConditionBaseMovement::withPubSub, OK, Dance::XsensRetargetting::PetiteDance, Auto]
-      - [Dance::XsensRetargetting::PetiteDance, OK, Dance::XsensRetargetting::PetiteDanceEnervee, Strict]
-      - [Dance::XsensRetargetting::PetiteDanceEnervee, OK, Dance::XsensRetargetting::Doute2, Strict]
-      - [Dance::XsensRetargetting::Doute2, OK, Dance::XsensRetargetting::FinDance, Auto]
-      - [Dance::XsensRetargetting::FinDance, OK, Dance::XsensRetargetting::FinDance2, Auto]
-      - [Dance::XsensRetargetting::FinDance2, OK, Walk::FaceScene, Strict]
-      - [Walk::FaceScene, OK, Dance::PrepareFlying, Strict]
+      - [Dance::Seq4::ConditionBaseMovement::withPubSub, OK, Dance::XsensRetargetting::PetiteDance, Strict]
+      - [Dance::XsensRetargetting::PetiteDance, OK, Dance::XsensRetargetting::GrandeDance, Strict]
+      - [Dance::XsensRetargetting::GrandeDance, OK, Dance::XsensRetargetting::Deception, Strict]
+      # Fin de Deuxieme Scene
+      # RobotSeul (Doute2, FinDance, FinDance2)
+      - [Dance::XsensRetargetting::Deception, OK, Dance::XsensRetargetting::RobotSeul, Strict]
+      - [Dance::XsensRetargetting::RobotSeul, OK, Walk::FaceScene, Strict]
+      - [Walk::FaceScene, OK, Dance::PlaceHolder::MemoireRobot, Strict]
+      - [Dance::PlaceHolder::MemoireRobot, OK, Dance::PrepareFlying, Strict]
       - [Dance::PrepareFlying, OK, Dance::XsensRetargetting::Flying, Strict]
       - [Dance::XsensRetargetting::Flying, OK, HalfSitting::Final, Auto]
         # HalfSitting after
@@ -1349,6 +1468,10 @@ states:
       - [LeftHeadTilt, OK, HalfSitting, Auto]
       - [RightHeadTilt, OK, HalfSitting, Auto]
       - [HalfSitting, OK, Dance::ConditionBaseMovement, Auto]
+    configs:
+      HalfSitting:
+        stiffness: 10
+        eval: 0.25
 
   Dance::Seq4::ConditionBaseMovement::withPubSub:
     base: Parallel

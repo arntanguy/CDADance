@@ -22,24 +22,25 @@ void Walk::start(mc_control::fsm::Controller &ctl)
                                             }));
 
   config_("autoWalk", autoWalk_);
-  config_("useStopDistance", useStopDistance_);
-  config_("stopDistance", stopDistance_);
-  Eigen::Vector3d refVel = Eigen::Vector3d::Zero();
-  if (config_.has("refVel"))
-  {
-    refVel = config_("refVel");
-  }
+  /* config_("useStopDistance", useStopDistance_); */
+  /* config_("stopDistance", stopDistance_); */
+  /* Eigen::Vector3d refVel = Eigen::Vector3d::Zero(); */
+  /* if (config_.has("refVel")) */
+  /* { */
+  /*   refVel = config_("refVel"); */
+  /* } */
   if (config_.has("plan"))
   {
+    mc_rtc::log::warning("PLAN IS SET");
     walk.load_plan(config_("plan"));
   }
-  mc_rtc::log::info("refVel is {}", refVel);
-  walk.set_planner_ref_vel(refVel);
+  /* mc_rtc::log::info("refVel is {}", refVel); */
+  //walk.set_planner_ref_vel(refVel);
   Eigen::Vector3d startPos_ = ctl.robot().posW().translation();
   if (autoWalk_)
   {
     walk.start_walking();
-    walking_ = true;
+    mc_rtc::log::warning("ASKING TO START WALKING");
   }
   output("OK");
   run(ctl);
@@ -50,19 +51,25 @@ bool Walk::run(mc_control::fsm::Controller &ctl)
   auto &walk = *ctl.datastore().get<WalkingInterfacePtr>("WalkingInterface");
   if (!walking_)
   {
-    return false;
+    if(!walk.is_walking()) return false;
+    else walking_ = true;
   }
 
-  if (useStopDistance_ && (ctl.robot().posW().translation() - startPos_).norm() >= stopDistance_)
+  if(walk.is_walking())
   {
-    walk.set_planner_ref_vel(Eigen::Vector3d{0, 0, 0});
-    walk.stop_walking();
-    return true;
+    mc_rtc::log::info("IS WALKING");
   }
-  else
-  {
-  }
-  return walk.is_stopped();
+
+  /* if (useStopDistance_ && (ctl.robot().posW().translation() - startPos_).norm() >= stopDistance_) */
+  /* { */
+  /*   walk.set_planner_ref_vel(Eigen::Vector3d{0, 0, 0}); */
+  /*   walk.stop_walking(); */
+  /*   return true; */
+  /* } */
+  /* else */
+  /* { */
+  /* } */
+  return walking_ && walk.is_stopped();
 }
 
 void Walk::teardown(mc_control::fsm::Controller &ctl)

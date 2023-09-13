@@ -84,7 +84,8 @@ Dance::XsensRetargetting::PetiteDance:
   base: XsensRetargetting::Standing
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio05_fix_from_3_to_132.bin
   start_time: 6.4
-  end_time: 124.5
+  end_time: 66.4 
+  #end_time: 124.5
   robot: hrp4
   stiffness: 100
   weight: 1000
@@ -92,7 +93,13 @@ Dance::XsensRetargetting::PetiteDance:
     translation: [0.0, 0.0, 0.1]
     rotation: [0.0, 0.5, 0.0]
 
-Dance::XsensRetargetting::PetiteDanceEnervee:
+Dance::XsensRetargetting::GrandeDance:
+  base: Dance::XsensRetargetting::PetiteDance
+  start_time: 66.4
+  end_time: 124.5 
+
+# PetiteDanceEnervee
+Dance::XsensRetargetting::Deception:
   base: XsensRetargetting::Standing
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio06_fix_from_3_to_63.bin
   start_time: 4.7
@@ -103,6 +110,12 @@ Dance::XsensRetargetting::PetiteDanceEnervee:
   offset:
     translation: [0.0, 0.0, 0.1]
     rotation: [0.0, 0.5, 0.0]
+
+Dance::XsensRetargetting::RobotSeul:
+  base: Meta
+  transitions:
+    - [Dance::XsensRetargetting::Doute2, OK, Dance::XsensRetargetting::FinDance, Auto]
+    - [Dance::XsensRetargetting::FinDance, OK, Dance::XsensRetargetting::FinDance2, Auto]
 
 Dance::XsensRetargetting::FinDance:
   base: XsensRetargetting::Standing
@@ -150,3 +163,4 @@ Dance::XsensRetargetting::Flying:
     rotation: [0.0, 0.34, 0.0]
   fixBaseLink: true
   initialStiffnessInterpolationDuration: 5
+

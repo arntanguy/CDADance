@@ -62,6 +62,7 @@ bool AutonomousInteraction::run(mc_control::fsm::Controller &ctl)
   {
     debug_log("------ Return Index = {}; output = {} ------", segIdx, SeqName[segIdx]);
     output(SeqName[segIdx]);
+    return true;
   }
 
   debug_log("------ DEBUG leave AutonomousInteraction::run ------");
