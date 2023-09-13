@@ -42,7 +42,8 @@ struct XsensRetargetting : mc_control::fsm::State
   std::vector<std::string> unactiveJoints_ = {};
   std::vector<std::string> activeBodies_ = {};
 
-  mc_trajectory::SequenceInterpolator<double> stiffnessInterpolator_;
+  mc_trajectory::SequenceInterpolator<double> startStiffnessInterpolator_;
+  mc_trajectory::SequenceInterpolator<double> endStiffnessInterpolator_;
 
   bool debugmode_ = false;
   double t_ = 0;

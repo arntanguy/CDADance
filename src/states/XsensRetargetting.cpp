@@ -126,9 +126,12 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
                         mc_rtc::gui::Button("Finished", [this]()
                                             { finished_ = true; }));
 
-  stiffnessInterpolator_.values(
+  startStiffnessInterpolator_.values(
       {{0.0, config_("initialStiffness", 0.1)},
        {config_("initialStiffnessInterpolationDuration", 2.0), 1.}});
+  endStiffnessInterpolator_.values(
+      {{0.0, 1.0},
+       {config_("initialStiffnessInterpolationDuration", 2.0), config_("initialStiffness", 0.1)}});
 
   /**
    * COMPUTE INITIAL POSE FOR THE BASE LINK
@@ -210,7 +213,7 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
 
   std::string baseLinkSegment = "Pelvis";
   const auto baseLinkSegmentPose = bodyConfigurations_["body"].offset * ctl.datastore().call<sva::PTransformd>("XsensPlugin::GetSegmentPose", static_cast<const std::string &>(baseLinkSegment));
-  double percentStiffness = stiffnessInterpolator_.compute(t_);
+  double percentStiffness = startStiffnessInterpolator_.compute(t_);
 
   for (const auto &bodyName : activeBodies_)
   {
@@ -253,8 +256,28 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
     fixedBodyTask->stiffness(percentStiffness * fixedStiffness_);
   }
 
+  if(finished_ || ds.call<bool>("Replay::is_finished"))
+  { // REDUCE STIFFNESS BEFORE STOPPING TO PREVENT DISCONTINUITIES
+    static double tend = t_;
+    // trajectory is finised here, reduce stiffness
+    double endPercentStiffness = endStiffnessInterpolator_.compute(t_ - tend);
+    for (const auto &bodyName : activeBodies_)
+    {
+      tasks_[bodyName]->stiffness(endPercentStiffness);
+    }
+    for (const auto & [fixedBodyName, fixedBodyTask] : fixedTasks_)
+    {
+      fixedBodyTask->stiffness(endPercentStiffness * fixedStiffness_);
+    }
+    if(t_-tend > endStiffnessInterpolator_.values().back().first)
+    {
+      mc_rtc::log::warning("FINISHED");
+      return true;
+    }
+  }
+
   t_ += ctl.timeStep;
-  return finished_ || ds.call<bool>("Replay::is_finished");
+  return false; 
 }
 
 void XsensRetargetting::teardown(mc_control::fsm::Controller &ctl)
