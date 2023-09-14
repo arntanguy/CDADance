@@ -35,6 +35,7 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
     }
     const std::string &logName = config_("log");
     ds.call<void>("Replay::pause", config_("pause", false));
+    ds.call<void>("Replay::SkipIter", static_cast<size_t>(config_("skip_iter", 1)));
     ds.call<void>("Replay::SetStartTime", static_cast<double>(config_("start_time", 0.0)));
     if (config_.has("end_time"))
     {
