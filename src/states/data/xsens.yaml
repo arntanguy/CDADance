@@ -151,3 +151,28 @@ Dance::XsensRetargetting::Flying:
     rotation: [0.0, 0.34, 0.0]
   fixBaseLink: true
   initialStiffnessInterpolationDuration: 5
+
+Dance::XsensRetargetting::FlyToSky:
+  base: XsensRetargetting
+  log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio09_FlyToSky_fix_cut_from_29_to_46.5.bin
+  start_time: 0.0
+  end_time: 46
+  robot: hrp4
+  stiffness: 15
+  weight: 1000
+  offset:
+    translation: [0.0, 0.0, 0.1]
+    rotation: [0.0, 0.34, 0.0]
+  fixBaseLink: true
+  initialStiffnessInterpolationDuration: 5
+
+
+Dance::XsensRetargetting::LookAtVideo:
+  base: XsensRetargetting::Standing
+  log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio10_LookAtVideo_fix_cut_from_0_to_53.bin
+  robot: hrp4
+  stiffness: 100
+  weight: 1000
+  offset:
+    translation: [0.0, 0.0, 0.1]
+    rotation: [0.0, 0.0, 0.17]

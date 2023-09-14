@@ -28,6 +28,10 @@ Replay:
     - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio06_fix_from_3_to_63.bin
     # Presence
     - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio03_fix_from_8_to_28.bin
+    # FlyToSky
+    - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio09_FlyToSky_fix_cut_from_29_to_46.5.bin
+    # LookAtVideo
+    - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio10_LookAtVideo_fix_cut_from_0_to_53.bin
   with-inputs: false
   with-gui-inputs: false
   with-outputs: false
@@ -64,12 +68,14 @@ Xsens:
       segment: "Right Forearm"
       offset:
         translation: [0,0,0]
-        rotation: [-1.57, 0, 0]
+          #rotation: [-1.57, 0, 0]
+        rotation: [-0.75, 0, 0]
     r_wrist:
       segment: "Right Hand"
       offset:
         translation: [0,0,0]
-        rotation: [-1.57, 0, 0]
+        # rotation: [-1.57, 0, 0]
+        rotation: [0.0, 0, 0]
     L_SHOULDER_R_LINK:
       segment: "Left Shoulder"
     L_SHOULDER_Y_LINK:
@@ -82,12 +88,14 @@ Xsens:
       segment: "Left Forearm"
       offset:
         translation: [0,0,0]
-        rotation: [1.57, 0, 0]
+          #rotation: [1.57, 0, 0]
+        rotation: [0.75, 0, 0]
     l_wrist:
       segment: "Left Hand"
       offset:
         translation: [0,0,0]
-        rotation: [1.57, 0, 0]
+        # rotation: [1.57, 0, 0]
+        rotation: [0, 0, 0]
     R_HIP_P_LINK:
       segment: "Right Upper Leg"
     R_KNEE_P_LINK:
@@ -268,100 +276,72 @@ plans:
         - half_length: 0.112
           half_width: 0.065
           pose:
-            translation: [-0.32790156377014198, -0.026095169424085117, 0.0]
-            rotation: [0.7157708469309063, -0.6983352308768426, 0.0, 0.6983352308768426, 0.7157708469309063, 0.0, 0.0, 0.0, 1.0]
+            translation: [-0.04387403835147926, -0.04694767275361721, 0.0]
+            rotation: [0.4936272853291993, -0.869673561273726, 0.0, 0.869673561273726, 0.4936272853291993, 0.0, 0.0, 0.0, 1.0]
           ref_vel: [0.0, 0.0, 0.0]
           surface: RightFootCenter
         - half_length: 0.112
           half_width: 0.065
           pose:
-            translation: [-0.19823725562396853, 0.10299368874329029, 0.0]
-            rotation: [0.7180449508008172, -0.6959967303295699, 0.0, 0.6959967303295699, 0.7180449508008172, 0.0, 0.0, 0.0, 1.0]
+            translation: [0.11608189634976185, 0.042427838380258309, 0.0]
+            rotation: [0.4917865266869806, -0.8707158044787953, 0.0, 0.8707158044787953, 0.4917865266869806, 0.0, 0.0, 0.0, 1.0]
           ref_vel: [0.0, 0.0, 0.0]
           surface: LeftFootCenter
         - half_length: 0.112
           half_width: 0.065
           pose:
-            translation: [-0.3435049516142538, -0.01106258095554128, 0.0]
-            rotation: [0.7161718612849104, -0.697923967996305, 0.0, 0.697923967996305, 0.7161718612849104, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [-0.02378135951511725, 0.00002590628128492809, -0.0]
+            translation: [-0.06223418648735514, -0.027724811340789088, 0.0]
+            rotation: [0.25068382590308188, -0.9680690158406028, 0.0, 0.9680690158406028, 0.25068382590308188, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
           surface: RightFootCenter
         - half_length: 0.112
           half_width: 0.065
           pose:
-            translation: [-0.2497449376175162, 0.15352659870432029, 0.0]
-            rotation: [0.7108495531389111, -0.7033440927470782, 0.0, 0.7033440927470782, 0.7108495531389111, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [-0.04756095314948534, 0.0004131120951167599, -0.0]
+            translation: [0.13444204448563774, 0.02320497696743018, 0.0]
+            rotation: [0.25068382590308188, -0.9680690158406028, 0.0, 0.9680690158406028, 0.25068382590308188, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
           surface: LeftFootCenter
         - half_length: 0.112
           half_width: 0.065
           pose:
-            translation: [-0.41281543791575589, 0.05772760438988669, 0.0]
-            rotation: [0.6986888421097378, -0.7154256788174115, 0.0, 0.7154256788174115, 0.6986888421097378, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [-0.047546884012368739, 0.001228310549098197, -0.0]
+            translation: [-0.06547419552327348, -0.0014052767802406504, 0.0]
+            rotation: [-0.008413328779647234, -0.9999646073231021, 0.0, 0.9999646073231021, -0.008413328779647234, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
           surface: RightFootCenter
         - half_length: 0.112
           half_width: 0.065
           pose:
-            translation: [-0.3123577486121172, 0.21793194583686888, 0.0]
-            rotation: [0.6754795018878382, -0.7373787646314192, 0.0, 0.7373787646314192, 0.6754795018878382, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [-0.04748338472233087, 0.002746470717445637, -0.0]
+            translation: [0.13768205352155606, -0.0031145575931182565, 0.0]
+            rotation: [-0.008413328779647234, -0.9999646073231021, 0.0, 0.9999646073231021, -0.008413328779647234, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
           surface: LeftFootCenter
         - half_length: 0.112
           half_width: 0.065
           pose:
-            translation: [-0.48168185855110548, 0.13352369425747299, 0.0]
-            rotation: [0.6351829629691266, -0.7723617051315797, 0.0, 0.7723617051315797, 0.6351829629691266, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [-0.04726926954159945, 0.005275517329541218, -0.0]
+            translation: [-0.06179179104878703, 0.024856015178134465, 0.0]
+            rotation: [-0.26693712634355246, -0.963713946448554, 0.0, 0.963713946448554, -0.26693712634355246, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
           surface: RightFootCenter
         - half_length: 0.112
           half_width: 0.065
           pose:
-            translation: [-0.3649029133105772, 0.2824221643074261, 0.0]
-            rotation: [0.5666679689130678, -0.8239462440037813, 0.0, 0.8239462440037813, 0.5666679689130678, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [-0.0466434031335256, 0.00930633495067127, -0.0]
+            translation: [0.13399964904706963, -0.02937584955149337, 0.0]
+            rotation: [-0.26693712634355246, -0.963713946448554, 0.0, 0.963713946448554, -0.26693712634355246, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
           surface: LeftFootCenter
         - half_length: 0.112
           half_width: 0.065
           pose:
-            translation: [-0.5458921123455433, 0.22812300170954129, 0.0]
-            rotation: [0.4662544805439889, -0.8846506425548197, 0.0, 0.8846506425548197, 0.4662544805439889, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [-0.04523221904848869, 0.01470582490172543, -0.0]
+            translation: [-0.04282004933695764, 0.044196697411141589, 0.0]
+            rotation: [-0.5072695152895375, -0.861787467336302, 0.0, 0.861787467336302, -0.5072695152895375, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
           surface: RightFootCenter
         - half_length: 0.112
           half_width: 0.065
           pose:
-            translation: [-0.3976070364330102, 0.34471552038032957, 0.0]
-            rotation: [0.33496141853904307, -0.9422318441287751, 0.0, 0.9422318441287751, 0.33496141853904307, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [-0.04266450576480897, 0.02102272280022866, -0.0]
-          surface: LeftFootCenter
-        - half_length: 0.112
-          half_width: 0.065
-          pose:
-            translation: [-0.5864037221098558, 0.3427554952361493, 0.0]
-            rotation: [0.19168779680139653, -0.9814559534474416, 0.0, 0.9814559534474416, 0.19168779680139653, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [-0.03907957899986257, 0.027110909820295068, -0.0]
-          surface: RightFootCenter
-        - half_length: 0.112
-          half_width: 0.065
-          pose:
-            translation: [-0.41117754195727038, 0.4136259184394579, 0.0]
-            rotation: [0.0658718465346031, -0.9978280913234112, 0.0, 0.9978280913234112, 0.0658718465346031, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [-0.017666109339939639, 0.015920499750697687, -0.0]
-          surface: LeftFootCenter
-        - half_length: 0.112
-          half_width: 0.065
-          pose:
-            translation: [-0.5950628810887502, 0.42997272852286058, 0.0]
-            rotation: [0.013890635800081652, -0.9999035204643844, 0.0, 0.9999035204643844, 0.013890635800081652, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [0.0, -0.0, 0.0]
-          surface: RightFootCenter
-        - half_length: 0.112
-          half_width: 0.065
-          pose:
-            translation: [-0.41191711306953629, 0.4325169851534399, 0.0]
-            rotation: [0.013890635800081652, -0.9999035204643844, 0.0, 0.9999035204643844, 0.013890635800081652, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [0.0, -0.0, 0.0]
+            translation: [0.11502790733524023, -0.048716531784500489, 0.0]
+            rotation: [-0.5072695152895375, -0.861787467336302, 0.0, 0.861787467336302, -0.5072695152895375, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
           surface: LeftFootCenter
       double_support_duration: 0.2
       final_dsp_duration: 0.6
@@ -369,7 +349,7 @@ plans:
       landing_duration: 0.15
       landing_pitch: 0.0
       single_support_duration: 0.8
-      swing_height: 0.05
+      swing_height: 0.04
       takeoff_duration: 0.05
       takeoff_pitch: 0.0
 
@@ -379,113 +359,57 @@ plans:
         - half_length: 0.112
           half_width: 0.065
           pose:
-            translation: [0.0358879558182822, 0.08779340970826372, 0.0]
-            rotation: [0.9999896621531799, -0.0045470415403098449, 0.0, 0.0045470415403098449, 0.9999896621531799, 0.0, 0.0, 0.0, 1.0]
+            translation: [0.11503793091994223, -0.048893747810317637, 0.0]
+            rotation: [-0.5011315995181099, -0.8653710880104678, 0.0, 0.8653710880104678, -0.5011315995181099, 0.0, 0.0, 0.0, 1.0]
           ref_vel: [0.0, 0.0, 0.0]
           surface: LeftFootCenter
         - half_length: 0.112
           half_width: 0.065
           pose:
-            translation: [0.03691595803041622, -0.09158171239694126, 0.0]
-            rotation: [0.9999999999993025, 0.0000011811273687762365, 0.0, -0.0000011811273687762365, 0.9999999999993025, 0.0, 0.0, 0.0, 1.0]
+            translation: [-0.042887456981115307, 0.04404330340235582, 0.0]
+            rotation: [-0.4972752899880493, -0.8675928111546922, 0.0, 0.8675928111546922, -0.4972752899880493, 0.0, 0.0, 0.0, 1.0]
           ref_vel: [0.0, 0.0, 0.0]
           surface: RightFootCenter
         - half_length: 0.112
           half_width: 0.065
           pose:
-            translation: [0.11464627616984326, 0.12353944171802145, 0.0]
-            rotation: [0.9823955345456993, 0.18681277714511397, 0.0, -0.18681277714511397, 0.9823955345456993, 0.0, 0.0, 0.0, 1.0]
+            translation: [0.136129078772592, -0.01997727428173053, 0.0]
+            rotation: [-0.17278750662273308, -0.9849591248143748, 0.0, 0.9849591248143748, -0.17278750662273308, 0.0, 0.0, 0.0, 1.0]
           ref_vel: [0.0, 0.0, 0.0]
           surface: LeftFootCenter
         - half_length: 0.112
           half_width: 0.065
           pose:
-            translation: [0.14886354698228544, -0.05639950338085914, 0.0]
-            rotation: [0.9823955345456993, 0.18681277714511397, 0.0, -0.18681277714511397, 0.9823955345456993, 0.0, 0.0, 0.0, 1.0]
+            translation: [-0.0639786048337651, 0.015126829873768719, 0.0]
+            rotation: [-0.17278750662273308, -0.9849591248143748, 0.0, 0.9849591248143748, -0.17278750662273308, 0.0, 0.0, 0.0, 1.0]
           ref_vel: [0.0, 0.0, 0.0]
           surface: RightFootCenter
         - half_length: 0.112
           half_width: 0.065
           pose:
-            translation: [0.1737592710043086, 0.1915777313767702, 0.0]
-            rotation: [0.9443575129987452, 0.32892079235406337, 0.0, -0.32892079235406337, 0.9443575129987452, 0.0, 0.0, 0.0, 1.0]
+            translation: [0.13609882553417486, 0.015298420828501268, 0.0]
+            rotation: [0.17447669789768567, -0.9846613031345954, 0.0, 0.9846613031345954, 0.17447669789768567, 0.0, 0.0, 0.0, 1.0]
           ref_vel: [0.0, 0.0, 0.0]
           surface: LeftFootCenter
         - half_length: 0.112
           half_width: 0.065
           pose:
-            translation: [0.23400553466902286, 0.018605961137832983, 0.0]
-            rotation: [0.9443575129987452, 0.32892079235406337, 0.0, -0.32892079235406337, 0.9443575129987452, 0.0, 0.0, 0.0, 1.0]
+            translation: [-0.06394835159534793, -0.02014886523646308, 0.0]
+            rotation: [0.17447669789768567, -0.9846613031345954, 0.0, 0.9846613031345954, 0.17447669789768567, 0.0, 0.0, 0.0, 1.0]
           ref_vel: [0.0, 0.0, 0.0]
           surface: RightFootCenter
         - half_length: 0.112
           half_width: 0.065
           pose:
-            translation: [0.22818561038123054, 0.26724355658209367, 0.0]
-            rotation: [0.899693910719103, 0.4365213248112475, 0.0, -0.4365213248112475, 0.899693910719103, 0.0, 0.0, 0.0, 1.0]
+            translation: [0.11535026907678113, 0.0434297740413937, 0.0]
+            rotation: [0.5007003183586636, -0.8656206970697575, 0.0, 0.8656206970697575, 0.5007003183586636, 0.0, 0.0, 0.0, 1.0]
           ref_vel: [0.0, 0.0, 0.0]
           surface: LeftFootCenter
         - half_length: 0.112
           half_width: 0.065
           pose:
-            translation: [0.3081403576674396, 0.10245252535906752, 0.0]
-            rotation: [0.899693910719103, 0.4365213248112475, 0.0, -0.4365213248112475, 0.899693910719103, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [0.0, 0.0, 0.0]
-          surface: RightFootCenter
-        - half_length: 0.112
-          half_width: 0.065
-          pose:
-            translation: [0.28481283887049116, 0.34496439963283478, 0.0]
-            rotation: [0.8517789272076215, 0.5239013830531787, 0.0, -0.5239013830531787, 0.8517789272076215, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [0.0, 0.0, 0.0]
-          surface: LeftFootCenter
-        - half_length: 0.112
-          half_width: 0.065
-          pose:
-            translation: [0.3807724181717428, 0.18894964159540818, 0.0]
-            rotation: [0.8517789272076215, 0.5239013830531787, 0.0, -0.5239013830531787, 0.8517789272076215, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [0.0, 0.0, 0.0]
-          surface: RightFootCenter
-        - half_length: 0.112
-          half_width: 0.065
-          pose:
-            translation: [0.34395397300704658, 0.4201469390995079, 0.0]
-            rotation: [0.8036951461482363, 0.5950412692055611, 0.0, -0.5950412692055611, 0.8036951461482363, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [0.0, 0.0, 0.0]
-          surface: LeftFootCenter
-        - half_length: 0.112
-          half_width: 0.065
-          pose:
-            translation: [0.452943778544652, 0.2729393717871414, 0.0]
-            rotation: [0.8036951461482363, 0.5950412692055611, 0.0, -0.5950412692055611, 0.8036951461482363, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [0.0, 0.0, 0.0]
-          surface: RightFootCenter
-        - half_length: 0.112
-          half_width: 0.065
-          pose:
-            translation: [0.4068263914500104, 0.4927641827880347, 0.0]
-            rotation: [0.7557442569808054, 0.6548668704710372, 0.0, -0.6548668704710372, 0.7557442569808054, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [0.0, 0.0, 0.0]
-          surface: LeftFootCenter
-        - half_length: 0.112
-          half_width: 0.065
-          pose:
-            translation: [0.5267740598881167, 0.35433946526471057, 0.0]
-            rotation: [0.7557442569808054, 0.6548668704710372, 0.0, -0.6548668704710372, 0.7557442569808054, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [0.0, 0.0, 0.0]
-          surface: RightFootCenter
-        - half_length: 0.112
-          half_width: 0.065
-          pose:
-            translation: [0.47293286674957366, 0.5618794644845921, 0.0]
-            rotation: [0.708781487145075, 0.7054280994406276, 0.0, -0.7054280994406276, 0.708781487145075, 0.0, 0.0, 0.0, 1.0]
-          ref_vel: [0.0, 0.0, 0.0]
-          surface: LeftFootCenter
-        - half_length: 0.112
-          half_width: 0.065
-          pose:
-            translation: [0.6021415037932613, 0.43205660941483739, 0.0]
-            rotation: [0.708781487145075, 0.7054280994406276, 0.0, -0.7054280994406276, 0.708781487145075, 0.0, 0.0, 0.0, 1.0]
+            translation: [-0.0431997951379542, -0.04828021844935551, 0.0]
+            rotation: [0.5007003183586636, -0.8656206970697575, 0.0, 0.8656206970697575, 0.5007003183586636, 0.0, 0.0, 0.0, 1.0]
           ref_vel: [0.0, 0.0, 0.0]
           surface: RightFootCenter
       double_support_duration: 0.2
@@ -498,6 +422,60 @@ plans:
       takeoff_duration: 0.05
       takeoff_pitch: 0.0
 
+    backwards_straigt_25cm:
+      com_height: 0.78
+      contacts:
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.03691582384269802, -0.09158172029914678, 0.0]
+            rotation: [0.9999999999990512, -0.000001377526440743716, 0.0, 0.000001377526440743716, 0.9999999999990512, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.035888158738454887, 0.08779342865521008, 0.0]
+            rotation: [0.9999896499781162, -0.004549718303873652, 0.0, 0.004549718303873652, 0.9999896499781162, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [-0.027166466242954568, -0.09333144319452472, 0.0]
+            rotation: [0.9999974107196759, -0.0022756436329087589, 0.0, 0.0022756436329087589, 0.9999974107196759, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [-0.0625, 0.0, -0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [-0.15002890385581153, 0.09011206245881519, 0.0]
+            rotation: [0.9999974107196759, -0.0022756436329087589, 0.0, 0.0022756436329087589, 0.9999974107196759, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [-0.0625, 0.0, -0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [-0.21380576874683114, -0.09290671755439749, 0.0]
+            rotation: [0.9999974107196759, -0.0022756436329087589, 0.0, 0.0022756436329087589, 0.9999974107196759, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, -0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [-0.2133889540318539, 0.09025624772691517, 0.0]
+            rotation: [0.9999974107196759, -0.0022756436329087589, 0.0, 0.0022756436329087589, 0.9999974107196759, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, -0.0, 0.0]
+          surface: LeftFootCenter
+      double_support_duration: 0.2
+      final_dsp_duration: 0.6
+      init_dsp_duration: 0.6
+      landing_duration: 0.15
+      landing_pitch: 0.0
+      single_support_duration: 0.8
+      swing_height: 0.05
+      takeoff_duration: 0.05
+      takeoff_pitch: 0.0
 
     ashibumi: # stepping in place
       double_support_duration: 0.2
@@ -1274,14 +1252,20 @@ states:
       Walk:
         plan: follow_me
 
-  Walk::FaceScene:
+  Walk::BackwardsStraight:
     base: Walk::Base
     transitions:
       - [HalfSitting::Interpolation, OK, Walk, Auto]
     configs:
       Walk:
         autoWalk: true
-        plan: back_and_turn
+        plan: backwards_straigt_25cm
+
+  Walk::FaceScene:
+    base: Walk
+    plan: back_and_turn
+    useStopDistance: false
+    autoWalk: true
 
   Walk::BackAndTurn:
     base: Walk::Base
@@ -1386,11 +1370,13 @@ states:
       # Fin de Deuxieme Scene
       # RobotSeul (Doute2, FinDance, FinDance2)
       - [Dance::XsensRetargetting::Deception, OK, Dance::XsensRetargetting::RobotSeul, Strict]
-      - [Dance::XsensRetargetting::RobotSeul, OK, Walk::FaceScene, Strict]
-      - [Walk::FaceScene, OK, Dance::PlaceHolder::MemoireRobot, Strict]
-      - [Dance::PlaceHolder::MemoireRobot, OK, Dance::PrepareFlying, Strict]
+      - [Dance::XsensRetargetting::RobotSeul, OK, Walk::BackwardsStraight, Strict]
+      - [Walk::BackwardsStraight, OK, Walk::FaceScene, Strict]
+      - [Walk::FaceScene, OK, Dance::XsensRetargetting::LookAtVideo, Strict]
+      - [Dance::XsensRetargetting::LookAtVideo, OK, Dance::PrepareFlying, Strict]
       - [Dance::PrepareFlying, OK, Dance::XsensRetargetting::Flying, Strict]
-      - [Dance::XsensRetargetting::Flying, OK, HalfSitting::Final, Auto]
+      - [Dance::XsensRetargetting::Flying, OK, Dance::XsensRetargetting::FlyToSky, Auto]
+      - [Dance::XsensRetargetting::FlyToSky, OK, HalfSitting::Final, Strict]
         # HalfSitting after
     configs:
       HalfSitting:

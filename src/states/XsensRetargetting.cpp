@@ -40,6 +40,10 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
     {
       ds.call<void>("Replay::SetEndTime", static_cast<double>(config_("end_time")));
     }
+    else
+    {
+      ds.call<void>("Replay::SetEndTime", 0.0);
+    }
     ds.call<void>("Replay::SetLog", logName);
   }
 
@@ -274,7 +278,6 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
   }
 
   auto currentTime = ds.call<double>("Replay::GetCurrentTime");
-  mc_rtc::log::info("finsishRequested: {}, finishing: {}, bool: {}", finishRequested_, finishing_, finishRequested_ && !finishing_);
   if(finishRequested_ && !finishing_)
   { // Requesting finishing early (before the end of the trajectory, start lowering stiffness now)
     mc_rtc::log::info("[{}] Requesting finishing after interpolation, stopping in {}s", endInterpolationTime_);
@@ -310,7 +313,7 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
     for (const auto &[fixedBodyName, fixedBodyTask] : fixedTasks_)
     {
       fixedBodyTask->stiffness(endPercentStiffness * fixedStiffness_);
-      fixedBodyTask->weight(endPercentWeight * fixedStiffness_);
+      // fixedBodyTask->weight(endPercentWeight * fixedStiffness_);
     }
   }
 
