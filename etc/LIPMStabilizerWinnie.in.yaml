@@ -110,8 +110,6 @@ Xsens:
       segment: "Left Foot"
 
 
-
-
 # Additional robots to load
 robots:
   ground:
@@ -209,6 +207,191 @@ mpc:
 
 plans:
   hrp4:
+    forward_1m:
+      com_height: 0.78
+      contacts:
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.036915898510350108, -0.09158171435939408, 0.0]
+            rotation: [0.9999999999999382, 3.5177705664614635e-7, 0.0, -3.5177705664614635e-7, 0.9999999999999382, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.03588799220326295, 0.08779343019095506, 0.0]
+            rotation: [0.9999896581967629, -0.00454791155602459, 0.0, 0.00454791155602459, 0.9999896581967629, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.10673899579701637, -0.09363603781049272, 0.0]
+            rotation: [0.9999974147068668, -0.002273890846684787, 0.0, 0.002273890846684787, 0.9999974147068668, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.08928571428571429, 0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.2510766863759497, 0.0891996662627612, 0.0]
+            rotation: [0.9999974147068668, -0.002273890846684787, 0.0, 0.002273890846684787, 0.9999974147068668, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.17857142857142858, 0.0, 0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.39404189447136919, -0.09428933493097891, 0.0]
+            rotation: [0.9999974147068668, -0.002273890846684787, 0.0, 0.002273890846684787, 0.9999974147068668, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.17857142857142858, 0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.5366088995445517, 0.08855039549824823, 0.0]
+            rotation: [0.9999974147068668, -0.002273890846684787, 0.0, 0.002273890846684787, 0.9999974147068668, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.17857142857142858, 0.0, 0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.6783429172804869, -0.09493580609576515, 0.0]
+            rotation: [0.9999974147068668, -0.002273890846684787, 0.0, 0.002273890846684787, 0.9999974147068668, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.17857142857142858, 0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.8221411127131538, 0.08790112473373524, 0.0]
+            rotation: [0.9999974147068668, -0.002273890846684787, 0.0, 0.002273890846684787, 0.9999974147068668, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.17857142857142858, 0.0, 0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.9656458159548398, -0.09558910321625132, 0.0]
+            rotation: [0.9999974147068668, -0.002273890846684787, 0.0, 0.002273890846684787, 0.9999974147068668, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.08928571428571429, 0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [1.036607606897985, 0.08741345007490582, 0.0]
+            rotation: [0.9999974147068668, -0.002273890846684787, 0.0, 0.002273890846684787, 0.9999974147068668, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [1.0361911132293616, -0.09574951593671442, 0.0]
+            rotation: [0.9999974147068668, -0.002273890846684787, 0.0, 0.002273890846684787, 0.9999974147068668, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: RightFootCenter
+      double_support_duration: 0.1
+      final_dsp_duration: 0.6
+      init_dsp_duration: 0.6
+      landing_duration: 0.15
+      landing_pitch: 0.0
+      single_support_duration: 0.7
+      swing_height: 0.04
+      takeoff_duration: 0.05
+      takeoff_pitch: 0.0
+    turn_right_90:
+      com_height: 0.78
+      contacts:
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.03691581267082748, -0.09158171885910566, 0.0]
+            rotation: [0.9999999999990281, -0.0000013942301139596454, 0.0, 0.0000013942301139596454, 0.9999999999990281, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.03588815898885448, 0.08779341473796759, 0.0]
+            rotation: [0.999989650130028, -0.00454968491481733, 0.0, 0.00454968491481733, 0.999989650130028, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.004791669285015614, -0.0984324018875234, 0.0]
+            rotation: [0.9503506146992118, -0.31118115164776646, 0.0, 0.31118115164776646, 0.9503506146992118, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.06801230237466635, 0.09464409776638534, 0.0]
+            rotation: [0.9503506146992118, -0.31118115164776646, 0.0, 0.31118115164776646, 0.9503506146992118, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [-0.023493231779769039, -0.08393931461883922, 0.0]
+            rotation: [0.8076764475232738, -0.5896259459319817, 0.0, 0.5896259459319817, 0.8076764475232738, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.096297203439451, 0.08015101049770115, 0.0]
+            rotation: [0.8076764475232738, -0.5896259459319817, 0.0, 0.5896259459319817, 0.8076764475232738, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [-0.04591514443596205, -0.06141503794542738, 0.0]
+            rotation: [0.5859409155387765, -0.810353776752833, 0.0, 0.810353776752833, 0.5859409155387765, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.11871911609564402, 0.05762673382428932, 0.0]
+            rotation: [0.5859409155387765, -0.810353776752833, 0.0, 0.810353776752833, 0.5859409155387765, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [-0.06027924546982119, -0.03306441523072429, 0.0]
+            rotation: [0.30684913821404638, -0.9517581659104886, 0.0, 0.9517581659104886, 0.30684913821404638, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.13308321712950317, 0.029276111109586227, 0.0]
+            rotation: [0.30684913821404638, -0.9517581659104886, 0.0, 0.9517581659104886, 0.30684913821404638, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [-0.05517949604609523, -0.0016854089288104568, 0.0]
+            rotation: [-0.002279310022563702, -0.9999974023695366, 0.0, 0.9999974023695366, -0.002279310022563702, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.1279834677057772, -0.0021028951923276076, 0.0]
+            rotation: [-0.002279310022563702, -0.9999974023695366, 0.0, 0.9999974023695366, -0.002279310022563702, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: LeftFootCenter
+      double_support_duration: 0.2
+      final_dsp_duration: 0.6
+      init_dsp_duration: 0.6
+      landing_duration: 0.15
+      landing_pitch: 0.0
+      single_support_duration: 0.8
+      swing_height: 0.04
+      takeoff_duration: 0.05
+      takeoff_pitch: 0.0
     follow_me:
       com_height: 0.78
       contacts:
@@ -1261,6 +1444,17 @@ states:
         autoWalk: true
         plan: backwards_straigt_25cm
 
+  Walk::TurnRight90:
+    base: Walk
+    plan: turn_right_90
+    autoWalk: true
+
+  Walk::Forward1m:
+    base: Walk
+    plan: forward_1m
+    autoWalk: true
+
+
   Walk::FaceScene:
     base: Walk
     plan: back_and_turn
@@ -1370,13 +1564,20 @@ states:
       # Fin de Deuxieme Scene
       # RobotSeul (Doute2, FinDance, FinDance2)
       - [Dance::XsensRetargetting::Deception, OK, Dance::XsensRetargetting::RobotSeul, Strict]
-      - [Dance::XsensRetargetting::RobotSeul, OK, Walk::BackwardsStraight, Strict]
-      - [Walk::BackwardsStraight, OK, Walk::FaceScene, Strict]
-      - [Walk::FaceScene, OK, Dance::XsensRetargetting::LookAtVideo, Strict]
-      - [Dance::XsensRetargetting::LookAtVideo, OK, Dance::PrepareFlying, Strict]
-      - [Dance::PrepareFlying, OK, Dance::XsensRetargetting::Flying, Strict]
-      - [Dance::XsensRetargetting::Flying, OK, Dance::XsensRetargetting::FlyToSky, Auto]
-      - [Dance::XsensRetargetting::FlyToSky, OK, HalfSitting::Final, Strict]
+      - [Dance::XsensRetargetting::RobotSeul, OK, Dance::XsensRetargetting::RobotSeul::HalfSitting, Auto]
+      - [Dance::XsensRetargetting::RobotSeul::HalfSitting, OK, Walk::TurnRight90, Strict]
+      - [Walk::TurnRight90, OK, Walk::Forward1m, Strict]
+      # 3rd act finish on one leg
+      # disable lipmwalking
+      - [Walk::Forward1m, OK, Dance::XsensRetargetting::LookAtVideo, Strict]
+      - [Dance::XsensRetargetting::LookAtVideo, OK, Dance::XsensRetargetting::FlyingUpperBody, Strict]
+      - [Dance::XsensRetargetting::FlyingUpperBody, OK, Dance::XsensRetargetting::FlyingUpperBody::HalfSitting, Strict]
+        #- [Dance::FinalLiftLegFSM, OK, HalfSitting::Final, Strict]
+      # Suspend in the air
+      # - [Dance::XsensRetargetting::LookAtVideo, OK, Dance::PrepareFlying, Strict]
+      # - [Dance::PrepareFlying, OK, Dance::XsensRetargetting::Flying, Strict]
+      # - [Dance::XsensRetargetting::Flying, OK, Dance::XsensRetargetting::FlyToSky, Auto]
+      # - [Dance::XsensRetargetting::FlyToSky, OK, HalfSitting::Final, Strict]
         # HalfSitting after
     configs:
       HalfSitting:

@@ -71,7 +71,12 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
                         mc_rtc::gui::ArrayInput("Offset Translation", offset_.translation()),
                         mc_rtc::gui::RPYInput("Offset RPY", offset_.rotation()));
 
-  auto robotConfig = static_cast<std::map<std::string, mc_rtc::Configuration>>(ctl.config()("Xsens")(robot.name()));
+  mc_rtc::Configuration xsensConf = ctl.config()("Xsens")(robot.name());
+  if(config_.has("Xsens"))
+  {
+    xsensConf.load(config_("Xsens"));
+  }
+  auto robotConfig = static_cast<std::map<std::string, mc_rtc::Configuration>>(xsensConf);
   bool addActive = activeBodies_.empty();
   for (const auto &bodyConfig : robotConfig)
   {
@@ -163,6 +168,7 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
   auto posW = robot.posW();
   auto leftFootPosW = robot.frame("LeftFoot").position();
   auto rightFootPosW = robot.frame("RightFoot").position();
+  double leftFootRatio = config_("leftFootRatio", 0.5);
   auto midFootPosW = sva::interpolate(leftFootPosW, rightFootPosW, 0.5);
   Eigen::Matrix3d R_above_feet_yaw =
       stateObservation::kine::mergeRoll1Pitch1WithYaw2(Eigen::Matrix3d::Identity(), midFootPosW.rotation());
