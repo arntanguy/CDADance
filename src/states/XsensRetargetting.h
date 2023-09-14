@@ -38,12 +38,24 @@ struct XsensRetargetting : mc_control::fsm::State
   sva::PTransformd offset_ = sva::PTransformd::Identity();
   bool fixBaseLink_ = true;
   sva::PTransformd initPosW_ = sva::PTransformd::Identity();
+  bool finishRequested_ = false;
+  bool finishing_ = false;
   bool finished_ = false;
   std::vector<std::string> unactiveJoints_ = {};
   std::vector<std::string> activeBodies_ = {};
 
+  double initialInterpolationTime_ = 5.0;
+  double initialStiffnessPercent_ = 0.05;
+  double initialWeightPercent_ = 0.1;
   mc_trajectory::SequenceInterpolator<double> startStiffnessInterpolator_;
+  double startWeightPercent_ = 0.1;
+  mc_trajectory::SequenceInterpolator<double> startWeightInterpolator_;
+  double endInterpolationTime_ = 2.0;
+  double endStiffnessPercent_ = 0.05;
   mc_trajectory::SequenceInterpolator<double> endStiffnessInterpolator_;
+  double endWeightPercent_ = 0.1;
+  mc_trajectory::SequenceInterpolator<double> endWeightInterpolator_;
+  double endTime_ = 0;
 
   bool debugmode_ = false;
   double t_ = 0;

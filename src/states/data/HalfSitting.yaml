@@ -1,0 +1,12 @@
+HalfSitting::Interpolation:
+  base: InterpolatePosture 
+  duration: 3
+  hrp4:
+    useDefaultPostureTask: true
+    goBackToInitialPosture: false
+    restorePostureGains: true
+    posture_task:
+      stiffness: 100
+    posture_sequence:
+      - time: 2.0
+        halfsitting: true

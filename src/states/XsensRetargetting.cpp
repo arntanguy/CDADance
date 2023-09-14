@@ -125,14 +125,25 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
   ctl.gui()->addElement(this,
                         {},
                         mc_rtc::gui::Button("Finished", [this]()
-                                            { finished_ = true; }));
+                                            { finishRequested_ = true; }));
 
+  config_("initialInterpolationTime", initialInterpolationTime_);
+  config_("initialStiffnessPercent", initialStiffnessPercent_);
+  config_("initialWeightPercent", initialWeightPercent_);
   startStiffnessInterpolator_.values(
-      {{0.0, config_("initialStiffness", 0.1)},
-       {config_("initialStiffnessInterpolationDuration", 2.0), 1.}});
+      {{0.0, initialStiffnessPercent_}, 
+       {initialInterpolationTime_, 1.}});
+  startWeightInterpolator_.values(
+      {{0.0, initialWeightPercent_}, 
+       {initialInterpolationTime_, 1.}});
+  config_("endInterpolationTime", endInterpolationTime_);
+  config_("endStiffnessPercent", endStiffnessPercent_);
   endStiffnessInterpolator_.values(
       {{0.0, 1.0},
-       {config_("initialStiffnessInterpolationDuration", 2.0), config_("initialStiffness", 0.1)}});
+       {endInterpolationTime_, endStiffnessPercent_}});
+  endWeightInterpolator_.values(
+      {{0.0, 1.0},
+       {endInterpolationTime_, endWeightPercent_}});
 
   /**
    * COMPUTE INITIAL POSE FOR THE BASE LINK
@@ -145,8 +156,8 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
    * meaningful base_link frame
    */
   auto posW = robot.posW();
-  auto leftFootPosW = robot.frame("LeftFootCenter").position();
-  auto rightFootPosW = robot.frame("RightFootCenter").position();
+  auto leftFootPosW = robot.frame("LeftFoot").position();
+  auto rightFootPosW = robot.frame("RightFoot").position();
   auto midFootPosW = sva::interpolate(leftFootPosW, rightFootPosW, 0.5);
   Eigen::Matrix3d R_above_feet_yaw =
       stateObservation::kine::mergeRoll1Pitch1WithYaw2(Eigen::Matrix3d::Identity(), midFootPosW.rotation());
@@ -208,6 +219,8 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
 
 bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
 {
+  if(finished_) return true;
+
   auto &ds = ctl.datastore();
   auto &robot = ctl.robot(robot_);
   Eigen::VectorXd dimW = Eigen::VectorXd::Ones(6);
@@ -215,6 +228,7 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
   std::string baseLinkSegment = "Pelvis";
   const auto baseLinkSegmentPose = bodyConfigurations_["body"].offset * ctl.datastore().call<sva::PTransformd>("XsensPlugin::GetSegmentPose", static_cast<const std::string &>(baseLinkSegment));
   double percentStiffness = startStiffnessInterpolator_.compute(t_);
+  double percentWeight = startWeightInterpolator_.compute(t_);
 
   for (const auto &bodyName : activeBodies_)
   {
@@ -227,6 +241,7 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
       {
         tasks_[bodyName]->dimWeight(dimW);
         tasks_[bodyName]->stiffness(percentStiffness * body.stiffness);
+        tasks_[bodyName]->weight(percentWeight * body.weight);
 
         const auto segmentPose = ctl.datastore().call<sva::PTransformd>("XsensPlugin::GetSegmentPose", segmentName);
 
@@ -255,29 +270,52 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
   for (const auto &[fixedBodyName, fixedBodyTask] : fixedTasks_)
   {
     fixedBodyTask->stiffness(percentStiffness * fixedStiffness_);
+    fixedBodyTask->stiffness(percentWeight * fixedWeight_);
   }
 
   auto currentTime = ds.call<double>("Replay::GetCurrentTime");
-  auto endTime = ds.call<double>("Replay::GetEndTime");
+  mc_rtc::log::info("finsishRequested: {}, finishing: {}, bool: {}", finishRequested_, finishing_, finishRequested_ && !finishing_);
+  if(finishRequested_ && !finishing_)
+  { // Requesting finishing early (before the end of the trajectory, start lowering stiffness now)
+    mc_rtc::log::info("[{}] Requesting finishing after interpolation, stopping in {}s", endInterpolationTime_);
+    finishing_ = true;
+    auto endTime = ds.call<double>("Replay::GetEndTime");
+    endTime_ = std::min(currentTime + endInterpolationTime_, endTime); // end after interpolation
+  }
+  else if(!finishing_)
+  {
+    endTime_ = ds.call<double>("Replay::GetEndTime");
+  }
+
+  auto remainingTime = endTime_-currentTime;
   double interpolationDuration = endStiffnessInterpolator_.values().back().first;
   // REDUCE STIFFNESS BEFORE STOPPING TO PREVENT DISCONTINUITIES
   // Here the trajectory is almost finished
-  if (endTime - currentTime <= interpolationDuration)
+  if(remainingTime <= 0)
   {
-    double endPercentStiffness = endStiffnessInterpolator_.compute(interpolationDuration - (endTime - currentTime));
+    finished_ = true;
+    return true;
+  }
+  else if (remainingTime <= interpolationDuration)
+  {
+    finishing_ = true;
+    double endPercentStiffness = endStiffnessInterpolator_.compute(interpolationDuration - (remainingTime));
+    double endPercentWeight = endWeightInterpolator_.compute(interpolationDuration - (remainingTime));
     for (const auto &bodyName : activeBodies_)
     {
       const auto &body = bodyConfigurations_[bodyName];
       tasks_[bodyName]->stiffness(endPercentStiffness * body.stiffness);
+      tasks_[bodyName]->weight(endPercentWeight * body.weight);
     }
     for (const auto &[fixedBodyName, fixedBodyTask] : fixedTasks_)
     {
       fixedBodyTask->stiffness(endPercentStiffness * fixedStiffness_);
+      fixedBodyTask->weight(endPercentWeight * fixedStiffness_);
     }
   }
 
   t_ += ctl.timeStep;
-  return finished_ || ds.call<bool>("Replay::is_finished");
+  return false;
 }
 
 void XsensRetargetting::teardown(mc_control::fsm::Controller &ctl)
