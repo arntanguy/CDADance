@@ -27,6 +27,7 @@ XsensRetargetting::Standing:
 Dance::XsensRetargetting::Salutations:
   base: XsensRetargetting::Standing
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio02_fix_from_4_to_53.bin
+  autoTransition: true
   start_time: 15.0
   end_time: 41.0
   robot: hrp4
@@ -60,6 +61,7 @@ Dance::XsensRetargetting::Doute:
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio03_fix_from_8_to_28.bin
   start_time: 3.965
   end_time: 13.760
+  autoTransition: true
   robot: hrp4
   stiffness: 100
   weight: 1000
@@ -72,10 +74,12 @@ Dance::XsensRetargetting::Doute::HalfSitting:
 
 Dance::XsensRetargetting::Doute2:
   base: Dance::XsensRetargetting::Doute
+  autoTransition: true
 
 Dance::XsensRetargetting::PetiteDance:
   base: XsensRetargetting::Standing
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio05_fix_from_3_to_132.bin
+  autoTransition: true
   start_time: 6.4
   end_time: 66.4
   #end_time: 124.5
@@ -90,6 +94,7 @@ Dance::XsensRetargetting::GrandeDance:
   base: Dance::XsensRetargetting::PetiteDance
   start_time: 66.4
   end_time: 124.5
+  autoTransition: true
 
 # PetiteDanceEnervee
 Dance::XsensRetargetting::Deception:
@@ -118,6 +123,7 @@ Dance::XsensRetargetting::FinDance:
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio06_fix_from_3_to_63.bin
   start_time: 50.87
   end_time: 58.4
+  autoTransition: true
   robot: hrp4
   stiffness: 100
   weight: 1000
@@ -170,7 +176,7 @@ Dance::PrepareFlying:
       #   fixBaseLink: true
       #   initialStiffnessInterpolationDuration: 5
 
-Dance::XsensRetargetting::FlyingUpperBody:
+Dance::XsensRetargetting::OpenClose:
   base: XsensRetargetting::Standing
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio08_fix_cutSecondPart_from_34_to_120.bin
   start_time: 28.0
@@ -184,7 +190,7 @@ Dance::XsensRetargetting::FlyingUpperBody:
   fixBaseLink: true
   initialStiffnessInterpolationDuration: 5
 
-Dance::XsensRetargetting::FlyingUpperBody::HalfSitting:
+Dance::XsensRetargetting::OpenClose::HalfSitting:
   base: HalfSitting::Interpolation
 
 Dance::PrepareOnOneLeg:
@@ -201,16 +207,71 @@ Dance::PrepareOnOneLeg:
     r2: ground
     r2Surface: AllGround
 
-Dance::XsensRetargetting::FlyToSkyUpperBody:
+Dance::XsensRetargetting::FlyToSky:
   base: XsensRetargetting
-  log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio09_FlyToSky_fix_cut_from_29_to_46.5.bin
-  start_time: 0.0
-  end_time: 46
+  log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio16_fix_from_6_to_43.bin
+  start_time: 6.0
+  end_time: 28.0
   robot: hrp4
-  stiffness: 5
-  weight: 200
+  stiffness: 100
+  weight: 1000
   offset:
     translation: [0.0, 0.0, 0.1]
+    rotation: [0.0, 0.34, 0.0]
+  leftFootRatio: 1
+  activeBodies:
+    # - torso
+    # - NECK_P_LINK
+    # - R_SHOULDER_R_LINK
+    # - R_SHOULDER_Y_LINK
+    # - R_ELBOW_P_LINK
+    # - r_wrist
+    # - L_SHOULDER_R_LINK
+    # - L_SHOULDER_Y_LINK
+    # - L_ELBOW_P_LINK
+    # - l_wrist
+    # - L_HIP_P_LINK
+    # - L_HIP_R_LINK
+    # - L_HIP_Y_LINK
+    # - L_KNEE_P_LINK
+    - l_ankle
+  Xsens:
+    # torso: &low-weight
+    #   weight: 100
+    #   stiffness: 10
+    # NECK_P_LINK: *low-weight
+    # R_SHOULDER_R_LINK: *low-weight
+    # R_SHOULDER_Y_LINK: *low-weight
+    # R_ELBOW_P_LINK: *low-weight
+    # r_wrist: *low-weight
+    # L_SHOULDER_R_LINK: *low-weight
+    # L_SHOULDER_Y_LINK: *low-weight
+    # L_ELBOW_P_LINK: *low-weight
+    # l_wrist: *low-weight
+    l_ankle:
+      segment: "Left Foot"
+      offset:
+        translation: [0, 0.1, 0.2]
+    L_KNEE_P_LINK:
+      segment: "Left Lower Leg"
+      offset:
+        translation: [0, 0.1, 0.2]
+  fixBaseLink: true
+  fixed_stiffness: 1
+  fixed_weight: 100
+  initialStiffnessInterpolationDuration: 5
+
+Dance::XsensRetargetting::FlyToSkyUpperBody:
+  base: XsensRetargetting
+  log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio16_fix_from_6_to_43.bin
+  autoTransition: true
+  start_time: 6.0
+  end_time: 28.0
+  robot: hrp4
+  stiffness: 100
+  weight: 1000
+  offset:
+    translation: [0.0, 0.0, 0.]
     rotation: [0.0, 0.34, 0.0]
   activeBodies:
     - torso
@@ -226,45 +287,8 @@ Dance::XsensRetargetting::FlyToSkyUpperBody:
   fixBaseLink: true
   initialStiffnessInterpolationDuration: 5
 
-Dance::XsensRetargetting::FlyToSky:
-  base: XsensRetargetting
-  log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio09_FlyToSky_fix_cut_from_29_to_46.5.bin
-  start_time: 0.0
-  end_time: 46
-  robot: hrp4
-  stiffness: 5
-  weight: 200
-  offset:
-    translation: [0.0, 0.0, 0.1]
-    rotation: [0.0, 0.34, 0.0]
-  leftFootRatio: 1
-  activeBodies:
-    - torso
-    - NECK_P_LINK
-    - R_SHOULDER_R_LINK
-    - R_SHOULDER_Y_LINK
-    - R_ELBOW_P_LINK
-    - r_wrist
-    - L_SHOULDER_R_LINK
-    - L_SHOULDER_Y_LINK
-    - L_ELBOW_P_LINK
-    - l_wrist
-    - L_HIP_P_LINK
-    - L_HIP_R_LINK
-    - L_HIP_Y_LINK
-    - L_KNEE_P_LINK
-    - l_ankle
-  Xsens:
-    l_ankle:
-      segment: "Left Foot"
-      offset:
-        translation: [0, 0, 0.2]
-    L_KNEE_P_LINK:
-      segment: "Left Lower Leg"
-      offset:
-        translation: [0, 0, 0.2]
-  fixBaseLink: true
-  initialStiffnessInterpolationDuration: 5
+Dance::XsensRetargetting::FlyToSkyUpperBody::HalfSitting:
+  base: HalfSitting::Interpolation
 
 
 Dance::XsensRetargetting::LookAtVideo:

@@ -7,4 +7,3 @@ InterpolatePosture::Base:
       activeJoints: [L_SHOULDER_P, L_SHOULDER_R, L_SHOULDER_Y, L_ELBOW_P, L_WRIST_P, L_WRIST_R, L_WRIST_Y,
                      R_SHOULDER_P, R_SHOULDER_R, R_SHOULDER_Y, R_ELBOW_P, R_WRIST_P, R_WRIST_R, R_WRIST_Y,
                      CHEST_P, NECK_P, NECK_Y]
-

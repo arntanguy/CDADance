@@ -135,7 +135,8 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
 
   ctl.gui()->addElement(this,
                         {},
-                        mc_rtc::gui::Label("Current motion:", [this]() -> const std::string & { return name(); }),
+                        mc_rtc::gui::Label("Current motion:", [this]() -> const std::string &
+                                           { return name(); }),
                         mc_rtc::gui::Button(fmt::format("Stop in {}s", endInterpolationTime_), [this]()
                                             { finishRequested_ = true; }),
                         mc_rtc::gui::Label("Finished?", finished_),

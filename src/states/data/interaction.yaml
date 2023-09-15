@@ -104,4 +104,3 @@ Dance::Interaction::Fake:
 Dance::Interaction::Real:
   base: Parallel
   states: [RosSubscriber, LookAtAudience, Dance::Interaction::Fake]
-

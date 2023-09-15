@@ -32,6 +32,8 @@ Replay:
     - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio09_FlyToSky_fix_cut_from_29_to_46.5.bin
     # LookAtVideo
     - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio10_LookAtVideo_fix_cut_from_0_to_53.bin
+    # Lift One Leg
+    - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio16_fix_from_6_to_43.bin
   with-inputs: false
   with-gui-inputs: false
   with-outputs: false
@@ -1216,6 +1218,7 @@ states:
 
   Demo::WaitForStart:
     base: Pause
+    duration: 2
 
   Dance::PlaceHolder::MemoireRobot:
     base: InterpolatePosture::Base
@@ -1285,14 +1288,14 @@ states:
     # PetiteDanceEnervee
     # Flying
     transitions:
-      - [Demo::WaitForStart, OK, Dance::XsensRetargetting::Salutations, Strict]
+      - [Demo::WaitForStart, OK, Dance::XsensRetargetting::Salutations, Auto]
       - [Dance::XsensRetargetting::Salutations, OK, Dance::XsensRetargetting::Salutations::HalfSitting, Auto]
       - [Dance::XsensRetargetting::Salutations::HalfSitting, OK, Dance::XsensRetargetting::ListenToRobot, Auto]
       - [Dance::XsensRetargetting::ListenToRobot, OK, Dance::XsensRetargetting::ListenToRobot::HalfSitting, Auto]
       - [Dance::XsensRetargetting::ListenToRobot::HalfSitting, OK, Walk::FollowMe, Strict]
       - [Walk::FollowMe, OK, Dance::LookRight, Auto]
       - [Dance::LookRight, OK, Walk::BackAndTurn, Strict]
-      - [Walk::BackAndTurn, OK, Dance::XsensRetargetting::Doute, Strict]
+      - [Walk::BackAndTurn, OK, Dance::XsensRetargetting::Doute, Auto]
       - [Dance::XsensRetargetting::Doute, OK,  Dance::XsensRetargetting::Doute::HalfSitting, Auto]
       - [Dance::XsensRetargetting::Doute::HalfSitting, OK, Walk::ForwardAndLeft, Strict]
       - [Walk::ForwardAndLeft, OK, Dance::Interaction::Fake, Auto]
@@ -1308,9 +1311,10 @@ states:
       # 3rd act finish on one leg
       # disable lipmwalking
       - [Walk::Forward1m, OK, Dance::XsensRetargetting::LookAtVideo, Auto]
-      - [Dance::XsensRetargetting::LookAtVideo, OK, Dance::XsensRetargetting::FlyingUpperBody, Auto]
-      - [Dance::XsensRetargetting::FlyingUpperBody, OK, Dance::XsensRetargetting::FlyingUpperBody::HalfSitting, Auto]
-        #- [Dance::FinalLiftLegFSM, OK, HalfSitting::Final, Strict]
+      - [Dance::XsensRetargetting::LookAtVideo, OK, Dance::XsensRetargetting::OpenClose, Auto]
+      - [Dance::XsensRetargetting::OpenClose, OK, Dance::XsensRetargetting::OpenClose::HalfSitting, Auto]
+      - [Dance::XsensRetargetting::OpenClose::HalfSitting, OK, Dance::XsensRetargetting::FlyToSkyUpperBody, Auto]
+      - [Dance::XsensRetargetting::FlyToSkyUpperBody, OK, HalfSitting::Final, Auto]
       # Suspend in the air
       # - [Dance::XsensRetargetting::LookAtVideo, OK, Dance::PrepareFlying, Strict]
       # - [Dance::PrepareFlying, OK, Dance::XsensRetargetting::Flying, Strict]
@@ -1321,6 +1325,11 @@ states:
       HalfSitting:
         stiffness: 10.0
         eval: 0.1
+
+  Demo::Start:
+    base: Parallel
+    states: [Demo::LIPMWalking::WalkFSM, Dance::Demo::FSM::FullSequence]
+
 
   Dance::Demo::StabilizedFSM:
     base: Parallel
@@ -1359,9 +1368,7 @@ states:
     states: [Demo::LIPMWalking::WalkFSM, Dance::Demo::FSM::FullSequence]
 
 transitions:
-  - [Pause, LIPMWalking, Demo::LIPMWalking::Dance, Strict]
-  - [Pause, LIPMWalkingFullSequence, Demo::LIPMWalking::Dance::FullSequence, Strict]
-  #- [Pause, ISMPC, Dance::Demo::FSM, Strict]
+  - [Pause, LIPMWalking, Demo::Start, Strict]
 
 init: Pause
 
