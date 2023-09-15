@@ -77,7 +77,7 @@ Xsens:
       offset:
         translation: [0,0,0]
           #rotation: [-1.57, 0, 0]
-        rotation: [-0.75, 0, 0]
+        rotation: [-1.0, 0, 0]
     r_wrist:
       segment: "Right Hand"
       offset:
@@ -97,7 +97,7 @@ Xsens:
       offset:
         translation: [0,0,0]
           #rotation: [1.57, 0, 0]
-        rotation: [0.75, 0, 0]
+        rotation: [1.0, 0, 0]
     l_wrist:
       segment: "Left Hand"
       offset:

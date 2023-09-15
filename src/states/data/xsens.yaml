@@ -87,7 +87,7 @@ Dance::XsensRetargetting::PetiteDance:
   stiffness: 100
   weight: 1000
   offset:
-    translation: [0.0, 0.0, 0.1]
+    translation: [0.1, 0.0, 0.1]
     rotation: [0.0, 0.5, 0.0]
 
 Dance::XsensRetargetting::GrandeDance:
@@ -296,6 +296,7 @@ Dance::XsensRetargetting::LookAtVideo:
   base: XsensRetargetting::Standing
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio10_LookAtVideo_fix_cut_from_0_to_53.bin
   robot: hrp4
+  autoTransition: true
   start_time: 2 # bug if start time is zero
   stiffness: 100
   weight: 1000
