@@ -1012,10 +1012,10 @@ states:
         - time: 2.0
           posture:
             NECK_Y: -1.0
-        - time: 2.0
+        - time: 1.0
           posture:
             NECK_Y: -1.0
-        - time: 2.0
+        - time: 1.0
           posture:
             NECK_Y: 0.0
 
@@ -1181,19 +1181,9 @@ states:
         autoWalk: true
 
   Walk::FollowMe:
-    base: Walk::Base
-    configs:
-      Walk:
-        plan: follow_me
-
-  Walk::BackwardsStraight:
-    base: Walk::Base
-    transitions:
-      - [HalfSitting::Interpolation, OK, Walk, Auto]
-    configs:
-      Walk:
-        autoWalk: true
-        plan: backwards_straigt_25cm
+    base: Walk
+    plan: follow_me
+    autoWalk: true
 
   Walk::TurnRight90:
     base: Walk
@@ -1209,22 +1199,17 @@ states:
   Walk::FaceScene:
     base: Walk
     plan: back_and_turn
-    useStopDistance: false
     autoWalk: true
 
   Walk::BackAndTurn:
-    base: Walk::Base
-    configs:
-      Walk:
-        autoWalk: true
-        plan: back_and_turn
+    base: Walk
+    autoWalk: true
+    plan: back_and_turn
 
   Walk::ForwardAndLeft:
-    base: Walk::Base
-    configs:
-      Walk:
-        autoWalk: true
-        plan: forward_and_left
+    base: Walk
+    autoWalk: true
+    plan: forward_and_left
 
   HalfSitting::Final:
     base: HalfSitting::Interpolation
@@ -1302,27 +1287,29 @@ states:
     transitions:
       - [Demo::WaitForStart, OK, Dance::XsensRetargetting::Salutations, Strict]
       - [Dance::XsensRetargetting::Salutations, OK, Dance::XsensRetargetting::Salutations::HalfSitting, Auto]
-      - [Dance::XsensRetargetting::Salutations::HalfSitting, OK, Dance::XsensRetargetting::ListenToRobot, Strict]
-      - [Dance::XsensRetargetting::ListenToRobot, OK, Walk::FollowMe, Strict]
+      - [Dance::XsensRetargetting::Salutations::HalfSitting, OK, Dance::XsensRetargetting::ListenToRobot, Auto]
+      - [Dance::XsensRetargetting::ListenToRobot, OK, Dance::XsensRetargetting::ListenToRobot::HalfSitting, Auto]
+      - [Dance::XsensRetargetting::ListenToRobot::HalfSitting, OK, Walk::FollowMe, Strict]
       - [Walk::FollowMe, OK, Dance::LookRight, Auto]
       - [Dance::LookRight, OK, Walk::BackAndTurn, Strict]
       - [Walk::BackAndTurn, OK, Dance::XsensRetargetting::Doute, Strict]
-      - [Dance::XsensRetargetting::Doute, OK,  Walk::ForwardAndLeft, Strict]
+      - [Dance::XsensRetargetting::Doute, OK,  Dance::XsensRetargetting::Doute::HalfSitting, Auto]
+      - [Dance::XsensRetargetting::Doute::HalfSitting, OK, Walk::ForwardAndLeft, Strict]
       - [Walk::ForwardAndLeft, OK, Dance::Interaction::Fake, Auto]
       - [Dance::Interaction::Fake, OK, Dance::XsensRetargetting::PetiteDance, Strict]
-      - [Dance::XsensRetargetting::PetiteDance, OK, Dance::XsensRetargetting::GrandeDance, Strict]
-      - [Dance::XsensRetargetting::GrandeDance, OK, Dance::XsensRetargetting::Deception, Strict]
+      - [Dance::XsensRetargetting::PetiteDance, OK, Dance::XsensRetargetting::GrandeDance, Auto]
+      - [Dance::XsensRetargetting::GrandeDance, OK, Dance::XsensRetargetting::Deception, Auto]
       # Fin de Deuxieme Scene
       # RobotSeul (Doute2, FinDance, FinDance2)
-      - [Dance::XsensRetargetting::Deception, OK, Dance::XsensRetargetting::RobotSeul, Strict]
+      - [Dance::XsensRetargetting::Deception, OK, Dance::XsensRetargetting::RobotSeul, Auto]
       - [Dance::XsensRetargetting::RobotSeul, OK, Dance::XsensRetargetting::RobotSeul::HalfSitting, Auto]
       - [Dance::XsensRetargetting::RobotSeul::HalfSitting, OK, Walk::TurnRight90, Strict]
-      - [Walk::TurnRight90, OK, Walk::Forward1m, Strict]
+      - [Walk::TurnRight90, OK, Walk::Forward1m, Auto]
       # 3rd act finish on one leg
       # disable lipmwalking
-      - [Walk::Forward1m, OK, Dance::XsensRetargetting::LookAtVideo, Strict]
-      - [Dance::XsensRetargetting::LookAtVideo, OK, Dance::XsensRetargetting::FlyingUpperBody, Strict]
-      - [Dance::XsensRetargetting::FlyingUpperBody, OK, Dance::XsensRetargetting::FlyingUpperBody::HalfSitting, Strict]
+      - [Walk::Forward1m, OK, Dance::XsensRetargetting::LookAtVideo, Auto]
+      - [Dance::XsensRetargetting::LookAtVideo, OK, Dance::XsensRetargetting::FlyingUpperBody, Auto]
+      - [Dance::XsensRetargetting::FlyingUpperBody, OK, Dance::XsensRetargetting::FlyingUpperBody::HalfSitting, Auto]
         #- [Dance::FinalLiftLegFSM, OK, HalfSitting::Final, Strict]
       # Suspend in the air
       # - [Dance::XsensRetargetting::LookAtVideo, OK, Dance::PrepareFlying, Strict]

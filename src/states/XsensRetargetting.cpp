@@ -19,6 +19,7 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
   config_("fixBaseLink", fixBaseLink_);
   config_("unactiveJoints", unactiveJoints_);
   config_("activeBodies", activeBodies_);
+  config_("autoTransition", autoTransition_);
   if (config_.has("log"))
   {
     if (!ds.has("Replay::SetStartTime"))
@@ -134,8 +135,11 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
 
   ctl.gui()->addElement(this,
                         {},
-                        mc_rtc::gui::Button("Finished", [this]()
-                                            { finishRequested_ = true; }));
+                        mc_rtc::gui::Label("Current motion:", [this]() -> const std::string & { return name(); }),
+                        mc_rtc::gui::Button(fmt::format("Stop in {}s", endInterpolationTime_), [this]()
+                                            { finishRequested_ = true; }),
+                        mc_rtc::gui::Label("Finished?", finished_),
+                        mc_rtc::gui::Input("Transition to NEXT STATE", autoTransition_));
 
   config_("initialInterpolationTime", initialInterpolationTime_);
   config_("initialStiffnessPercent", initialStiffnessPercent_);
@@ -230,7 +234,7 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
 
 bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
 {
-  if (finished_) return true;
+  if (finished_) return autoTransition_;
 
   auto &ds = ctl.datastore();
   auto &robot = ctl.robot(robot_);
@@ -304,7 +308,7 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
   if (remainingTime <= 0)
   {
     finished_ = true;
-    return true;
+    return autoTransition_;
   }
   else if (remainingTime <= interpolationDuration)
   {

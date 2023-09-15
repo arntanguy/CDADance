@@ -42,6 +42,7 @@ Dance::XsensRetargetting::Salutations::HalfSitting:
 Dance::XsensRetargetting::ListenToRobot:
   base: XsensRetargetting::Standing
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio04_fix_from_5_to_31.bin
+  autoTransition: true
   start_time: 6.8
   end_time: 16.0
   robot: hrp4

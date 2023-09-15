@@ -57,6 +57,7 @@ struct XsensRetargetting : mc_control::fsm::State
   mc_trajectory::SequenceInterpolator<double> endWeightInterpolator_;
   double endTime_ = 0;
 
+  bool autoTransition_ = false;
   bool debugmode_ = false;
   double t_ = 0;
 };
