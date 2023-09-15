@@ -16,6 +16,25 @@ static inline mc_rtc::Configuration patch_config(mc_rtc::Configuration config)
   return config;
 }
 
+static inline mc_rbdyn::RobotModulePtr patch_rm(mc_rbdyn::RobotModulePtr rm, const mc_rtc::Configuration & config)
+{
+  auto limits = config("Limits", mc_rtc::Configuration{})(rm->name, mc_rtc::Configuration{})
+                    .
+                operator std::map<std::string, mc_rtc::Configuration>();
+  for(const auto & [joint, overwrite] : limits)
+  {
+    if(overwrite.has("lower"))
+    {
+      rm->_bounds[0].at(joint)[0] = overwrite("lower").operator double();
+    }
+    if(overwrite.has("upper"))
+    {
+      rm->_bounds[1].at(joint)[0] = overwrite("upper").operator double();
+    }
+  }
+  return rm;
+}
+
 template <typename WalkingCtl>
 struct WalkingInterfaceImpl : public WalkingInterface
 {
@@ -232,13 +251,32 @@ LIPMStabilizerController<WalkingCtl>::LIPMStabilizerController(mc_rbdyn::RobotMo
                                                                double dt,
                                                                const mc_rtc::Configuration &config,
                                                                const mc_control::ControllerParameters &params)
-    : WalkingCtl(rm, dt, patch_config(config), params)
+    : WalkingCtl(patch_rm(rm, config), dt, patch_config(config), params)
 {
   /* mc_rtc::log::info("FULL CONFIG IS {}", mc_control::MCController::config().dump(true, true)); */
 
   walking_interface_ = std::make_shared<WalkingInterfaceImpl<WalkingCtl>>(*this);
   this->datastore().template make<WalkingInterfacePtr>("WalkingInterface", walking_interface_);
+
 }
+
+template <typename WalkingCtl>
+bool LIPMStabilizerController<WalkingCtl>::run()
+{
+  mc_rtc::Configuration jc;
+  auto & robot = this->robot();
+  for(const auto & joint : robot.refJointOrder())
+  {
+    auto j = robot.mbc().q[robot.jointIndexByName(joint)];
+    if(j.size() == 1)
+    {
+      jc.add(joint, j[0]);
+    }
+  }
+  mc_rtc::log::info(jc.dump(true, true));
+  return WalkingCtl::run();
+}
+
 
 /** Explicit instanciation of the controllers */
 template struct LIPMStabilizerController<lipm_walking::Controller>;

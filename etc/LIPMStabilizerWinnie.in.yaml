@@ -40,6 +40,12 @@ Replay:
   with-datastore-config: /home/arnaud/src/huiting/lipmstabilizerwinnie/etc/datastore-to-replay.yaml
   pause: false
 
+Limits:
+  hrp4:
+    NECK_P:
+      lower: 0.61 
+      upper: -0.35
+
 Xsens:
   liveMode: false
   hrp4:
@@ -1288,7 +1294,7 @@ states:
     # PetiteDanceEnervee
     # Flying
     transitions:
-      - [Demo::WaitForStart, OK, Dance::XsensRetargetting::Salutations, Auto]
+      - [Demo::WaitForStart, OK, Dance::XsensRetargetting::Salutations, Strict]
       - [Dance::XsensRetargetting::Salutations, OK, Dance::XsensRetargetting::Salutations::HalfSitting, Auto]
       - [Dance::XsensRetargetting::Salutations::HalfSitting, OK, Dance::XsensRetargetting::ListenToRobot, Auto]
       - [Dance::XsensRetargetting::ListenToRobot, OK, Dance::XsensRetargetting::ListenToRobot::HalfSitting, Auto]
@@ -1313,8 +1319,10 @@ states:
       - [Walk::Forward1m, OK, Dance::XsensRetargetting::LookAtVideo, Auto]
       - [Dance::XsensRetargetting::LookAtVideo, OK, Dance::XsensRetargetting::OpenClose, Auto]
       - [Dance::XsensRetargetting::OpenClose, OK, Dance::XsensRetargetting::OpenClose::HalfSitting, Auto]
-      - [Dance::XsensRetargetting::OpenClose::HalfSitting, OK, Dance::XsensRetargetting::FlyToSkyUpperBody, Auto]
-      - [Dance::XsensRetargetting::FlyToSkyUpperBody, OK, HalfSitting::Final, Auto]
+      # - [Dance::XsensRetargetting::OpenClose::HalfSitting, OK, Dance::XsensRetargetting::FlyToSkyUpperBody, Auto]
+      # - [Dance::XsensRetargetting::FlyToSkyUpperBody, OK, HalfSitting::Final, Auto]
+      - [Dance::XsensRetargetting::OpenClose::HalfSitting, OK, Dance::FinalLiftLegFSM, Strict]
+        # - [Dance::FinalLiftLegFSM, OK, HalfSitting::Final, Strict]
       # Suspend in the air
       # - [Dance::XsensRetargetting::LookAtVideo, OK, Dance::PrepareFlying, Strict]
       # - [Dance::PrepareFlying, OK, Dance::XsensRetargetting::Flying, Strict]
