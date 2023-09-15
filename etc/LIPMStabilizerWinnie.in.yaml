@@ -1322,7 +1322,7 @@ states:
       # - [Dance::XsensRetargetting::OpenClose::HalfSitting, OK, Dance::XsensRetargetting::FlyToSkyUpperBody, Auto]
       # - [Dance::XsensRetargetting::FlyToSkyUpperBody, OK, HalfSitting::Final, Auto]
       - [Dance::XsensRetargetting::OpenClose::HalfSitting, OK, Dance::FinalLiftLegFSM, Strict]
-        # - [Dance::FinalLiftLegFSM, OK, HalfSitting::Final, Strict]
+      - [Dance::FinalLiftLegFSM, OK, HalfSitting::Final, Strict]
       # Suspend in the air
       # - [Dance::XsensRetargetting::LookAtVideo, OK, Dance::PrepareFlying, Strict]
       # - [Dance::PrepareFlying, OK, Dance::XsensRetargetting::Flying, Strict]
