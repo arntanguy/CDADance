@@ -16,18 +16,18 @@ static inline mc_rtc::Configuration patch_config(mc_rtc::Configuration config)
   return config;
 }
 
-static inline mc_rbdyn::RobotModulePtr patch_rm(mc_rbdyn::RobotModulePtr rm, const mc_rtc::Configuration & config)
+static inline mc_rbdyn::RobotModulePtr patch_rm(mc_rbdyn::RobotModulePtr rm, const mc_rtc::Configuration &config)
 {
   auto limits = config("Limits", mc_rtc::Configuration{})(rm->name, mc_rtc::Configuration{})
                     .
-                operator std::map<std::string, mc_rtc::Configuration>();
-  for(const auto & [joint, overwrite] : limits)
+                    operator std::map<std::string, mc_rtc::Configuration>();
+  for (const auto &[joint, overwrite] : limits)
   {
-    if(overwrite.has("lower"))
+    if (overwrite.has("lower"))
     {
       rm->_bounds[0].at(joint)[0] = overwrite("lower").operator double();
     }
-    if(overwrite.has("upper"))
+    if (overwrite.has("upper"))
     {
       rm->_bounds[1].at(joint)[0] = overwrite("upper").operator double();
     }
@@ -257,7 +257,6 @@ LIPMStabilizerController<WalkingCtl>::LIPMStabilizerController(mc_rbdyn::RobotMo
 
   walking_interface_ = std::make_shared<WalkingInterfaceImpl<WalkingCtl>>(*this);
   this->datastore().template make<WalkingInterfacePtr>("WalkingInterface", walking_interface_);
-
 }
 
 template <typename WalkingCtl>
@@ -276,7 +275,6 @@ bool LIPMStabilizerController<WalkingCtl>::run()
   /* mc_rtc::log::info(jc.dump(true, true)); */
   return WalkingCtl::run();
 }
-
 
 /** Explicit instanciation of the controllers */
 template struct LIPMStabilizerController<lipm_walking::Controller>;

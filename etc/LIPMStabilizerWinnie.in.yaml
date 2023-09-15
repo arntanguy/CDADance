@@ -43,7 +43,7 @@ Replay:
 Limits:
   hrp4:
     NECK_P:
-      lower: 0.61 
+      lower: 0.61
       upper: -0.35
 
 Xsens:
@@ -1305,7 +1305,7 @@ states:
       - [Dance::XsensRetargetting::Doute, OK,  Dance::XsensRetargetting::Doute::HalfSitting, Auto]
       - [Dance::XsensRetargetting::Doute::HalfSitting, OK, Walk::ForwardAndLeft, Strict]
       - [Walk::ForwardAndLeft, OK, Dance::Interaction::Fake, Auto]
-      - [Dance::Interaction::Fake, OK, Dance::XsensRetargetting::PetiteDance, Strict]
+      - [Dance::Interaction::Fake, OK, Dance::XsensRetargetting::PetiteDance, Auto]
       - [Dance::XsensRetargetting::PetiteDance, OK, Dance::XsensRetargetting::GrandeDance, Auto]
       - [Dance::XsensRetargetting::GrandeDance, OK, Dance::XsensRetargetting::Deception, Auto]
       # Fin de Deuxieme Scene

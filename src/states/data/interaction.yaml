@@ -83,23 +83,51 @@ Left::HandHigh:
           L_SHOULDER_Y: 0.819
           L_ELBOW_P: -0.601
 
+Interaction::HS1:
+  base: HalfSitting::Interpolation
+
+Interaction::HS2:
+  base: HalfSitting::Interpolation
+
+Interaction::HS3:
+  base: HalfSitting::Interpolation
+
+Interaction::HS4:
+  base: HalfSitting::Interpolation
+
+Interaction::HS5:
+  base: HalfSitting::Interpolation
+
+Right::TouchHead2:
+  base: Right::TouchHead
+
 Dance::Interaction::Fake:
   base: Meta
   ResetPostures: false
   StepByStep: false
   transitions:
-    - [HalfSitting::Interpolation, Seq0, Right::TouchHead, Auto]
-    - [HalfSitting::Interpolation, Seq1, Right::HandHigh, Auto]
-    - [HalfSitting::Interpolation, Seq2, Right::HandSide, Auto]
-    - [HalfSitting::Interpolation, Seq3, Left::TouchHead, Auto]
-    - [HalfSitting::Interpolation, Seq4, Left::HandHigh, Auto]
-    - [HalfSitting::Interpolation, Seq5, Left::HandSide, Auto]
-    - [Right::TouchHead, OK, HalfSitting::Interpolation, Auto]
-    - [Right::HandHigh, OK, HalfSitting::Interpolation, Auto]
-    - [Right::HandSide, OK, HalfSitting::Interpolation, Auto]
-    - [Left::TouchHead, OK, HalfSitting::Interpolation, Auto]
-    - [Left::HandHigh, OK, HalfSitting::Interpolation, Auto]
-    - [Left::HandSide, OK, HalfSitting::Interpolation, Auto]
+    - [Left::HandSide, OK, Interaction::HS1, Auto]
+    - [Interaction::HS1, OK, Right::TouchHead, Auto]
+    - [Right::TouchHead, OK, Interaction::HS2, Auto]
+    - [Interaction::HS2, OK, Left::TouchHead, Auto]
+    - [Left::TouchHead, OK, Interaction::HS3, Auto]
+    - [Interaction::HS3, OK, Right::HandSide, Auto]
+    - [Right::HandSide, OK, Interaction::HS4, Auto]
+    - [Interaction::HS4, OK, Right::TouchHead2, Auto]
+    - [Right::TouchHead2, OK, Interaction::HS5, Auto]
+
+    #- [HalfSitting::Interpolation, Seq0, Right::TouchHead, Auto]
+    #- [HalfSitting::Interpolation, Seq1, Right::HandHigh, Auto]
+    #- [HalfSitting::Interpolation, Seq2, Right::HandSide, Auto]
+    #- [HalfSitting::Interpolation, Seq3, Left::TouchHead, Auto]
+    #- [HalfSitting::Interpolation, Seq4, Left::HandHigh, Auto]
+    #- [HalfSitting::Interpolation, Seq5, Left::HandSide, Auto]
+    #- [Right::TouchHead, OK, HalfSitting::Interpolation, Auto]
+    #- [Right::HandHigh, OK, HalfSitting::Interpolation, Auto]
+    #- [Right::HandSide, OK, HalfSitting::Interpolation, Auto]
+    #- [Left::TouchHead, OK, HalfSitting::Interpolation, Auto]
+    #- [Left::HandHigh, OK, HalfSitting::Interpolation, Auto]
+    #- [Left::HandSide, OK, HalfSitting::Interpolation, Auto]
 
 Dance::Interaction::Real:
   base: Parallel
