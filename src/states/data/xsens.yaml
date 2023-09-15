@@ -100,6 +100,7 @@ Dance::XsensRetargetting::GrandeDance:
 Dance::XsensRetargetting::Deception:
   base: XsensRetargetting::Standing
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio06_fix_from_3_to_63.bin
+  autoTransition: true
   start_time: 4.7
   end_time: 50.87
   robot: hrp4
@@ -401,11 +402,15 @@ Dance::LiftLeg:
         admittance:
           cop: [0.005, 0.01]
 
+Fin::PrepareLift:
+  base: Pause
+
 Dance::FinalLiftLegFSM:
   base: Meta
   transitions:
     - [Dance::PrepareFlying, OK, Stabilizer::GoRight, Auto]
     - [Stabilizer::GoRight, OK, Dance::LiftLeg, Strict]
+    - [Dance::LiftLeg, OK, Fin::PrepareLift, Strict]
   configs:
     Stabilizer::GoRight:
       completion:
