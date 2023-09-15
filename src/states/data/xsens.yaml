@@ -154,7 +154,7 @@ Dance::PrepareFlying:
       #     rotation: [0.0, 0.34, 0.0]
       #   fixBaseLink: true
       #   initialStiffnessInterpolationDuration: 5
-      # 
+      #
       # Dance::XsensRetargetting::FlyToSky:
       #   base: XsensRetargetting
       #   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio09_FlyToSky_fix_cut_from_29_to_46.5.bin
@@ -289,4 +289,3 @@ Dance::FinalLiftLegFSM:
   transitions:
     - [Dance::PrepareFlying, OK, Stabilizer::GoRight, Strict]
     - [Stabilizer::GoRight, OK, Dance::LiftLeg, Strict]
-

@@ -1,5 +1,5 @@
 HalfSitting::Interpolation:
-  base: InterpolatePosture 
+  base: InterpolatePosture
   duration: 3
   hrp4:
     useDefaultPostureTask: true

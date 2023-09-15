@@ -72,7 +72,7 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
                         mc_rtc::gui::RPYInput("Offset RPY", offset_.rotation()));
 
   mc_rtc::Configuration xsensConf = ctl.config()("Xsens")(robot.name());
-  if(config_.has("Xsens"))
+  if (config_.has("Xsens"))
   {
     xsensConf.load(config_("Xsens"));
   }
@@ -141,10 +141,10 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
   config_("initialStiffnessPercent", initialStiffnessPercent_);
   config_("initialWeightPercent", initialWeightPercent_);
   startStiffnessInterpolator_.values(
-      {{0.0, initialStiffnessPercent_}, 
+      {{0.0, initialStiffnessPercent_},
        {initialInterpolationTime_, 1.}});
   startWeightInterpolator_.values(
-      {{0.0, initialWeightPercent_}, 
+      {{0.0, initialWeightPercent_},
        {initialInterpolationTime_, 1.}});
   config_("endInterpolationTime", endInterpolationTime_);
   config_("endStiffnessPercent", endStiffnessPercent_);
@@ -230,7 +230,7 @@ void XsensRetargetting::start(mc_control::fsm::Controller &ctl)
 
 bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
 {
-  if(finished_) return true;
+  if (finished_) return true;
 
   auto &ds = ctl.datastore();
   auto &robot = ctl.robot(robot_);
@@ -285,23 +285,23 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
   }
 
   auto currentTime = ds.call<double>("Replay::GetCurrentTime");
-  if(finishRequested_ && !finishing_)
-  { // Requesting finishing early (before the end of the trajectory, start lowering stiffness now)
+  if (finishRequested_ && !finishing_)
+  {  // Requesting finishing early (before the end of the trajectory, start lowering stiffness now)
     mc_rtc::log::info("[{}] Requesting finishing after interpolation, stopping in {}s", endInterpolationTime_);
     finishing_ = true;
     auto endTime = ds.call<double>("Replay::GetEndTime");
-    endTime_ = std::min(currentTime + endInterpolationTime_, endTime); // end after interpolation
+    endTime_ = std::min(currentTime + endInterpolationTime_, endTime);  // end after interpolation
   }
-  else if(!finishing_)
+  else if (!finishing_)
   {
     endTime_ = ds.call<double>("Replay::GetEndTime");
   }
 
-  auto remainingTime = endTime_-currentTime;
+  auto remainingTime = endTime_ - currentTime;
   double interpolationDuration = endStiffnessInterpolator_.values().back().first;
   // REDUCE STIFFNESS BEFORE STOPPING TO PREVENT DISCONTINUITIES
   // Here the trajectory is almost finished
-  if(remainingTime <= 0)
+  if (remainingTime <= 0)
   {
     finished_ = true;
     return true;
