@@ -12,7 +12,8 @@ StatesFiles:
 - "@LIPM_WALKING_STATES_FILES@"
 VerboseStateFactory: false
 
-Plugins: [footsteps_planner_plugin,mc_joystick_plugin,MosquittoPlugin, Replay, XsensPlugin]
+  #Plugins: [footsteps_planner_plugin,mc_joystick_plugin,MosquittoPlugin, Replay, XsensPlugin]
+Plugins: [Replay, XsensPlugin]
 
 Replay:
   preload_logs:
@@ -24,7 +25,7 @@ Replay:
     - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio04_fix_from_5_to_31.bin
     # PetiteDanse
     - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio05_fix_from_3_to_132.bin
-    # PetiteDanceEnervee
+    # Deception
     - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio06_fix_from_3_to_63.bin
     # Presence
     - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio03_fix_from_8_to_28.bin

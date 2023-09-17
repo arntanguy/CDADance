@@ -273,6 +273,10 @@ bool LIPMStabilizerController<WalkingCtl>::run()
   /*   } */
   /* } */
   /* mc_rtc::log::info(jc.dump(true, true)); */
+  /* for(const auto & j : this->robot().mb().joints()) */
+  /* { */
+  /*   std::cout << j.name() << ", dof: " << j.dof() << std::endl; */
+  /* } */
   return WalkingCtl::run();
 }
 

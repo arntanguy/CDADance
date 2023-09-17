@@ -80,29 +80,39 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
   }
 
   // Get the list of actuated joints
-  const auto &rjo = robot.refJointOrder();
 
+  const auto &rjo = robot.refJointOrder();
   // Start interpolation from current posture
   PostureConfig initPosture;
   initPosture.t = 0.0;
-  for (int i = 0; i < rjo.size(); ++i)
+  for (const auto &jName : rjo)
   {
-    if (robot.hasJoint(rjo[i]))
+    if (robot.hasJoint(jName))
     {
-      std::cout << "Joint " << rjo[i] << std::endl;
-      initPosture.posture[rjo[i]] = robot.mbc().q[robot.jointIndexInMBC(i)][0];
+      const auto jIdx = robot.jointIndexByName(jName);
+      if (robot.mb().joint(jIdx).dof() == 1)
+      {
+        initPosture.posture[jName] = robot.mbc().q[jIdx][0];
+      }
     }
   }
   postureSequence_.push_back(initPosture);
 
+  mc_rtc::log::critical("here");
   // Create a vector used to store the desired value for each actuated joint
   Eigen::VectorXd desiredPosture(rjo.size());
   double t = 0;
   // Initialize with current robot posture
   for (int i = 0; i < rjo.size(); ++i)
   {
-    desiredPosture(i) = robot.mbc().q[robot.jointIndexInMBC(i)][0];
+    const auto jIdx = robot.jointIndexInMBC(i);
+    if (robot.mb().joint(jIdx).dof() == 1)
+    {
+      desiredPosture(i) = robot.mbc().q[jIdx][0];
+    }
   }
+
+  mc_rtc::log::critical("there");
 
   for (auto postureConfig : postureSequence)
   {
@@ -110,11 +120,11 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
     postureConfig.t = t;
     if (postureConfig.halfsitting)
     {
-      for (int i = 0; i < rjo.size(); ++i)
+      for (const auto &jName : robot.refJointOrder())
       {
         const auto &hsStance = robot.module().stance();
-        const auto &jName = rjo[i];
-        if (robot.hasJoint(jName))
+        const auto jIdx = robot.jointIndexByName(jName);
+        if (robot.hasJoint(jName) && robot.mb().joint(jIdx).dof() == 1)
         {
           postureConfig.posture[jName] = hsStance.at(jName)[0];
         }
@@ -122,6 +132,7 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
     }
     postureSequence_.push_back(postureConfig);
   }
+  mc_rtc::log::critical("there2");
 
   // Last posture should be the init posture no matter what
   if (goBackToInitialPosture_)
@@ -148,10 +159,6 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
 
   CoMInterpolator::TimedValueVector comInterpolatorValues;
   comInterpolatorValues.emplace_back(0.0, Eigen::Vector3d::Zero());
-  // for(const auto & p : postureSequence_)
-  // {
-  //   mc_rtc::log::info("Posture {}", p.save().dump(true));
-  // }
 
   // For each timed posture in the sequence
   for (const auto &postureConfig : postureSequence_)
@@ -161,7 +168,8 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
     for (int i = 0; i < rjo.size(); ++i)
     {
       const auto &actuatedJoint = rjo[i];
-      if (!robot.hasJoint(actuatedJoint)) continue;
+      const auto jIdx = robot.jointIndexByName(rjo[i]);
+      if (!robot.hasJoint(actuatedJoint) || robot.mb().joint(jIdx).dof() != 1) continue;
       // Check if we have a desired posture in the configuration
       if (postureMap.count(actuatedJoint))
       {
@@ -178,6 +186,7 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
     interpolatorValues.emplace_back(postureConfig.t, desiredPosture);
     comInterpolatorValues.emplace_back(postureConfig.t, postureConfig.comOffset);
   }
+  mc_rtc::log::critical("there3");
   // Put all desired postures in the interpolator
   interpolator_.values(interpolatorValues);
   comInterpolator_.values(comInterpolatorValues);
@@ -301,7 +310,8 @@ bool InterpolatePosture::run(mc_control::fsm::Controller &ctl)
       {
         // Shake
         const auto &actuatedJoint = rjo[i];
-        if (shakeMap.count(actuatedJoint))
+        const auto jIdx = robot.jointIndexByName(actuatedJoint);
+        if (shakeMap.count(actuatedJoint) && robot.mb().joint(jIdx).dof() == 1)
         {
           const auto &shakeConfig = shakeMap.at(actuatedJoint);
           // Shake value such that it starts with
@@ -353,8 +363,10 @@ bool InterpolatePosture::run(mc_control::fsm::Controller &ctl)
   for (int i = 0; i < rjo.size(); ++i)
   {
     const auto &actuatedJoint = rjo[i];
+    const auto jIdx = robot.jointIndexByName(rjo[i]);
+    if (robot.mb().joint(jIdx).dof() != 1) continue;
     // Set the posture target for this actuated joint to its interpolated value
-    posture[robot.jointIndexInMBC(i)][0] = desiredPosture[i];
+    posture[jIdx][0] = desiredPosture[i];
   }
 
   // Change the posture target in the posture task

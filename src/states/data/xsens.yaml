@@ -17,7 +17,7 @@ XsensRetargetting::Standing:
     - L_SHOULDER_R_LINK
     - L_SHOULDER_Y_LINK
     - L_ELBOW_P_LINK
-    - l_wrist
+      #- l_wrist
   fixBaseLink: true
   fixed_stiffness: 150
   fixed_weight: 8000
@@ -96,7 +96,6 @@ Dance::XsensRetargetting::GrandeDance:
   end_time: 124.5
   autoTransition: true
 
-# PetiteDanceEnervee
 Dance::XsensRetargetting::Deception:
   base: XsensRetargetting::Standing
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio06_fix_from_3_to_63.bin
@@ -403,7 +402,13 @@ Dance::LiftLeg:
           cop: [0.005, 0.01]
 
 Fin::PrepareLift:
-  base: Pause
+  base: InterpolatePosture
+  duration: 3
+  hrp4:
+    goBackToInitialPosture: true
+    posture_task:
+      stiffness: 100
+    posture_sequence: []
 
 Dance::FinalLiftLegFSM:
   base: Meta

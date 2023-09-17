@@ -118,13 +118,13 @@ void MosquittoPlugin::before(mc_control::MCGlobalController& gc)
 
     if (publishEncoders_)
     {
-      for (unsigned int i = 0; i < robot.refJointOrder().size(); i++)
+      for (unsigned int i = 0; i < outputRobot.refJointOrder().size(); i++)
       {
-        const auto& jName = robot.refJointOrder()[i];
-        const auto& jLimits = robot.module().bounds();
+        const auto& jName = outputRobot.refJointOrder()[i];
+        const auto& jLimits = outputRobot.module().bounds();
         auto jInf = jLimits[0].at(jName)[0];
         auto jSup = jLimits[1].at(jName)[0];
-        auto q = robot.encoderValues()[i];
+        auto q = outputRobot.encoderValues()[i];
         auto jNormalized = std::fabs(q - jInf) / std::fabs(jSup - jInf);
         encoders[jName] = jNormalized;
         encoders_normalized[jName] = jNormalized;
