@@ -216,6 +216,116 @@ mpc:
 
 plans:
   hrp4:
+    back_20cm:
+      com_height: 0.78
+      contacts:
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.536501784839346, -0.09298897979962834, 0.0]
+            rotation: [0.9999973086145777, -0.0023200783609943125, 0.0, 0.0023200783609943125, 0.9999973086145777, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.5369313452367888, 0.08703308871752938, 0.0]
+            rotation: [0.9999972861588061, -0.002329737114542485, 0.0, 0.002329737114542485, 0.9999972861588061, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.4858735039308863, -0.09445821480442557, 0.0]
+            rotation: [0.9999985681922723, -0.001692221441059994, 0.0, 0.001692221441059994, 0.9999985681922723, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [-0.0499999992118347, -0.00003103986085913774, -0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.3875717416625476, 0.08885629342828459, 0.0]
+            rotation: [0.9999983406918789, -0.0018217062027427083, 0.0, 0.0018217062027427083, 0.9999983406918789, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [-0.05000000281187101, -0.000024565612637656867, -0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.3364867223461099, -0.09419677239692544, 0.0]
+            rotation: [0.9999968423684197, -0.002513016750861085, 0.0, 0.002513016750861085, 0.9999968423684197, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, -0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.33694701513782629, 0.08896608878321626, 0.0]
+            rotation: [0.9999968423684197, -0.002513016750861085, 0.0, 0.002513016750861085, 0.9999968423684197, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, -0.0, 0.0]
+          surface: LeftFootCenter
+      double_support_duration: 0.2
+      final_dsp_duration: 0.6
+      init_dsp_duration: 0.6
+      landing_duration: 0.15
+      landing_pitch: 0.0
+      single_support_duration: 0.8
+      swing_height: 0.05
+      takeoff_duration: 0.05
+      takeoff_pitch: 0.0
+
+    forward_20cm_rotate_20:
+      com_height: 0.78
+      contacts:
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.035888163053101208, 0.08779337290376246, 0.0]
+            rotation: [0.9999896541070048, -0.004548810718516613, 0.0, 0.004548810718516613, 0.9999896541070048, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.03691584739105069, -0.09158170549631079, 0.0]
+            rotation: [0.9999999999993524, -0.0000011380183405782599, 0.0, 0.0000011380183405782599, 0.9999999999993524, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.151971483688951, 0.09620190459069376, 0.0]
+            rotation: [0.9871537380302491, -0.15977326901865178, 0.0, 0.15977326901865178, 0.9871537380302491, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.12270686218849719, -0.08460856942446149, 0.0]
+            rotation: [0.9871537380302491, -0.15977326901865178, 0.0, 0.15977326901865178, 0.9871537380302491, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: RightFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.26792292176709578, 0.08363693510945315, 0.0]
+            rotation: [0.9389003303048163, -0.3441891482215946, 0.0, 0.3441891482215946, 0.9389003303048163, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: LeftFootCenter
+        - half_length: 0.112
+          half_width: 0.065
+          pose:
+            translation: [0.20488005352552098, -0.08833527877705061, 0.0]
+            rotation: [0.9389003303048163, -0.3441891482215946, 0.0, 0.3441891482215946, 0.9389003303048163, 0.0, 0.0, 0.0, 1.0]
+          ref_vel: [0.0, 0.0, 0.0]
+          surface: RightFootCenter
+      double_support_duration: 0.2
+      final_dsp_duration: 0.6
+      init_dsp_duration: 0.6
+      landing_duration: 0.15
+      landing_pitch: 0.0
+      single_support_duration: 0.8
+      swing_height: 0.04
+      takeoff_duration: 0.05
+      takeoff_pitch: 0.0
+
     forward_1m:
       com_height: 0.78
       contacts:
@@ -1194,6 +1304,16 @@ states:
     plan: follow_me
     autoWalk: true
 
+  Walk::Back20cm:
+    base: Walk
+    plan: back_20cm
+    autoWalk: true
+
+  Walk::forward_20cm_rotate_20:
+    base: Walk
+    plan: forward_20cm_rotate_20
+    autoWalk: true
+
   Walk::TurnRight90:
     base: Walk
     plan: turn_right_90
@@ -1203,7 +1323,6 @@ states:
     base: Walk
     plan: forward_1m
     autoWalk: true
-
 
   Walk::FaceScene:
     base: Walk
@@ -1307,8 +1426,12 @@ states:
       - [Dance::XsensRetargetting::Doute::HalfSitting, OK, Walk::ForwardAndLeft, Strict]
       - [Walk::ForwardAndLeft, OK, Dance::Interaction::Fake, Auto]
       - [Dance::Interaction::Fake, OK, Dance::XsensRetargetting::PetiteDance, Auto]
-      - [Dance::XsensRetargetting::PetiteDance, OK, Dance::XsensRetargetting::GrandeDance, Auto]
-      - [Dance::XsensRetargetting::GrandeDance, OK, Dance::XsensRetargetting::Deception, Auto]
+      - [Dance::XsensRetargetting::PetiteDance, OK, Dance::XsensRetargetting::PetiteDance::HalfSitting, Auto]
+      - [Dance::XsensRetargetting::PetiteDance::HalfSitting, OK, Walk::Back20cm, Auto]
+      - [Walk::Back20cm, OK, Dance::XsensRetargetting::GrandeDance, Auto]
+      - [Dance::XsensRetargetting::GrandeDance, OK, Dance::XsensRetargetting::GrandeDance::HalfSitting, Auto]
+      - [Dance::XsensRetargetting::GrandeDance::HalfSitting, OK, Walk::forward_20cm_rotate_20, Auto]
+      - [Walk::forward_20cm_rotate_20, OK, Dance::XsensRetargetting::Deception, Auto]
       # Fin de Deuxieme Scene
       # RobotSeul (Doute2, FinDance, FinDance2)
       - [Dance::XsensRetargetting::Deception, OK, Dance::XsensRetargetting::RobotSeul, Auto]

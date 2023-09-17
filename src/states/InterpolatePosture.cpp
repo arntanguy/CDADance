@@ -98,7 +98,6 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
   }
   postureSequence_.push_back(initPosture);
 
-  mc_rtc::log::critical("here");
   // Create a vector used to store the desired value for each actuated joint
   Eigen::VectorXd desiredPosture(rjo.size());
   double t = 0;
@@ -112,7 +111,6 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
     }
   }
 
-  mc_rtc::log::critical("there");
 
   for (auto postureConfig : postureSequence)
   {
@@ -132,7 +130,6 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
     }
     postureSequence_.push_back(postureConfig);
   }
-  mc_rtc::log::critical("there2");
 
   // Last posture should be the init posture no matter what
   if (goBackToInitialPosture_)
@@ -186,7 +183,6 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
     interpolatorValues.emplace_back(postureConfig.t, desiredPosture);
     comInterpolatorValues.emplace_back(postureConfig.t, postureConfig.comOffset);
   }
-  mc_rtc::log::critical("there3");
   // Put all desired postures in the interpolator
   interpolator_.values(interpolatorValues);
   comInterpolator_.values(comInterpolatorValues);

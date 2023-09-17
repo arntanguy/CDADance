@@ -90,11 +90,17 @@ Dance::XsensRetargetting::PetiteDance:
     translation: [0.1, 0.0, 0.1]
     rotation: [0.0, 0.5, 0.0]
 
+Dance::XsensRetargetting::PetiteDance::HalfSitting:
+  base: HalfSitting::Interpolation
+
 Dance::XsensRetargetting::GrandeDance:
   base: Dance::XsensRetargetting::PetiteDance
   start_time: 66.4
   end_time: 124.5
   autoTransition: true
+
+Dance::XsensRetargetting::GrandeDance::HalfSitting:
+  base: HalfSitting::Interpolation
 
 Dance::XsensRetargetting::Deception:
   base: XsensRetargetting::Standing
@@ -293,16 +299,77 @@ Dance::XsensRetargetting::FlyToSkyUpperBody::HalfSitting:
 
 
 Dance::XsensRetargetting::LookAtVideo:
-  base: XsensRetargetting::Standing
-  log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio10_LookAtVideo_fix_cut_from_0_to_53.bin
-  robot: hrp4
-  autoTransition: true
-  start_time: 2 # bug if start time is zero
-  stiffness: 100
-  weight: 1000
-  offset:
-    translation: [0.0, 0.0, 0.1]
-    rotation: [0.0, 0.0, 0.17]
+  base: Parallel
+  states: [XsensRetargetting::Standing, InterpolatePosture::Base]
+  configs:
+    XsensRetargetting::Standing:
+      log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio10_LookAtVideo_fix_cut_from_0_to_53.bin
+      robot: hrp4
+      activeBodies:
+        - torso
+        - R_SHOULDER_R_LINK
+        - R_SHOULDER_Y_LINK
+        - R_ELBOW_P_LINK
+        - r_wrist
+        - L_SHOULDER_R_LINK
+        - L_SHOULDER_Y_LINK
+        - L_ELBOW_P_LINK
+        - l_wrist
+      autoTransition: true
+      start_time: 2 # bug if start time is zero
+      end_time: 46 # 44s from start of lookat 
+      stiffness: 100
+      weight: 1000
+      offset:
+        translation: [0.0, 0.0, 0.1]
+        rotation: [0.0, 0.0, 0.17]
+    InterpolatePosture::Base:
+      hrp4:
+        posture_sequence:
+          - time: 3.0
+            posture:
+              NECK_P: 0 
+              NECK_Y: 0 
+          - time: 1.0
+            posture: # droite
+              NECK_P: -0.6
+              NECK_Y: -0.8
+          - time: 15.0 #droite
+            posture:
+              NECK_P: -0.6
+              NECK_Y: -0.8
+          - time: 1.0 #gauche
+            posture:
+              NECK_P: -0.6
+              NECK_Y: 0.8 
+          - time: 5.0 #gauche
+            posture:
+              NECK_P: -0.6
+              NECK_Y: 0.8 
+          - time: 1.0 # droite
+            posture:
+              NECK_P: -0.5
+              NECK_Y: -0.8 
+          - time: 5.0 # droite
+            posture:
+              NECK_P: -0.5
+              NECK_Y: -0.8 
+          - time: 1.0 # gauche
+            posture:
+              NECK_P: 0.5
+              NECK_Y: 0.8 
+          - time: 5.0 # gauche
+            posture:
+              NECK_P: 0.5
+              NECK_Y: 0.8 
+          - time: 5.0 # droite bas
+            posture:
+              NECK_P: 0.2
+              NECK_Y: -0.8 
+          - time: 2.0 # droite bas
+            posture:
+              NECK_P: 0.2
+              NECK_Y: -0.8 
 
 Dance::XsensRetargetting::LookAtVideo::HalfSitting:
   base: HalfSitting::Interpolation
