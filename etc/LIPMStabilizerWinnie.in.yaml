@@ -44,8 +44,8 @@ Replay:
 Limits:
   hrp4:
     NECK_P:
-      lower: 0.61
-      upper: -0.35
+      lower: -1.15
+      upper: 0.13 
 
 Xsens:
   liveMode: false
@@ -64,7 +64,7 @@ Xsens:
       segment: "Head"
       offset:
         translation: [0,0,0]
-        rotation: [0.0, 0.3, 0.0]
+        rotation: [0.0, -0.3, 0.0]
     R_SHOULDER_R_LINK:
       segment: "Right Shoulder"
     R_SHOULDER_Y_LINK:
@@ -84,7 +84,7 @@ Xsens:
       offset:
         translation: [0,0,0]
         # rotation: [-1.57, 0, 0]
-        rotation: [0.0, 0, 0]
+        rotation: [-0.3, 0, 0]
     L_SHOULDER_R_LINK:
       segment: "Left Shoulder"
     L_SHOULDER_Y_LINK:

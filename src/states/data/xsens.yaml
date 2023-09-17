@@ -332,7 +332,7 @@ Dance::XsensRetargetting::LookAtVideo:
               NECK_Y: 0 
           - time: 1.0
             posture: # droite
-              NECK_P: -0.6
+              NECK_P: -1.1
               NECK_Y: -0.8
           - time: 15.0 #droite
             posture:
@@ -340,35 +340,35 @@ Dance::XsensRetargetting::LookAtVideo:
               NECK_Y: -0.8
           - time: 1.0 #gauche
             posture:
-              NECK_P: -0.6
+              NECK_P: -1.1
               NECK_Y: 0.8 
           - time: 5.0 #gauche
             posture:
-              NECK_P: -0.6
+              NECK_P: -1.1
               NECK_Y: 0.8 
           - time: 1.0 # droite
             posture:
-              NECK_P: -0.5
+              NECK_P: -0.8
               NECK_Y: -0.8 
           - time: 5.0 # droite
             posture:
-              NECK_P: -0.5
+              NECK_P: -0.8
               NECK_Y: -0.8 
           - time: 1.0 # gauche
             posture:
-              NECK_P: 0.5
+              NECK_P: 0.
               NECK_Y: 0.8 
           - time: 5.0 # gauche
             posture:
-              NECK_P: 0.5
+              NECK_P: 0.
               NECK_Y: 0.8 
           - time: 5.0 # droite bas
             posture:
-              NECK_P: 0.2
+              NECK_P: 0.
               NECK_Y: -0.8 
           - time: 2.0 # droite bas
             posture:
-              NECK_P: 0.2
+              NECK_P: 0.
               NECK_Y: -0.8 
 
 Dance::XsensRetargetting::LookAtVideo::HalfSitting:
@@ -439,7 +439,7 @@ Dance::InterpolatePosture::LiftLeftLeg:
           CHEST_P: -0.01409800367098486
           CHEST_Y: 0.00004810380688906177
           NECK_Y: -8.17363159262032e-20
-          NECK_P: 1.7994277857329965e-18
+          NECK_P: -1.1
           R_SHOULDER_P: -1.0842988764854187
           R_SHOULDER_R: -1.1784764901635537
           R_SHOULDER_Y: 0.17577137839155919
