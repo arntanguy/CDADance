@@ -111,7 +111,6 @@ void InterpolatePosture::start(mc_control::fsm::Controller &ctl)
     }
   }
 
-
   for (auto postureConfig : postureSequence)
   {
     t += postureConfig.t;

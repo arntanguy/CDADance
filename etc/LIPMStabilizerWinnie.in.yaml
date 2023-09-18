@@ -45,7 +45,7 @@ Limits:
   hrp4:
     NECK_P:
       lower: -1.15
-      upper: 0.13 
+      upper: 0.13
 
 Xsens:
   liveMode: false
