@@ -328,16 +328,16 @@ Dance::XsensRetargetting::LookAtVideo:
         posture_sequence:
           - time: 3.0
             posture:
-              NECK_P: 0
-              NECK_Y: 0
+              NECK_P: -1.1
+              NECK_Y: -0.1
           - time: 1.0
             posture: # droite
               NECK_P: -1.1
-              NECK_Y: -0.8
+              NECK_Y: -0.1
           - time: 15.0 #droite
             posture:
-              NECK_P: -0.6
-              NECK_Y: -0.8
+              NECK_P: -1.1
+              NECK_Y: -0.1
           - time: 1.0 #gauche
             posture:
               NECK_P: -1.1
@@ -349,27 +349,27 @@ Dance::XsensRetargetting::LookAtVideo:
           - time: 1.0 # droite
             posture:
               NECK_P: -0.8
-              NECK_Y: -0.8
+              NECK_Y: -0.1
           - time: 5.0 # droite
             posture:
-              NECK_P: -0.8
-              NECK_Y: -0.8
+              NECK_P: -1.1
+              NECK_Y: -0.1
           - time: 1.0 # gauche
             posture:
-              NECK_P: 0.
+              NECK_P: -0.8
               NECK_Y: 0.8
           - time: 5.0 # gauche
             posture:
-              NECK_P: 0.
+              NECK_P: -0.8
               NECK_Y: 0.8
           - time: 5.0 # droite bas
             posture:
-              NECK_P: 0.
-              NECK_Y: -0.8
+              NECK_P: -0.8
+              NECK_Y: -0.1
           - time: 2.0 # droite bas
             posture:
-              NECK_P: 0.
-              NECK_Y: -0.8
+              NECK_P: -0.8
+              NECK_Y: -0.1
 
 Dance::XsensRetargetting::LookAtVideo::HalfSitting:
   base: HalfSitting::Interpolation

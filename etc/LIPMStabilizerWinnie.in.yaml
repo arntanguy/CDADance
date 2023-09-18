@@ -1458,7 +1458,10 @@ states:
         stiffness: 10.0
         eval: 0.1
 
-  Demo::Start:
+  Demo::Start::HalfSitting:
+    base: HalfSitting::Interpolation
+
+  Demo::StartStabilizer:
     base: Parallel
     states: [Demo::LIPMWalking::WalkFSM, Dance::Demo::FSM::FullSequence]
 
@@ -1500,7 +1503,8 @@ states:
     states: [Demo::LIPMWalking::WalkFSM, Dance::Demo::FSM::FullSequence]
 
 transitions:
-  - [Pause, LIPMWalking, Demo::Start, Strict]
+  - [Pause, OK, Demo::Start::HalfSitting, Strict]
+  - [Demo::Start::HalfSitting, OK, Demo::StartStabilizer, Strict]
 
 init: Pause
 
