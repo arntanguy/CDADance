@@ -100,6 +100,8 @@ Dance::XsensRetargetting::GrandeDance:
     #end_time: 124.5
   start_time: 90
   end_time: 120
+  fixed_weight: 5000
+  fixed_stiffness: 100
   autoTransition: true
 
 Dance::XsensRetargetting::GrandeDance::HalfSitting:

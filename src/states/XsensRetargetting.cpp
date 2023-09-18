@@ -286,7 +286,7 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
   for (const auto &[fixedBodyName, fixedBodyTask] : fixedTasks_)
   {
     fixedBodyTask->stiffness(percentStiffness * fixedStiffness_);
-    fixedBodyTask->stiffness(percentWeight * fixedWeight_);
+    fixedBodyTask->weight(percentWeight * fixedWeight_);
   }
 
   auto currentTime = ds.call<double>("Replay::GetCurrentTime");
@@ -325,7 +325,7 @@ bool XsensRetargetting::run(mc_control::fsm::Controller &ctl)
     for (const auto &[fixedBodyName, fixedBodyTask] : fixedTasks_)
     {
       fixedBodyTask->stiffness(endPercentStiffness * fixedStiffness_);
-      // fixedBodyTask->weight(endPercentWeight * fixedStiffness_);
+      fixedBodyTask->weight(endPercentWeight * fixedWeight_);
     }
   }
 

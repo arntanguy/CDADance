@@ -46,6 +46,10 @@ Limits:
     NECK_P:
       lower: -1.15
       upper: 0.13
+    R_KNEE_P:
+      lower: 0.411
+    L_KNEE_P:
+      lower: 0.411
 
 Xsens:
   liveMode: false
