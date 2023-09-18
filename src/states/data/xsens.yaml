@@ -80,9 +80,10 @@ Dance::XsensRetargetting::PetiteDance:
   base: XsensRetargetting::Standing
   log: /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio05_fix_from_3_to_132.bin
   autoTransition: true
-  start_time: 6.4
-  end_time: 66.4
-  #end_time: 124.5
+    # start_time: 6.4
+    # end_time: 66.4
+  start_time: 36
+  end_time: 66
   robot: hrp4
   stiffness: 100
   weight: 1000
@@ -95,8 +96,10 @@ Dance::XsensRetargetting::PetiteDance::HalfSitting:
 
 Dance::XsensRetargetting::GrandeDance:
   base: Dance::XsensRetargetting::PetiteDance
-  start_time: 66.4
-  end_time: 124.5
+    #start_time: 66.4
+    #end_time: 124.5
+  start_time: 90
+  end_time: 120
   autoTransition: true
 
 Dance::XsensRetargetting::GrandeDance::HalfSitting:

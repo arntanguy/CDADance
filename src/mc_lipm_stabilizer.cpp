@@ -263,11 +263,11 @@ template <typename WalkingCtl>
 bool LIPMStabilizerController<WalkingCtl>::run()
 {
   /* mc_rtc::Configuration jc; */
-  /* auto & robot = this->robot(); */
-  /* for(const auto & joint : robot.refJointOrder()) */
+  /* auto &robot = this->robot(); */
+  /* for (const auto &joint : robot.refJointOrder()) */
   /* { */
   /*   auto j = robot.mbc().q[robot.jointIndexByName(joint)]; */
-  /*   if(j.size() == 1) */
+  /*   if (j.size() == 1) */
   /*   { */
   /*     jc.add(joint, j[0]); */
   /*   } */
