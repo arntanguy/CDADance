@@ -103,6 +103,9 @@ Dance::XsensRetargetting::GrandeDance:
   fixed_weight: 5000
   fixed_stiffness: 100
   autoTransition: true
+  offset:
+    translation: [0.0, 0.0, 0.0]
+    rotation: [0.0, 0.5, 0.0]
 
 Dance::XsensRetargetting::GrandeDance::HalfSitting:
   base: HalfSitting::Interpolation
