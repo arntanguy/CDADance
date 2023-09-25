@@ -165,13 +165,13 @@ Dance::Interaction::Real::FSM:
   ResetPostures: false
   StepByStep: false
   transitions:
-  - [HalfSitting::Interpolation, Seq0, Right::TouchHead, Auto]
-  - [HalfSitting::Interpolation, Seq1, Right::HandForward, Auto]
-  - [HalfSitting::Interpolation, Seq2, Right::HandSide, Auto]
-  - [HalfSitting::Interpolation, Seq3, Left::TouchHead, Auto]
-  - [HalfSitting::Interpolation, Seq4, Left::HandForward, Auto]
-  - [HalfSitting::Interpolation, Seq5, Left::HandSide, Auto]
-  - [HalfSitting::Interpolation, Seq8, Both::Raise, Auto]
+  - [AutonomousInteraction, Seq0, Right::TouchHead, Auto]
+  - [AutonomousInteraction, Seq1, Right::HandForward, Auto]
+  - [AutonomousInteraction, Seq2, Right::HandSide, Auto]
+  - [AutonomousInteraction, Seq3, Left::TouchHead, Auto]
+  - [AutonomousInteraction, Seq4, Left::HandForward, Auto]
+  - [AutonomousInteraction, Seq5, Left::HandSide, Auto]
+  - [AutonomousInteraction, Seq8, Both::Raise, Auto]
   - [Right::TouchHead, OK, HalfSitting::Interpolation, Auto]
   - [Right::HandForward, OK, HalfSitting::Interpolation, Auto]
   - [Right::HandSide, OK, HalfSitting::Interpolation, Auto]
@@ -179,6 +179,7 @@ Dance::Interaction::Real::FSM:
   - [Left::HandForward, OK, HalfSitting::Interpolation, Auto]
   - [Left::HandSide, OK, HalfSitting::Interpolation, Auto]
   - [Both::Raise, OK, HalfSitting::Interpolation, Auto]
+  - [HalfSitting::Interpolation, OK, AutonomousInteraction, Auto]
 
 Dance::Interaction::Fake::HalfSitting:
   base: HalfSitting::Interpolation

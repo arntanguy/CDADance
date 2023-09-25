@@ -27,8 +27,8 @@ struct AutonomousInteraction : mc_control::fsm::State
   int segIdx;
   int category_seq_ = 4;
   int capture_charatersN = 1;
-  bool debugmode_ = false;
-  std::string SeqName[8] = {"Seq0", "Seq1", "Seq2", "Seq3", "Seq4", "Seq5", "Seq6", "Seq7"};
+  bool debugmode_ = true;
+  std::vector<std::string> SeqName{"Seq0", "Seq1", "Seq2", "Seq3", "Seq4", "Seq5", "Seq6", "Seq7"};
   std::string subscriber_msg;
   bool finished_ = false;
 };

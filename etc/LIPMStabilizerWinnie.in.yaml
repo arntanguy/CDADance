@@ -43,9 +43,11 @@ Replay:
 
 Limits:
   hrp4:
-    NECK_P:
-      lower: -1.15
-      upper: 0.13
+    # XXX modified NECK_P limits for head with mask
+    # NECK_P:
+    #   lower: -1.15
+    #   upper: 0.13
+    # Lower joint limits for knees to prevent overstretching
     R_KNEE_P:
       lower: 0.411
     L_KNEE_P:
@@ -1124,7 +1126,7 @@ states:
         type: lookAt
         frame: NECK_P_LINK
         frameVector: [1, 0, 0]
-        targetVector: [1, 0, 0]
+        targetVector: [1, 0, -0.5]
         weight: 500
         stiffness: 10
 
@@ -1418,7 +1420,7 @@ states:
     # PetiteDanceEnervee
     # Flying
     transitions:
-      - [Demo::WaitForStart, OK, Dance::XsensRetargetting::Salutations, Strict]
+      - [Demo::WaitForStart, OK, Dance::XsensRetargetting::Salutations, Auto]
       - [Dance::XsensRetargetting::Salutations, OK, Dance::XsensRetargetting::Salutations::HalfSitting, Auto]
       - [Dance::XsensRetargetting::Salutations::HalfSitting, OK, Dance::XsensRetargetting::ListenToRobot, Auto]
       - [Dance::XsensRetargetting::ListenToRobot, OK, Dance::XsensRetargetting::ListenToRobot::HalfSitting, Auto]
