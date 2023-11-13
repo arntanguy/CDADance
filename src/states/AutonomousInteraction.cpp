@@ -61,8 +61,8 @@ bool AutonomousInteraction::run(mc_control::fsm::Controller &ctl)
   if (find_msg)
   {
     debug_log("------ Return Index = {}; output = {} ------", segIdx, SeqName[segIdx]);
-    const auto & currSeq = SeqName[segIdx];
-    if(std::find(SeqName.begin(), SeqName.end(), currSeq) != SeqName.end())
+    const auto &currSeq = SeqName[segIdx];
+    if (std::find(SeqName.begin(), SeqName.end(), currSeq) != SeqName.end())
     {
       output(SeqName[segIdx]);
       return true;

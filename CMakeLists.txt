@@ -16,6 +16,7 @@ endif()
 find_package(Eigen3 REQUIRED)
 find_package(ismpc_walking REQUIRED)
 find_package(lipm_walking_controller REQUIRED)
+find_package(XsensPlugin REQUIRED)
 
 add_subdirectory(src)
 add_subdirectory(plugins)

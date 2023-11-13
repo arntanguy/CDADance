@@ -1,17 +1,17 @@
-body6d_hrp4_L_ELBOW_P_LINK_target: ReplayPlugin::GetSegmentPose::L_ELBOW_P_LINK
-body6d_hrp4_L_HIP_P_LINK_target: ReplayPlugin::GetSegmentPose::L_HIP_P_LINK
-body6d_hrp4_L_KNEE_P_LINK_target: ReplayPlugin::GetSegmentPose::L_KNEE_P_LINK
-body6d_hrp4_L_SHOULDER_R_LINK_target: ReplayPlugin::GetSegmentPose::L_SHOULDER_R_LINK
-body6d_hrp4_L_SHOULDER_Y_LINK_target: ReplayPlugin::GetSegmentPose::L_SHOULDER_Y_LINK
-body6d_hrp4_NECK_P_LINK_target: ReplayPlugin::GetSegmentPose::NECK_P_LINK
-body6d_hrp4_R_ELBOW_P_LINK_target: ReplayPlugin::GetSegmentPose::R_ELBOW_P_LINK
-body6d_hrp4_R_HIP_P_LINK_target: ReplayPlugin::GetSegmentPose::R_HIP_P_LINK
-body6d_hrp4_R_KNEE_P_LINK_target: ReplayPlugin::GetSegmentPose::R_KNEE_P_LINK
-body6d_hrp4_R_SHOULDER_R_LINK_target: ReplayPlugin::GetSegmentPose::R_SHOULDER_R_LINK
-body6d_hrp4_R_SHOULDER_Y_LINK_target: ReplayPlugin::GetSegmentPose::R_SHOULDER_Y_LINK
-body6d_hrp4_body_target: ReplayPlugin::GetSegmentPose::body
-body6d_hrp4_l_ankle_target: ReplayPlugin::GetSegmentPose::l_ankle
-body6d_hrp4_l_wrist_target: ReplayPlugin::GetSegmentPose::l_wrist
-body6d_hrp4_r_ankle_target: ReplayPlugin::GetSegmentPose::r_ankle
-body6d_hrp4_r_wrist_target: ReplayPlugin::GetSegmentPose::r_wrist
-body6d_hrp4_torso_target: ReplayPlugin::GetSegmentPose::torso
+body6d_hrp4_L_ELBOW_P_LINK_target: ReplayPlugin::GetSegmentPose::Left Forearm
+body6d_hrp4_L_HIP_P_LINK_target: ReplayPlugin::GetSegmentPose::Left Upper Leg
+body6d_hrp4_L_KNEE_P_LINK_target: ReplayPlugin::GetSegmentPose::Left Lower Leg
+body6d_hrp4_L_SHOULDER_R_LINK_target: ReplayPlugin::GetSegmentPose::Left Shoulder
+body6d_hrp4_L_SHOULDER_Y_LINK_target: ReplayPlugin::GetSegmentPose::Left Upper Arm
+body6d_hrp4_NECK_P_LINK_target: ReplayPlugin::GetSegmentPose::Head
+body6d_hrp4_R_ELBOW_P_LINK_target: ReplayPlugin::GetSegmentPose::Right Forearm
+body6d_hrp4_R_HIP_P_LINK_target: ReplayPlugin::GetSegmentPose::Right Upper Leg
+body6d_hrp4_R_KNEE_P_LINK_target: ReplayPlugin::GetSegmentPose::Right Lower Leg
+body6d_hrp4_R_SHOULDER_R_LINK_target: ReplayPlugin::GetSegmentPose::Right Shoulder
+body6d_hrp4_R_SHOULDER_Y_LINK_target: ReplayPlugin::GetSegmentPose::Right Upper Arm
+body6d_hrp4_body_target: ReplayPlugin::GetSegmentPose::Pelvis
+body6d_hrp4_l_ankle_target: ReplayPlugin::GetSegmentPose::Left Foot
+body6d_hrp4_l_wrist_target: ReplayPlugin::GetSegmentPose::Left Hand
+body6d_hrp4_r_ankle_target: ReplayPlugin::GetSegmentPose::Right Foot
+body6d_hrp4_r_wrist_target: ReplayPlugin::GetSegmentPose::Right Hand
+body6d_hrp4_torso_target: ReplayPlugin::GetSegmentPose::T8

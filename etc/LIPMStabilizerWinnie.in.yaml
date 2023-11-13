@@ -6,10 +6,12 @@ StatesLibraries:
 - "@MC_STATES_DEFAULT_RUNTIME_INSTALL_PREFIX@"
 - "@MC_STATES_RUNTIME_INSTALL_PREFIX@"
 - "@LIPM_WALKING_STATES_LIBRARIES@"
+- "@XSENS_PLUGIN_STATES_LIBRARIES@"
 StatesFiles:
 - "@MC_STATES_DEFAULT_RUNTIME_INSTALL_PREFIX@/data"
 - "@MC_STATES_RUNTIME_INSTALL_PREFIX@/data"
 - "@LIPM_WALKING_STATES_FILES@"
+- "@XSENS_PLUGIN_STATES_FILES@"
 VerboseStateFactory: false
 
   #Plugins: [footsteps_planner_plugin,mc_joystick_plugin,MosquittoPlugin, Replay, XsensPlugin]
@@ -56,73 +58,74 @@ Limits:
 Xsens:
   liveMode: false
   hrp4:
-    body:
-      segment: "Pelvis"
-      offset:
-        translation: [0,0,0]
-      # weight: 10
-      # stiffness: 10
-    torso:
-      segment: "T8" # Sternum
-      # weight: 10
-      # stiffness: 10
-    NECK_P_LINK:
-      segment: "Head"
-      offset:
-        translation: [0,0,0]
-        rotation: [0.0, -0.3, 0.0]
-    R_SHOULDER_R_LINK:
-      segment: "Right Shoulder"
-    R_SHOULDER_Y_LINK:
-      segment: "Right Upper Arm"
-      offset:
-        translation: [0,0,0]
-        # rotation: [-1.57, 0, 0] #livemode
-        # rotation: [0, 0, 0] #offlinemode: further adaptation
-    R_ELBOW_P_LINK:
-      segment: "Right Forearm"
-      offset:
-        translation: [0,0,0]
-          #rotation: [-1.57, 0, 0]
-        rotation: [-1.0, 0, 0]
-    r_wrist:
-      segment: "Right Hand"
-      offset:
-        translation: [0,0,0]
-        # rotation: [-1.57, 0, 0]
-        rotation: [-0.3, 0, 0]
-    L_SHOULDER_R_LINK:
-      segment: "Left Shoulder"
-    L_SHOULDER_Y_LINK:
-      segment: "Left Upper Arm"
-      offset:
-        translation: [0,0,0]
-        # rotation: [1.57, 0, 0] #livemode
-        # rotation: [0, 0, 0] #offlinemode: further adaptation
-    L_ELBOW_P_LINK:
-      segment: "Left Forearm"
-      offset:
-        translation: [0,0,0]
-          #rotation: [1.57, 0, 0]
-        rotation: [1.0, 0, 0]
-    l_wrist:
-      segment: "Left Hand"
-      offset:
-        translation: [0,0,0]
-        # rotation: [1.57, 0, 0]
-        rotation: [0, 0, 0]
-    R_HIP_P_LINK:
-      segment: "Right Upper Leg"
-    R_KNEE_P_LINK:
-      segment: "Right Lower Leg"
-    r_ankle:
-      segment: "Right Foot"
-    L_HIP_P_LINK:
-      segment: "Left Upper Leg"
-    L_KNEE_P_LINK:
-      segment: "Left Lower Leg"
-    l_ankle:
-      segment: "Left Foot"
+    bodies:
+      body:
+        segment: "Pelvis"
+        offset:
+          translation: [0,0,0]
+        # weight: 10
+        # stiffness: 10
+      torso:
+        segment: "T8" # Sternum
+        # weight: 10
+        # stiffness: 10
+      NECK_P_LINK:
+        segment: "Head"
+        offset:
+          translation: [0,0,0]
+          rotation: [0.0, -0.3, 0.0]
+      R_SHOULDER_R_LINK:
+        segment: "Right Shoulder"
+      R_SHOULDER_Y_LINK:
+        segment: "Right Upper Arm"
+        offset:
+          translation: [0,0,0]
+          # rotation: [-1.57, 0, 0] #livemode
+          # rotation: [0, 0, 0] #offlinemode: further adaptation
+      R_ELBOW_P_LINK:
+        segment: "Right Forearm"
+        offset:
+          translation: [0,0,0]
+            #rotation: [-1.57, 0, 0]
+          rotation: [-1.0, 0, 0]
+      r_wrist:
+        segment: "Right Hand"
+        offset:
+          translation: [0,0,0]
+          # rotation: [-1.57, 0, 0]
+          rotation: [-0.3, 0, 0]
+      L_SHOULDER_R_LINK:
+        segment: "Left Shoulder"
+      L_SHOULDER_Y_LINK:
+        segment: "Left Upper Arm"
+        offset:
+          translation: [0,0,0]
+          # rotation: [1.57, 0, 0] #livemode
+          # rotation: [0, 0, 0] #offlinemode: further adaptation
+      L_ELBOW_P_LINK:
+        segment: "Left Forearm"
+        offset:
+          translation: [0,0,0]
+            #rotation: [1.57, 0, 0]
+          rotation: [1.0, 0, 0]
+      l_wrist:
+        segment: "Left Hand"
+        offset:
+          translation: [0,0,0]
+          # rotation: [1.57, 0, 0]
+          rotation: [0, 0, 0]
+      R_HIP_P_LINK:
+        segment: "Right Upper Leg"
+      R_KNEE_P_LINK:
+        segment: "Right Lower Leg"
+      r_ankle:
+        segment: "Right Foot"
+      L_HIP_P_LINK:
+        segment: "Left Upper Leg"
+      L_KNEE_P_LINK:
+        segment: "Left Lower Leg"
+      l_ankle:
+        segment: "Left Foot"
 
 
 # Additional robots to load
