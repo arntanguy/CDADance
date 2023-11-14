@@ -8,8 +8,8 @@ extern "C"
 {
   CONTROLLER_MODULE_API void MC_RTC_CONTROLLER(std::vector<std::string>& names)
   {
-    CONTROLLER_CHECK_VERSION("LIPMStabilizerWinnie")
-    names = {"LIPMStabilizerWinnie", "LIPMStabilizerWinnie_ismpc"};
+    CONTROLLER_CHECK_VERSION("CDADance")
+    names = {"CDADance", "CDADance_ismpc"};
   }
 
   CONTROLLER_MODULE_API void destroy(mc_control::MCController* ptr)
@@ -27,11 +27,11 @@ extern "C"
                                                          const double& dt,
                                                          const mc_control::Configuration& conf)
   {
-    if (name == "LIPMStabilizerWinnie")
+    if (name == "CDADance")
     {
       return new LIPMStabilizerController<lipm_walking::Controller>(robot, dt, conf);
     }
-    if (name == "LIPMStabilizerWinnie_ismpc")
+    if (name == "CDADance_ismpc")
     {
       return new LIPMStabilizerController<Walking_controller>(robot, dt, conf,
                                                               mc_control::ControllerParameters{}.load_robot_config_into({}).overwrite_config(true));
