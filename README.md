@@ -43,6 +43,12 @@ Timestep: 0.005
 
 Then you can run in your favorite dynamic simulator (choreonoid, mujoco, ...)
 
+### How does it work?
+
+Here is the full demo FSM:
+
+![Full demo FSM](doc/fsm.png)
+
 ## Acknowledgements
 
 - Artistic direction | Pr. Chu-Yin Chen
