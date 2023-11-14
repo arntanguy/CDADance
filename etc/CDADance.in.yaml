@@ -20,27 +20,29 @@ Plugins: [Replay, XsensPlugin]
 Replay:
   preload_logs:
     # Salutations
-    - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio02_fix_from_4_to_53.bin
-    # Flying
-    - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio08_fix_cutSecondPart_from_34_to_120.bin
+    - "@XSENS_DIR@/Rocio02_fix_from_4_to_53.bin"
     # ListenToRobot
-    - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio04_fix_from_5_to_31.bin
-    # PetiteDanse
-    - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio05_fix_from_3_to_132.bin
-    # Deception
-    - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio06_fix_from_3_to_63.bin
-    # Presence
-    - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio03_fix_from_8_to_28.bin
-    # FlyToSky
-    - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio09_FlyToSky_fix_cut_from_29_to_46.5.bin
+    - "@XSENS_DIR@/Rocio_dance/Rocio04_fix_from_5_to_31.bin"
+    # Doute
+    - "@XSENS_DIR@/Rocio_dance/Rocio03_fix_from_8_to_28.bin"
+    # PetiteDanse + GrandeDance
+    - "@XSENS_DIR@/Rocio_dance/Rocio05_fix_from_3_to_132.bin"
+    # Deception + FinDance
+    - "@XSENS_DIR@/Rocio_dance/Rocio06_fix_from_3_to_63.bin"
+    # OpenClose
+    - "@XSENS_DIR@/Rocio_dance/Rocio08_fix_cutSecondPart_from_34_to_120.bin"
     # LookAtVideo
-    - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio10_LookAtVideo_fix_cut_from_0_to_53.bin
-    # Lift One Leg
-    - /home/arnaud/src/huiting/lipmstabilizerwinnie/xsens/Rocio_dance/Rocio16_fix_from_6_to_43.bin
+    - "@XSENS_DIR/Rocio_dance/Rocio10_LookAtVideo_fix_cut_from_0_to_53.bin"
+    # # FlyToSky + FlyToSkyUpperBody
+    # - "@XSENS_DIR@/Rocio_dance/Rocio16_fix_from_6_to_43.bin"
+    # # Flying
+    # - "@XSENS_DIR@/Rocio_dance/Rocio08_fix_cutSecondPart_from_34_to_120.bin"
+    # # FlyToSky
+    # - "@XSENS_DIR@/Rocio_dance/Rocio09_FlyToSky_fix_cut_from_29_to_46.5.bin"
   with-inputs: false
   with-gui-inputs: false
   with-outputs: false
-  with-datastore-config: /home/arnaud/src/huiting/lipmstabilizerwinnie/etc/datastore-to-replay.yaml
+  with-datastore-config: "@XSENS_DIR@/datastore-to-replay.yaml"
   pause: false
 
 Limits:

@@ -21,6 +21,20 @@ find_package(XsensPlugin REQUIRED)
 add_subdirectory(src)
 add_subdirectory(plugins)
 
+set(XSENS_DIR "${MC_CONTROLLER_RUNTIME_INSTALL_PREFIX}/${PROJECT_NAME}/xsens")
+
+install(
+  FILES etc/datastore-to-replay.yaml
+  DESTINATION ${XSENS_DIR}
+)
+
+install(
+  DIRECTORY xsens
+  DESTINATION ${MC_CONTROLLER_RUNTIME_INSTALL_PREFIX}/${PROJECT_NAME}
+  FILES_MATCHING
+  REGEX ".*(.bin$)"
+)
+
 set(AROBASE "@")
 configure_file(etc/CDADance.in.yaml "${CMAKE_CURRENT_BINARY_DIR}/etc/CDADance.yaml")
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/etc/CDADance.yaml" DESTINATION "${MC_CONTROLLER_RUNTIME_INSTALL_PREFIX}/etc")

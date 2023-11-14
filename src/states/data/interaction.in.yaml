@@ -1,0 +1,189 @@
+Right::TouchHead:
+  base: InterpolatePosture::Base
+  hrp4:
+    posture_sequence:
+      - time: 2.0
+        posture:
+          # NECK_P: 0.8
+          # NECK_Y: 1.2
+          R_SHOULDER_R: -0.6
+          R_SHOULDER_P: -2.5 #-2.0
+          R_SHOULDER_Y: 1.6 #-3.1
+          R_ELBOW_P: -2.1
+          # L_SHOULDER_R: 2.15
+
+Right::HandHigh:
+  base: InterpolatePosture::Base
+  hrp4:
+    scaleTime: 1.0
+    posture_sequence:
+      - time: 2.0
+        posture:
+          R_SHOULDER_P: -0.971
+          R_SHOULDER_R: -0.071
+      - time: 2.0
+        posture:
+          R_SHOULDER_P: -1.551
+          R_SHOULDER_R: -0.503
+          R_SHOULDER_Y: 0.132
+
+Right::HandSide:
+  base: InterpolatePosture::Base
+  hrp4:
+    scaleTime: 1.0
+    posture_sequence:
+      - time: 2.0
+        posture:
+          R_SHOULDER_P: -1.150
+      - time: 2.0
+        posture:
+          R_SHOULDER_P: -1.150
+          R_SHOULDER_R: -1.47
+
+Left::TouchHead:
+  base: InterpolatePosture::Base
+  hrp4:
+    posture_sequence:
+    - time: 2.0
+      posture:
+        # NECK_P: 0.8
+        # NECK_Y: 1.2
+        L_SHOULDER_R: 1.235
+        L_SHOULDER_P: -1.9 #-2.0
+        # L_SHOULDER_Y: 1.6 #-3.1
+        L_ELBOW_P: -2.12
+        # L_SHOULDER_R: 2.15
+
+Left::HandSide:
+  base: InterpolatePosture::Base
+  hrp4:
+    scaleTime: 1.0
+    posture_sequence:
+      - time: 2.0
+        posture:
+          L_SHOULDER_P: -1.127
+      - time: 2.0
+        posture:
+          L_SHOULDER_P: -1.127
+          L_SHOULDER_R: 0.603
+          L_SHOULDER_Y: -0.841
+
+Left::HandHigh:
+  base: InterpolatePosture::Base
+  hrp4:
+    scaleTime: 1.0
+    posture_sequence:
+      - time: 2.0
+        posture:
+          L_SHOULDER_P: -0.585
+      - time: 2.0
+        posture:
+          L_SHOULDER_P: 0.382
+          L_SHOULDER_R: 0.627
+          L_SHOULDER_Y: 0.819
+          L_ELBOW_P: -0.601
+
+Interaction::HS1:
+  base: HalfSitting::Interpolation
+
+Interaction::HS2:
+  base: HalfSitting::Interpolation
+
+Interaction::HS3:
+  base: HalfSitting::Interpolation
+
+Interaction::HS4:
+  base: HalfSitting::Interpolation
+
+Interaction::HS5:
+  base: HalfSitting::Interpolation
+
+Right::TouchHead2:
+  base: Right::TouchHead
+
+Dance::Interaction::Fake:
+  base: Meta
+  ResetPostures: false
+  StepByStep: false
+  transitions:
+    - [Left::HandSide, OK, Interaction::HS1, Auto]
+    - [Interaction::HS1, OK, Right::TouchHead, Auto]
+    - [Right::TouchHead, OK, Interaction::HS2, Auto]
+    - [Interaction::HS2, OK, Left::TouchHead, Auto]
+    - [Left::TouchHead, OK, Interaction::HS3, Auto]
+    - [Interaction::HS3, OK, Right::HandSide, Auto]
+    - [Right::HandSide, OK, Interaction::HS4, Auto]
+    - [Interaction::HS4, OK, Right::TouchHead2, Auto]
+    - [Right::TouchHead2, OK, Interaction::HS5, Auto]
+
+Left::HandForward:
+  base: InterpolatePosture::Base
+  hrp4:
+    scaleTime: 1.0
+    posture_sequence:
+      - time: 2.0
+        posture:
+          L_SHOULDER_P: -0.7044003811369571
+          L_SHOULDER_R: 0.11682543675543102
+          L_SHOULDER_Y: -0.014070956585719627
+          L_ELBOW_P: -0.9182042624469274
+          L_WRIST_Y: -0.10429334323019289
+
+Right::HandForward:
+  base: InterpolatePosture::Base
+  hrp4:
+    scaleTime: 1.0
+    posture_sequence:
+      - time: 2.0
+        posture:
+          R_SHOULDER_P: -0.7044003811369571
+          R_SHOULDER_R: 0.11682543675543102
+          R_SHOULDER_Y: -0.014070956585719627
+          R_ELBOW_P: -0.9182042624469274
+          R_WRIST_Y: -0.10429334323019289
+
+Both::Raise:
+  base: InterpolatePosture::Base
+  hrp4:
+    scaleTime: 1.0
+    posture_sequence:
+      - time: 2.0
+        posture:
+          L_SHOULDER_P: -1.428492798587428
+          L_SHOULDER_R: -0.02326798864483972
+          L_SHOULDER_Y: -0.15610860393484769
+          L_ELBOW_P: -1.7751388011496606
+          L_WRIST_Y: -0.08325554331222093
+          R_SHOULDER_P: -1.428492798587428
+          R_SHOULDER_R: -0.02326798864483972
+          R_SHOULDER_Y: -0.15610860393484769
+          R_ELBOW_P: -1.7751388011496606
+          R_WRIST_Y: -0.08325554331222093
+
+Dance::Interaction::Real::FSM:
+  base: Meta
+  ResetPostures: false
+  StepByStep: false
+  transitions:
+  - [AutonomousInteraction, Seq0, Right::TouchHead, Auto]
+  - [AutonomousInteraction, Seq1, Right::HandForward, Auto]
+  - [AutonomousInteraction, Seq2, Right::HandSide, Auto]
+  - [AutonomousInteraction, Seq3, Left::TouchHead, Auto]
+  - [AutonomousInteraction, Seq4, Left::HandForward, Auto]
+  - [AutonomousInteraction, Seq5, Left::HandSide, Auto]
+  - [AutonomousInteraction, Seq8, Both::Raise, Auto]
+  - [Right::TouchHead, OK, HalfSitting::Interpolation, Auto]
+  - [Right::HandForward, OK, HalfSitting::Interpolation, Auto]
+  - [Right::HandSide, OK, HalfSitting::Interpolation, Auto]
+  - [Left::TouchHead, OK, HalfSitting::Interpolation, Auto]
+  - [Left::HandForward, OK, HalfSitting::Interpolation, Auto]
+  - [Left::HandSide, OK, HalfSitting::Interpolation, Auto]
+  - [Both::Raise, OK, HalfSitting::Interpolation, Auto]
+  - [HalfSitting::Interpolation, OK, AutonomousInteraction, Auto]
+
+Dance::Interaction::Fake::HalfSitting:
+  base: HalfSitting::Interpolation
+
+Dance::Interaction::Real:
+  base: Parallel
+  states: [Demo::LIPMWalking::WalkFSM, RosSubscriber, LookAtAudience, Dance::Interaction::Real::FSM]

@@ -5,4 +5,12 @@ add_fsm_state_simple(InterpolatePosture)
 add_fsm_state_simple(Walk)
 add_fsm_state_simple(DisableWalk)
 
-add_fsm_data_directory(data)
+set(XSENS_DIR "${MC_CONTROLLER_RUNTIME_INSTALL_PREFIX}/${PROJECT_NAME}/xsens")
+message(STATUS "XSENS DIR ${XSENS_DIR}")
+set(AROBASE "@")
+configure_file(data/xsens.in.yaml ${CMAKE_CURRENT_BINARY_DIR}/data/xsens.yaml)
+configure_file(data/interaction.in.yaml ${CMAKE_CURRENT_BINARY_DIR}/data/interaction.yaml)
+configure_file(data/interpolateposture.in.yaml ${CMAKE_CURRENT_BINARY_DIR}/data/interpolateposture.yaml)
+configure_file(data/HalfSitting.in.yaml ${CMAKE_CURRENT_BINARY_DIR}/data/HalfSitting.yaml)
+
+add_fsm_data_directory(${CMAKE_CURRENT_BINARY_DIR}/data)
