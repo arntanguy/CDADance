@@ -20,6 +20,7 @@ This controller publishes the controller's code used during the live demo held a
 - [hrp4_description](https://github.com/isri-aist/hrp4_description)
 - [mc-hrp4](https://github.com/isri-aist/mc-hrp4)
 - [ismpc_walking]() [optional]
+- PahoMqttCpp (optional, only required by the MosquittoPlugin for MQTT communication): `sudo apt install ros-noetic-paho-mqtt-cpp`
 
 ### Build and install
 
