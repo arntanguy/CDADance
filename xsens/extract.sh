@@ -1,6 +1,6 @@
 mkdir -p extracted
-for i in *.bin 
-do 
+for i in *.bin
+do
   echo $i
   mc_bin_utils extract --in "$i" --out "extracted/$i" --keys \
     body6d_hrp4_L_ELBOW_P_LINK_target body6d_hrp4_L_HIP_P_LINK_target body6d_hrp4_L_KNEE_P_LINK_target \

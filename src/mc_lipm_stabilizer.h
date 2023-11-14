@@ -4,7 +4,9 @@
 
 #pragma once
 
+#ifdef WITH_ISMPC
 #include <ismpc_walking/Walking_controller.h>
+#endif
 #include <lipm_walking/Controller.h>
 #include <mc_control/MCController.h>
 #include <mc_control/api.h>
@@ -26,4 +28,6 @@ struct MC_CONTROL_DLLAPI LIPMStabilizerController : public WalkingCtl
 };
 
 extern template struct LIPMStabilizerController<lipm_walking::Controller>;
+#ifdef WITH_ISMPC
 extern template struct LIPMStabilizerController<Walking_controller>;
+#endif
