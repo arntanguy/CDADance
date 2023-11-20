@@ -5,8 +5,7 @@
 #include <string>
 
 /** Virtual interface to the walking controller */
-struct WalkingInterface
-{
+struct WalkingInterface {
   /** Returns true if the robot is walking */
   virtual bool is_walking() = 0;
 
@@ -26,10 +25,10 @@ struct WalkingInterface
   virtual void start_stop_walking() = 0;
 
   /** Set the reference velocity for walking */
-  virtual void set_planner_ref_vel(const Eigen::Vector3d& v) = 0;
+  virtual void set_planner_ref_vel(const Eigen::Vector3d &v) = 0;
 
   /** Load a predefined plan (LIPMWalking only for now) */
-  virtual void load_plan(const std::string& name) = 0;
+  virtual void load_plan(const std::string &name) = 0;
 
   /** Set the desired torso pitch */
   virtual void set_torso_pitch(double p) = 0;
