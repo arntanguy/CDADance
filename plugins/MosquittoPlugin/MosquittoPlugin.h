@@ -10,40 +10,36 @@
 #include <mutex>
 #include <thread>
 
-namespace mc_plugin
-{
+namespace mc_plugin {
 
 struct callback;
 
-struct MosquittoPlugin : public mc_control::GlobalPlugin
-{
-  void init(mc_control::MCGlobalController& controller, const mc_rtc::Configuration& config) override;
+struct MosquittoPlugin : public mc_control::GlobalPlugin {
+  void init(mc_control::MCGlobalController &controller,
+            const mc_rtc::Configuration &config) override;
 
-  void reset(mc_control::MCGlobalController& controller) override;
+  void reset(mc_control::MCGlobalController &controller) override;
 
-  void before(mc_control::MCGlobalController&) override;
+  void before(mc_control::MCGlobalController &) override;
 
-  void after(mc_control::MCGlobalController& controller) override;
+  void after(mc_control::MCGlobalController &controller) override;
 
   mc_control::GlobalPlugin::GlobalPluginConfiguration configuration() override;
 
   ~MosquittoPlugin() override;
 
-  bool connected() const noexcept
-  {
-    return connected_;
-  }
+  bool connected() const noexcept { return connected_; }
 
-  void connectionLost(const std::string& cause)
-  {
-    mc_rtc::log::error("[{}] Connection lost{}", cause.size() ? " (cause: " + cause + ")" : "");
+  void connectionLost(const std::string &cause) {
+    mc_rtc::log::error("[{}] Connection lost{}",
+                       cause.size() ? " (cause: " + cause + ")" : "");
     connected_ = false;
   }
 
- protected:
+protected:
   void connect();
 
- protected:
+protected:
   std::string address_ = "127.0.0.1";
   uint port_ = 1883;
   std::string topic_ = "robot_state";
@@ -68,22 +64,20 @@ struct MosquittoPlugin : public mc_control::GlobalPlugin
 /**
  * A callback class for use with the main MQTT client.
  */
-struct callback : public virtual mqtt::callback
-{
-  callback(MosquittoPlugin& plugin) : plugin_(plugin) {}
+struct callback : public virtual mqtt::callback {
+  callback(MosquittoPlugin &plugin) : plugin_(plugin) {}
 
-  void connection_lost(const std::string& cause) override
-  {
+  void connection_lost(const std::string &cause) override {
     plugin_.connectionLost(cause);
   }
 
-  void delivery_complete(mqtt::delivery_token_ptr tok) override
-  {
-    /* mc_rtc::log::info("Delivery complete for token: {}", tok ? tok->get_message_id() : -1); */
+  void delivery_complete(mqtt::delivery_token_ptr tok) override {
+    /* mc_rtc::log::info("Delivery complete for token: {}", tok ?
+     * tok->get_message_id() : -1); */
   }
 
- protected:
-  MosquittoPlugin& plugin_;
+protected:
+  MosquittoPlugin &plugin_;
 };
 
-}  // namespace mc_plugin
+} // namespace mc_plugin
