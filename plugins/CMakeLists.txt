@@ -1,1 +1,2 @@
 add_subdirectory(MosquittoPlugin)
+add_subdirectory(XsensReplay)

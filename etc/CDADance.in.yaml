@@ -15,9 +15,9 @@ StatesFiles:
 VerboseStateFactory: false
 
   #Plugins: [footsteps_planner_plugin,mc_joystick_plugin,MosquittoPlugin, Replay, XsensPlugin]
-Plugins: [Replay, XsensPlugin]
+Plugins: [XsensReplay, XsensPlugin]
 
-Replay:
+XsensReplay:
   preload_logs:
     # Salutations
     - "@XSENS_DIR@/Rocio02_fix_from_4_to_53.bin"
