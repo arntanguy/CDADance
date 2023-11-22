@@ -14,14 +14,16 @@
 
 namespace fs = std::filesystem;
 
-namespace mc_plugin {
+namespace mc_plugin
+{
 
 constexpr int QOS = 1;
 
 MosquittoPlugin::~MosquittoPlugin() {}
 
 void MosquittoPlugin::init(mc_control::MCGlobalController &gc,
-                           const mc_rtc::Configuration &config) {
+                           const mc_rtc::Configuration &config)
+{
   auto &ctl = gc.controller();
   config("address", address_);
   config("port", port_);
@@ -43,15 +45,18 @@ void MosquittoPlugin::init(mc_control::MCGlobalController &gc,
       this, {"MosquittoPlugin"}, mc_rtc::gui::Input("Address", address_),
       mc_rtc::gui::Input("Port", port_), mc_rtc::gui::Input("Topic", topic_),
       mc_rtc::gui::Input("Client id", client_id_),
-      mc_rtc::gui::Button("(Re)connect", [this]() { connect(); }),
+      mc_rtc::gui::Button("(Re)connect", [this]()
+                          { connect(); }),
       mc_rtc::gui::Label("Connected", connected_));
 
-  if (autoconnect_) {
+  if (autoconnect_)
+  {
     connect();
   }
 }
 
-void MosquittoPlugin::connect() {
+void MosquittoPlugin::connect()
+{
   connected_ = false;
 
   /* if(client_) */
@@ -68,36 +73,47 @@ void MosquittoPlugin::connect() {
 
   auto connOpts = mqtt::connect_options_builder().clean_session().finalize();
 
-  try {
+  try
+  {
     mc_rtc::log::info("Connecting...");
     conn_token_ = client_->connect(connOpts);
-  } catch (...) {
+  }
+  catch (...)
+  {
   }
 }
 
 void MosquittoPlugin::reset(mc_control::MCGlobalController &controller) {}
 
-void MosquittoPlugin::before(mc_control::MCGlobalController &gc) {
+void MosquittoPlugin::before(mc_control::MCGlobalController &gc)
+{
   auto &ctl = gc.controller();
   auto &robot = ctl.robot();
 
-  if (!connected_) { // Waiting for connection
-    if (conn_token_ && conn_token_->is_complete()) {
+  if (!connected_)
+  {  // Waiting for connection
+    if (conn_token_ && conn_token_->is_complete())
+    {
       mc_rtc::log::info("Connected");
       connected_ = true;
-    } else { // not connected yet
+    }
+    else
+    {  // not connected yet
       return;
     }
   }
 
-  if (iter_ == 0 || iter_ % iterRate_ == 0) {
+  if (iter_ == 0 || iter_ % iterRate_ == 0)
+  {
     mc_rtc::Configuration msgConfig;
     std::map<std::string, double> encoders;
     std::map<std::string, double> encoders_normalized;
     const auto &outputRobot = ctl.outputRobot();
 
-    if (publishEncoders_) {
-      for (unsigned int i = 0; i < outputRobot.refJointOrder().size(); i++) {
+    if (publishEncoders_)
+    {
+      for (unsigned int i = 0; i < outputRobot.refJointOrder().size(); i++)
+      {
         const auto &jName = outputRobot.refJointOrder()[i];
         const auto &jLimits = outputRobot.module().bounds();
         auto jInf = jLimits[0].at(jName)[0];
@@ -110,9 +126,12 @@ void MosquittoPlugin::before(mc_control::MCGlobalController &gc) {
       msgConfig.add("encoders", encoders);
       msgConfig.add("encoders_normalized", encoders_normalized);
     }
-    if (forceSensors_.size()) {
-      for (const auto &fs : forceSensors_) {
-        if (robot.hasForceSensor(fs)) {
+    if (forceSensors_.size())
+    {
+      for (const auto &fs : forceSensors_)
+      {
+        if (robot.hasForceSensor(fs))
+        {
           auto fsConf = msgConfig.add(fs);
           fsConf.add("force", robot.forceSensor(fs).force());
           fsConf.add("couple", robot.forceSensor(fs).force());
@@ -120,24 +139,32 @@ void MosquittoPlugin::before(mc_control::MCGlobalController &gc) {
       }
     }
     std::string msg = msgConfig.dump();
-    if (!pub_token_) {
-      try {
+    if (!pub_token_)
+    {
+      try
+      {
         pub_token_ =
             client_->publish(topic_, msg.data(), msg.size(), QOS, false);
-      } catch (...) {
       }
-    } else if (pub_token_ && pub_token_->is_complete()) {
+      catch (...)
+      {
+      }
+    }
+    else if (pub_token_ && pub_token_->is_complete())
+    {
       pub_token_ = nullptr;
     }
   }
 }
 
-void MosquittoPlugin::after(mc_control::MCGlobalController &controller) {
+void MosquittoPlugin::after(mc_control::MCGlobalController &controller)
+{
   ++iter_;
 }
 
 mc_control::GlobalPlugin::GlobalPluginConfiguration
-MosquittoPlugin::configuration() {
+MosquittoPlugin::configuration()
+{
   mc_control::GlobalPlugin::GlobalPluginConfiguration out;
   out.should_run_before = true;
   out.should_run_after = true;
@@ -145,6 +172,6 @@ MosquittoPlugin::configuration() {
   return out;
 }
 
-} // namespace mc_plugin
+}  // namespace mc_plugin
 
 EXPORT_MC_RTC_PLUGIN("MosquittoPlugin", mc_plugin::MosquittoPlugin)

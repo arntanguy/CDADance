@@ -2,7 +2,8 @@
 #include <mc_tasks/EndEffectorTask.h>
 #include <spdlog/common.h>
 
-struct AutonomousInteraction : mc_control::fsm::State {
+struct AutonomousInteraction : mc_control::fsm::State
+{
   void configure(const mc_rtc::Configuration &config) override;
 
   void start(mc_control::fsm::Controller &ctl) override;
@@ -11,13 +12,16 @@ struct AutonomousInteraction : mc_control::fsm::State {
 
   void teardown(mc_control::fsm::Controller &ctl) override;
 
-  template <typename... Args> void debug_log(Args &&...args) {
-    if (debugmode_) {
+  template <typename... Args>
+  void debug_log(Args &&...args)
+  {
+    if (debugmode_)
+    {
       mc_rtc::log::info(std::forward<Args>(args)...);
     }
   }
 
-private:
+ private:
   float rand_val;
   int remainder_val;
   int segIdx;

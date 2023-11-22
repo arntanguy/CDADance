@@ -5,7 +5,8 @@
 
 #include "../WalkingInterface.h"
 
-void DisableWalk::start(mc_control::fsm::Controller &ctl) {
+void DisableWalk::start(mc_control::fsm::Controller &ctl)
+{
   auto &walk = *ctl.datastore().get<WalkingInterfacePtr>("WalkingInterface");
 
   walk.remove_stabilizer_task();

@@ -10,11 +10,13 @@
 
 #include <thread>
 
-struct rosSubscriberData {
+struct rosSubscriberData
+{
   std::string val{""};
 };
 
-struct RosSubscriber : mc_control::fsm::State {
+struct RosSubscriber : mc_control::fsm::State
+{
   RosSubscriber();
 
   void start(mc_control::fsm::Controller &ctl) override;
@@ -23,14 +25,14 @@ struct RosSubscriber : mc_control::fsm::State {
 
   void teardown(mc_control::fsm::Controller &ctl) override;
 
-protected:
+ protected:
   void chatterCallBack(const std_msgs::String::ConstPtr &msg);
   void rosSpinner();
 
-private:
+ private:
   std::shared_ptr<ros::NodeHandle> nh_;
   std::atomic<bool> active_{
-      true}; // start rosSunscriber on assigning true; while stop: false.
+      true};  // start rosSunscriber on assigning true; while stop: false.
   std::thread spinThread_;
   rosSubscriberData rS_data;
   std::mutex receiveMutex_;

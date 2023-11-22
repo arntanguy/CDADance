@@ -5,7 +5,8 @@
 #include <string>
 
 /** Virtual interface to the walking controller */
-struct WalkingInterface {
+struct WalkingInterface
+{
   /** Returns true if the robot is walking */
   virtual bool is_walking() = 0;
 
