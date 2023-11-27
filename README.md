@@ -4,7 +4,7 @@ This controller publishes the controller's code used during the live demo held a
 
 **Live Demo**
 
-[Live Performance at CDA](https://vimeo.com/877916174/549e9e10cb)
+[![Watch the live performance at CDA](doc/cda_video_caption.png)](https://vimeo.com/886474133)
 
 
 **Control sceencast**
