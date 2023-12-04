@@ -18,15 +18,14 @@
 #include "WalkingInterface.h"
 
 template <typename WalkingCtl>
-struct MC_CONTROL_DLLAPI LIPMStabilizerController : public WalkingCtl
-{
+struct MC_CONTROL_DLLAPI LIPMStabilizerController : public WalkingCtl {
   LIPMStabilizerController(mc_rbdyn::RobotModulePtr rm, double dt,
                            const mc_rtc::Configuration &config,
                            const mc_control::ControllerParameters &params =
                                mc_control::ControllerParameters{});
   bool run() override;
 
- protected:
+protected:
   WalkingInterfacePtr walking_interface_;
 };
 
