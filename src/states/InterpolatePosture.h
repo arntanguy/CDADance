@@ -14,9 +14,9 @@ struct Shake
 {
   double period = 1;
   double amplitude = 1.0;
-  int direction = 1;  // should be 1 or -1
+  int direction = 1; // should be 1 or -1
 
-  void load(const mc_rtc::Configuration &config)
+  void load(const mc_rtc::Configuration & config)
   {
     period = config("period");
     amplitude = config("amplitude");
@@ -35,22 +35,22 @@ struct Shake
 
 namespace mc_rtc
 {
-template <>
+template<>
 struct ConfigurationLoader<Shake>
 {
-  static Shake load(const mc_rtc::Configuration &config)
+  static Shake load(const mc_rtc::Configuration & config)
   {
     Shake shake;
     shake.load(config);
     return shake;
   }
 
-  static mc_rtc::Configuration save(const Shake &object)
+  static mc_rtc::Configuration save(const Shake & object)
   {
     return object.save();
   }
 };
-}  // namespace mc_rtc
+} // namespace mc_rtc
 
 /**
  * Configuration for the shaking motion (per-joint)
@@ -62,10 +62,10 @@ struct LookAtConfig
   double stiffness = 20;
   double weight = 1000;
 
-  void load(const mc_rtc::Configuration &config)
+  void load(const mc_rtc::Configuration & config)
   {
     frame = static_cast<std::string>(config("frame"));
-    if (config.has("robot"))
+    if(config.has("robot"))
     {
       robot = config("robot");
     }
@@ -77,7 +77,7 @@ struct LookAtConfig
   {
     mc_rtc::Configuration c;
     c.add("frame", frame);
-    if (robot)
+    if(robot)
     {
       c.add("robot", *robot);
     }
@@ -89,22 +89,22 @@ struct LookAtConfig
 
 namespace mc_rtc
 {
-template <>
+template<>
 struct ConfigurationLoader<LookAtConfig>
 {
-  static LookAtConfig load(const mc_rtc::Configuration &config)
+  static LookAtConfig load(const mc_rtc::Configuration & config)
   {
     LookAtConfig lookat;
     lookat.load(config);
     return lookat;
   }
 
-  static mc_rtc::Configuration save(const LookAtConfig &object)
+  static mc_rtc::Configuration save(const LookAtConfig & object)
   {
     return object.save();
   }
 };
-}  // namespace mc_rtc
+} // namespace mc_rtc
 
 /**
  * Configuration for a posture
@@ -112,26 +112,26 @@ struct ConfigurationLoader<LookAtConfig>
 struct PostureConfig
 {
   double t;
-  bool halfsitting = false;  // when halfsitting is true, ignore posture and use
-                             // halfsitting instead
+  bool halfsitting = false; // when halfsitting is true, ignore posture and use
+                            // halfsitting instead
   std::map<std::string, double> posture;
   std::map<std::string, Shake> shake;
   Eigen::Vector3d comOffset = Eigen::Vector3d::Zero();
   std::optional<LookAtConfig> lookAt{std::nullopt};
 
-  void load(const mc_rtc::Configuration &config)
+  void load(const mc_rtc::Configuration & config)
   {
     t = config("time");
     halfsitting = config("halfsitting", false);
-    if (!halfsitting)
+    if(!halfsitting)
     {
       posture = config("posture");
     }
-    if (config.has("shake"))
+    if(config.has("shake"))
     {
       shake = config("shake");
     }
-    if (config.has("lookAt"))
+    if(config.has("lookAt"))
     {
       lookAt = config("lookAt");
     }
@@ -149,7 +149,7 @@ struct PostureConfig
     c.add("posture", posture);
     c.add("shake", shake);
     c.add("halfsitting", halfsitting);
-    if (lookAt)
+    if(lookAt)
     {
       c.add("lookAt", *lookAt);
     }
@@ -160,34 +160,33 @@ struct PostureConfig
 
 namespace mc_rtc
 {
-template <>
+template<>
 struct ConfigurationLoader<PostureConfig>
 {
-  static PostureConfig load(const mc_rtc::Configuration &config)
+  static PostureConfig load(const mc_rtc::Configuration & config)
   {
     PostureConfig shake;
     shake.load(config);
     return shake;
   }
 
-  static mc_rtc::Configuration save(const PostureConfig &object)
+  static mc_rtc::Configuration save(const PostureConfig & object)
   {
     return object.save();
   }
 };
-}  // namespace mc_rtc
+} // namespace mc_rtc
 
 struct InterpolatePosture : mc_control::fsm::State
 {
-  void start(mc_control::fsm::Controller &ctl) override;
+  void start(mc_control::fsm::Controller & ctl) override;
 
-  bool run(mc_control::fsm::Controller &ctl) override;
+  bool run(mc_control::fsm::Controller & ctl) override;
 
-  void teardown(mc_control::fsm::Controller &ctl) override;
+  void teardown(mc_control::fsm::Controller & ctl) override;
 
- private:
-  using PostureInterpolator =
-      mc_trajectory::SequenceInterpolator<Eigen::VectorXd>;
+private:
+  using PostureInterpolator = mc_trajectory::SequenceInterpolator<Eigen::VectorXd>;
   using CoMInterpolator = mc_trajectory::SequenceInterpolator<Eigen::Vector3d>;
   bool useDefaultPostureTask_ = false;
   bool restorePostureGains_ = false;

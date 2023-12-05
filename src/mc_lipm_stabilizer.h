@@ -5,28 +5,28 @@
 #pragma once
 
 #ifdef WITH_ISMPC
-#include <ismpc_walking/Walking_controller.h>
+#  include <ismpc_walking/Walking_controller.h>
 #endif
-#include <lipm_walking/Controller.h>
 #include <mc_control/MCController.h>
 #include <mc_control/api.h>
 #include <mc_control/fsm/Controller.h>
 #include <mc_control/fsm/states/Pause.h>
 #include <mc_control/fsm/states/StabilizerStandingState.h>
 #include <mc_control/mc_controller.h>
+#include <lipm_walking/Controller.h>
 
 #include "WalkingInterface.h"
 
-template <typename WalkingCtl>
+template<typename WalkingCtl>
 struct MC_CONTROL_DLLAPI LIPMStabilizerController : public WalkingCtl
 {
-  LIPMStabilizerController(mc_rbdyn::RobotModulePtr rm, double dt,
-                           const mc_rtc::Configuration &config,
-                           const mc_control::ControllerParameters &params =
-                               mc_control::ControllerParameters{});
+  LIPMStabilizerController(mc_rbdyn::RobotModulePtr rm,
+                           double dt,
+                           const mc_rtc::Configuration & config,
+                           const mc_control::ControllerParameters & params = mc_control::ControllerParameters{});
   bool run() override;
 
- protected:
+protected:
   WalkingInterfacePtr walking_interface_;
 };
 
