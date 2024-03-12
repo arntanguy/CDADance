@@ -215,8 +215,7 @@ void InterpolatePosture::start(mc_control::fsm::Controller & ctl)
           "Play", [this]() { return autoplay_; }, [this]() { autoplay_ = !autoplay_; }),
       mc_rtc::gui::Checkbox(
           "Update posture", [this]() { return updatePosture_; }, [this]() { updatePosture_ = !updatePosture_; }),
-      mc_rtc::gui::NumberInput(
-          "Time", [this]() { return t_; }, [this](double t) { t_ = t; }));
+      mc_rtc::gui::NumberInput("Time", [this]() { return t_; }, [this](double t) { t_ = t; }));
 
   ctl.gui()->addElement(this, {name()}, mc_rtc::gui::ElementsStacking::Horizontal,
                         mc_rtc::gui::NumberSlider(

@@ -19,8 +19,7 @@ static inline mc_rtc::Configuration patch_config(mc_rtc::Configuration config)
 static inline mc_rbdyn::RobotModulePtr patch_rm(mc_rbdyn::RobotModulePtr rm, const mc_rtc::Configuration & config)
 {
   auto limits = config("Limits", mc_rtc::Configuration{})(rm->name, mc_rtc::Configuration{})
-                    .
-                operator std::map<std::string, mc_rtc::Configuration>();
+                    .operator std::map<std::string, mc_rtc::Configuration>();
   for(const auto & [joint, overwrite] : limits)
   {
     if(overwrite.has("lower"))
