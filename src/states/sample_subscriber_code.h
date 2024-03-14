@@ -270,16 +270,17 @@
   ROSPoseStampedSubscriber()
 
   : ROSSubscriber(
-      [](const geometry_msgs::PoseStamped & msg)
-      {
-        const auto & t = msg.pose.position;
+        [](const geometry_msgs::PoseStamped & msg)
+        {
+          const auto & t = msg.pose.position;
 
-        const auto & r = msg.pose.orientation;
+          const auto & r = msg.pose.orientation;
 
-        auto pose = sva::PTransformd(Eigen::Quaterniond{r.w, r.x, r.y, r.z}.inverse(), Eigen::Vector3d{t.x, t.y, t.z});
+          auto pose =
+              sva::PTransformd(Eigen::Quaterniond{r.w, r.x, r.y, r.z}.inverse(), Eigen::Vector3d{t.x, t.y, t.z});
 
-        return pose;
-      })
+          return pose;
+        })
 
   {
   }
@@ -293,16 +294,16 @@
   ROSAccelStampedSubscriber()
 
   : ROSSubscriber(
-      [](const geometry_msgs::AccelStamped & msg)
-      {
-        const auto & a = msg.accel.linear;
+        [](const geometry_msgs::AccelStamped & msg)
+        {
+          const auto & a = msg.accel.linear;
 
-        const auto & w = msg.accel.angular;
+          const auto & w = msg.accel.angular;
 
-        auto acc = sva::MotionVecd(Eigen::Vector3d{w.x, w.y, w.z}, Eigen::Vector3d{a.x, a.y, a.z});
+          auto acc = sva::MotionVecd(Eigen::Vector3d{w.x, w.y, w.z}, Eigen::Vector3d{a.x, a.y, a.z});
 
-        return acc;
-      })
+          return acc;
+        })
 
   {
   }
@@ -414,28 +415,28 @@
   ROSOcculusLeftHandJoySubscriber()
 
   : ROSSubscriber(
-      [this](const sensor_msgs::Joy & msg)
-      {
-        auto joy = OcculusHandJoystick{};
+        [this](const sensor_msgs::Joy & msg)
+        {
+          auto joy = OcculusHandJoystick{};
 
-        // Axes
+          // Axes
 
-        joy.primary_trigger = msg.axes[0];
+          joy.primary_trigger = msg.axes[0];
 
-        joy.secondary_trigger = msg.axes[1];
+          joy.secondary_trigger = msg.axes[1];
 
-        joy.vertical = msg.axes[2];
+          joy.vertical = msg.axes[2];
 
-        joy.horizontal = msg.axes[3];
+          joy.horizontal = msg.axes[3];
 
-        // Buttons
+          // Buttons
 
-        joy.x = msg.buttons[0];
+          joy.x = msg.buttons[0];
 
-        joy.y = msg.buttons[1];
+          joy.y = msg.buttons[1];
 
-        return joy;
-      })
+          return joy;
+        })
 
   {
   }
@@ -455,24 +456,24 @@
   ROSOcculusRightHandJoySubscriber()
 
   : ROSSubscriber(
-      [this](const sensor_msgs::Joy & msg)
-      {
-        auto joy = OcculusHandJoystick{};
+        [this](const sensor_msgs::Joy & msg)
+        {
+          auto joy = OcculusHandJoystick{};
 
-        joy.primary_trigger = msg.axes[4];
+          joy.primary_trigger = msg.axes[4];
 
-        joy.secondary_trigger = msg.axes[5];
+          joy.secondary_trigger = msg.axes[5];
 
-        joy.vertical = msg.axes[6];
+          joy.vertical = msg.axes[6];
 
-        joy.horizontal = msg.axes[7];
+          joy.horizontal = msg.axes[7];
 
-        joy.x = msg.buttons[2];
+          joy.x = msg.buttons[2];
 
-        joy.y = msg.buttons[3];
+          joy.y = msg.buttons[3];
 
-        return joy;
-      })
+          return joy;
+        })
 
   {
   }
@@ -616,16 +617,16 @@
   ROSPS4JoySubscriber()
 
   : ROSSubscriber(
-      [this](const sensor_msgs::Joy & msg)
-      {
-        auto joy = PS4Joystick{};
+        [this](const sensor_msgs::Joy & msg)
+        {
+          auto joy = PS4Joystick{};
 
-        joy.circle = msg.buttons[0];
+          joy.circle = msg.buttons[0];
 
-        joy.triangle = msg.buttons[2];
+          joy.triangle = msg.buttons[2];
 
-        return joy;
-      })
+          return joy;
+        })
 
   {
   }
