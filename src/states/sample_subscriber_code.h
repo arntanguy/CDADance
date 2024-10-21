@@ -108,11 +108,11 @@
     time_ = 0;
   }
 
-  ​
+​
 
-      private :
+    private :
 
-      Data value_;
+    Data value_;
 
   double time_ = std::numeric_limits<double>::max();
 
@@ -167,12 +167,12 @@
     return data_;
   }
 
-  ​
+​
 
-      protected :
+    protected :
 
-      void
-      value(const Data & data)
+    void
+    value(const Data & data)
 
   {
     std::lock_guard<std::mutex> l(valueMutex_);
@@ -191,12 +191,12 @@
     data_.value(data);
   }
 
-  ​
+​
 
-      private :
+    private :
 
-      SubscriberData<Data>
-          data_;
+    SubscriberData<Data>
+        data_;
 
   mutable std::mutex valueMutex_;
 };
@@ -242,22 +242,22 @@
     return sub_;
   }
 
-  ​
+​
 
-      protected :
+    protected :
 
-      void
-      callback(const boost::shared_ptr<ROSMessageType const> & msg)
+    void
+    callback(const boost::shared_ptr<ROSMessageType const> & msg)
 
   {
     this->value(converter_(*msg));
   }
 
-  ​
+​
 
-      protected :
+    protected :
 
-      ros::Subscriber sub_;
+    ros::Subscriber sub_;
 
   std::function<TargetType(const ROSMessageType &)> converter_;
 };
@@ -576,11 +576,11 @@
     return dt_;
   }
 
-  ​
+​
 
-      protected :
+    protected :
 
-      OcculusHandJoystick prevData_;
+    OcculusHandJoystick prevData_;
 
   OcculusHandJoystick data_;
 
