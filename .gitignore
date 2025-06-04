@@ -8,6 +8,8 @@ build/*
 src/states/__pycache__/*
 .vscode/*
 .cache/
+compile_commands.json
+build
 
 # Compiled source #
 ###################
