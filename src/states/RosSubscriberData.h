@@ -5,4 +5,3 @@ struct rosSubscriberData
 {
   std::string val{""};
 };
-
