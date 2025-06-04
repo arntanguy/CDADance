@@ -6,14 +6,10 @@
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/String.h>
+#include "RosSubscriberData.h"
 #include <mc_rtc_ros/ros.h>
 
 #include <thread>
-
-struct rosSubscriberData
-{
-  std::string val{""};
-};
 
 struct RosSubscriber : mc_control::fsm::State
 {

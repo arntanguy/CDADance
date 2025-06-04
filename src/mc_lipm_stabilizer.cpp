@@ -38,7 +38,11 @@ template<typename WalkingCtl>
 struct WalkingInterfaceImpl : public WalkingInterface
 {
   static constexpr bool is_lipm = std::is_same_v<WalkingCtl, lipm_walking::Controller>;
+#ifdef WITH_ISMPC
   static constexpr bool is_ismpc = std::is_same_v<WalkingCtl, Walking_controller>;
+#else
+  static constexpr bool is_ismpc = false;
+#endif
 
   static_assert(is_lipm || is_ismpc, "Write WalkingInterfaceImpl to support another walking base");
 
@@ -51,10 +55,12 @@ struct WalkingInterfaceImpl : public WalkingInterface
       ctl_.loadFootstepPlan(name);
       // ctl_.updatePlan();
     }
+#ifdef WITH_ISMPC
     if constexpr(is_ismpc)
     {
       mc_rtc::log::error_and_throw("WalkingInterface: load_plan is not supported in ismpc");
     }
+#endif
   }
 
   bool is_walking() final
@@ -64,10 +70,12 @@ struct WalkingInterfaceImpl : public WalkingInterface
       return ctl_.walkingState == lipm_walking::WalkingState::SingleSupport
              || ctl_.walkingState == lipm_walking::WalkingState::DoubleSupport;
     }
+#ifdef WITH_ISMPC
     if constexpr(is_ismpc)
     {
       return ctl_.datastore().template call<bool>("ismpc_walking::robot_walking");
     }
+#endif
     __builtin_unreachable();
   }
 
@@ -78,10 +86,12 @@ struct WalkingInterfaceImpl : public WalkingInterface
       return ctl_.walkingState == lipm_walking::WalkingState::DoubleSupport
              || ctl_.walkingState == lipm_walking::WalkingState::Standing;
     }
+#ifdef WITH_ISMPC
     if constexpr(is_ismpc)
     {
       return ctl_.datastore().template call<bool>("ismpc_walking::double_support");
     }
+#endif
     __builtin_unreachable();
   }
 
@@ -91,10 +101,12 @@ struct WalkingInterfaceImpl : public WalkingInterface
     {
       return is_walking() && ctl_.pauseWalking;
     }
+#ifdef WITH_ISMPC
     if constexpr(is_ismpc)
     {
       return ctl_.datastore().template call<bool>("ismpc_walking::stop_phase");
     }
+#endif
     __builtin_unreachable();
   }
 
@@ -121,8 +133,10 @@ struct WalkingInterfaceImpl : public WalkingInterface
 
   void start_stop_walking() final
   {
+    mc_rtc::log::info("start_stop_walking");
     if constexpr(is_lipm)
     {
+      mc_rtc::log::info("LIPM Start walking");
       if(ctl_.walkingState == lipm_walking::WalkingState::Standing)
       {
         if(!ctl_.startWalking)
@@ -142,10 +156,12 @@ struct WalkingInterfaceImpl : public WalkingInterface
       }
       return;
     }
+#ifdef WITH_ISMPC
     if constexpr(is_ismpc)
     {
       return ctl_.datastore().template call<void>("ismpc_walking::start/stop");
     }
+#endif
     __builtin_unreachable();
   }
 
@@ -161,10 +177,12 @@ struct WalkingInterfaceImpl : public WalkingInterface
       }
       return;
     }
+#ifdef WITH_ISMPC
     if constexpr(is_ismpc)
     {
       return ctl_.datastore().template call<void, Eigen::Vector3d>("ismpc_walking::set_ref_vel", v);
     }
+#endif
     __builtin_unreachable();
   }
 
@@ -175,10 +193,12 @@ struct WalkingInterfaceImpl : public WalkingInterface
       ctl_.stabilizer()->torsoPitch(p);
       return ctl_.plan.torsoPitch(p);
     }
+#ifdef WITH_ISMPC
     if constexpr(is_ismpc)
     {
       return ctl_.datastore().template call<void, const double &>("ismpc_walking::set_torso_pitch", p);
     }
+#endif
     __builtin_unreachable();
   }
 
@@ -188,11 +208,13 @@ struct WalkingInterfaceImpl : public WalkingInterface
     {
       return ctl_.plan.comHeight();
     }
+#ifdef WITH_ISMPC
     if constexpr(is_ismpc)
     {
       auto & cfg = ctl_.datastore().template call<ControllerConfiguration &>("ismpc_walking::get_config");
       return cfg.Stab_config.comHeight;
     }
+#endif
     __builtin_unreachable();
   }
 
@@ -202,10 +224,12 @@ struct WalkingInterfaceImpl : public WalkingInterface
     {
       return ctl_.plan.comHeight(h);
     }
+#ifdef WITH_ISMPC
     if constexpr(is_ismpc)
     {
       return ctl_.datastore().template call<void, const double &>("ismpc_walking::set_com_height", h);
     }
+#endif
     __builtin_unreachable();
   }
 
@@ -215,10 +239,12 @@ struct WalkingInterfaceImpl : public WalkingInterface
     {
       return ctl_.plan.supportContact().surfaceName;
     }
+#ifdef WITH_ISMPC
     if constexpr(is_ismpc)
     {
       return ctl_.datastore().template call<std::string>("ismpc_walking::support_foot_name");
     }
+#endif
     __builtin_unreachable();
   }
 
@@ -228,10 +254,12 @@ struct WalkingInterfaceImpl : public WalkingInterface
     {
       return ctl_.stabilizer()->targetZMP();
     }
+#ifdef WITH_ISMPC
     if constexpr(is_ismpc)
     {
       return ctl_.MPCState().Pzk;
     }
+#endif
     __builtin_unreachable();
   }
 
@@ -284,4 +312,6 @@ bool LIPMStabilizerController<WalkingCtl>::run()
 
 /** Explicit instanciation of the controllers */
 template struct LIPMStabilizerController<lipm_walking::Controller>;
+#ifdef WITH_ISMPC
 template struct LIPMStabilizerController<Walking_controller>;
+#endif

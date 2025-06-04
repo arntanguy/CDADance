@@ -1,12 +1,7 @@
 #include "AutonomousInteraction.h"
-
-#include <time.h>
-
+#include <mc_control/fsm/Controller.h>
+#include "RosSubscriberData.h"
 #include <cmath>
-#include <iostream>
-
-#include "../mc_lipm_stabilizer.h"
-#include "RosSubscriber.h"
 
 void AutonomousInteraction::configure(const mc_rtc::Configuration & config)
 {

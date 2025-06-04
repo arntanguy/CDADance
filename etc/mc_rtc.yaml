@@ -1,0 +1,4 @@
+#MainRobot: HRP4::CDA
+MainRobot: HRP4 #::ImpactGrippers::MuJoCo
+Timestep: 0.005
+Enabled: CDADance
