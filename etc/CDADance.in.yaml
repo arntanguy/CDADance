@@ -1526,9 +1526,11 @@ ObserverPipelines:
   gui: true
   observers:
     - type: Encoder
-      #- type: Attitude
-      #  required: true
-      #  update: true
+    # FIXME: Attitude is required for MujoCo but does not work on the real
+    # HRP4 (slow drift)
+    - type: Attitude
+      required: true
+      update: true
     - type: KinematicInertial
       update: true
       config:
