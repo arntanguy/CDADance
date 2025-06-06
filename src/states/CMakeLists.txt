@@ -1,5 +1,9 @@
 add_fsm_state_simple(AutonomousInteraction)
-if(TARGET mc_rtc::mc_rtc_ros)
+
+# Build ROS states only for ros1
+# TODO: support ros2
+find_package(ament_cmake)
+if(TARGET mc_rtc::mc_rtc_ros AND NOT ${ament_cmake_FOUND})
 add_fsm_state_simple(RosSubscriber)
 target_link_libraries(RosSubscriber PUBLIC mc_rtc::mc_rtc_ros)
 endif()
