@@ -488,8 +488,8 @@ Dance::FinalLiftLegFSM:
   base: Meta
   transitions:
     - [Dance::PrepareFlying, OK, Stabilizer::GoRight, Auto]
-    - [Stabilizer::GoRight, OK, Dance::LiftLeg, Strict]
-    - [Dance::LiftLeg, OK, Fin::PrepareLift, Strict]
+    - [Stabilizer::GoRight, OK, Dance::LiftLeg, "@DEMO_TRANSITION@"]
+    - [Dance::LiftLeg, OK, Fin::PrepareLift, "@DEMO_TRANSITION@"]
   configs:
     Stabilizer::GoRight:
       completion:

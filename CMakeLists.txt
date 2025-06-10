@@ -9,6 +9,9 @@ set(PROJECT_URL "")
 
 project(${PROJECT_NAME} CXX)
 
+option(CDADANCE_AUTO_MODE "Automatic demo" OFF)
+option(CDADANCE_REAL_ROBOT_MODE "Set to ON to run on the real robot" OFF)
+
 # Check if the project is built inside mc_rtc
 if(NOT TARGET mc_rtc::mc_control)
   find_package(mc_rtc REQUIRED)
@@ -25,6 +28,20 @@ else()
   message(STATUS "ISMPC Walking Controller not found, building without ISMPC support")
   set(WITH_ISMPC OFF)
 endif()
+
+# Modes for the demo
+if(${CDADANCE_AUTO_MODE})
+  set(DEMO_TRANSITION "Auto")
+else()
+  set(DEMO_TRANSITION "Strict")
+endif()
+
+if(${CDADANCE_REAL_ROBOT_MODE})
+  set(DEMO_MODE_COMMENT "#")
+else()
+  set(DEMO_MODE_COMMENT "")
+endif()
+
 
 add_subdirectory(src)
 add_subdirectory(plugins)
@@ -43,8 +60,7 @@ install(
   REGEX ".*(.bin$)"
 )
 
-set(AROBASE "@")
-configure_file(etc/CDADance.in.yaml "${CMAKE_CURRENT_BINARY_DIR}/etc/CDADance.yaml")
+configure_file(etc/CDADance.in.yaml "${CMAKE_CURRENT_BINARY_DIR}/etc/CDADance.yaml" @ONLY)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/etc/CDADance.yaml" DESTINATION "${MC_CONTROLLER_RUNTIME_INSTALL_PREFIX}/etc")
 
 if(${WITH_ISMPC})

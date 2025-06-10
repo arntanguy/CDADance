@@ -1429,12 +1429,12 @@ states:
       - [Dance::XsensRetargetting::Salutations, OK, Dance::XsensRetargetting::Salutations::HalfSitting, Auto]
       - [Dance::XsensRetargetting::Salutations::HalfSitting, OK, Dance::XsensRetargetting::ListenToRobot, Auto]
       - [Dance::XsensRetargetting::ListenToRobot, OK, Dance::XsensRetargetting::ListenToRobot::HalfSitting, Auto]
-      - [Dance::XsensRetargetting::ListenToRobot::HalfSitting, OK, Walk::FollowMe, Strict]
+      - [Dance::XsensRetargetting::ListenToRobot::HalfSitting, OK, Walk::FollowMe, "@DEMO_TRANSITION@"]
       - [Walk::FollowMe, OK, Dance::LookRight, Auto]
-      - [Dance::LookRight, OK, Walk::BackAndTurn, Strict]
+      - [Dance::LookRight, OK, Walk::BackAndTurn, "@DEMO_TRANSITION@"]
       - [Walk::BackAndTurn, OK, Dance::XsensRetargetting::Doute, Auto]
       - [Dance::XsensRetargetting::Doute, OK,  Dance::XsensRetargetting::Doute::HalfSitting, Auto]
-      - [Dance::XsensRetargetting::Doute::HalfSitting, OK, Walk::ForwardAndLeft, Strict]
+      - [Dance::XsensRetargetting::Doute::HalfSitting, OK, Walk::ForwardAndLeft, "@DEMO_TRANSITION@"]
       - [Walk::ForwardAndLeft, OK, Dance::Interaction::Fake, Auto]
       - [Dance::Interaction::Fake, OK, Dance::Interaction::Fake::HalfSitting, Auto]
       - [Dance::Interaction::Fake::HalfSitting, OK, Dance::XsensRetargetting::PetiteDance, Auto]
@@ -1448,7 +1448,7 @@ states:
       # RobotSeul (Doute2, FinDance, FinDance2)
       - [Dance::XsensRetargetting::Deception, OK, Dance::XsensRetargetting::RobotSeul, Auto]
       - [Dance::XsensRetargetting::RobotSeul, OK, Dance::XsensRetargetting::RobotSeul::HalfSitting, Auto]
-      - [Dance::XsensRetargetting::RobotSeul::HalfSitting, OK, Walk::TurnRight90, Strict]
+      - [Dance::XsensRetargetting::RobotSeul::HalfSitting, OK, Walk::TurnRight90, "@DEMO_TRANSITION@"]
       - [Walk::TurnRight90, OK, Walk::Forward1m, Auto]
       # 3rd act finish on one leg
       # disable lipmwalking
@@ -1457,7 +1457,7 @@ states:
       - [Dance::XsensRetargetting::OpenClose, OK, Dance::XsensRetargetting::OpenClose::HalfSitting, Auto]
       # - [Dance::XsensRetargetting::OpenClose::HalfSitting, OK, Dance::XsensRetargetting::FlyToSkyUpperBody, Auto]
       # - [Dance::XsensRetargetting::FlyToSkyUpperBody, OK, HalfSitting::Final, Auto]
-      - [Dance::XsensRetargetting::OpenClose::HalfSitting, OK, Dance::FinalLiftLegFSM, Strict]
+      - [Dance::XsensRetargetting::OpenClose::HalfSitting, OK, Dance::FinalLiftLegFSM, "@DEMO_TRANSITION@"]
       - [Dance::FinalLiftLegFSM, OK, HalfSitting::Final, Strict]
       # Suspend in the air
       # - [Dance::XsensRetargetting::LookAtVideo, OK, Dance::PrepareFlying, Strict]
@@ -1518,8 +1518,8 @@ states:
     states: [Demo::LIPMWalking::WalkFSM, Dance::Demo::FSM::FullSequence]
 
 transitions:
-  - [Pause, OK, Demo::Start::HalfSitting, Strict]
-  - [Demo::Start::HalfSitting, OK, Demo::Start, Strict]
+  - [Pause, OK, Demo::Start::HalfSitting, "@DEMO_TRANSITION@"]
+  - [Demo::Start::HalfSitting, OK, Demo::Start, "@DEMO_TRANSITION@"]
   - [Demo::Start::HalfSitting, StartInteractivity, Dance::Interaction::Real, Strict]
 
 init: Pause
@@ -1531,9 +1531,9 @@ ObserverPipelines:
     - type: Encoder
     # FIXME: Attitude is required for MujoCo but does not work on the real
     # HRP4 (slow drift)
-    - type: Attitude
-      required: true
-      update: true
+    @DEMO_MODE_COMMENT@- type: Attitude
+    @DEMO_MODE_COMMENT@  required: true
+    @DEMO_MODE_COMMENT@  update: true
     - type: KinematicInertial
       update: true
       config:
