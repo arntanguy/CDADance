@@ -75,7 +75,7 @@ Xsens:
         segment: "Head"
         offset:
           translation: [0,0,0]
-          rotation: [0.0, -0.3, 0.0]
+          rotation: [0.0, 0.4, 0.0]
       R_SHOULDER_R_LINK:
         segment: "Right Shoulder"
       R_SHOULDER_Y_LINK:
@@ -1457,7 +1457,7 @@ states:
       - [Dance::XsensRetargetting::OpenClose, OK, Dance::XsensRetargetting::OpenClose::HalfSitting, Auto]
       # - [Dance::XsensRetargetting::OpenClose::HalfSitting, OK, Dance::XsensRetargetting::FlyToSkyUpperBody, Auto]
       # - [Dance::XsensRetargetting::FlyToSkyUpperBody, OK, HalfSitting::Final, Auto]
-      - [Dance::XsensRetargetting::OpenClose::HalfSitting, OK, Dance::FinalLiftLegFSM, "@DEMO_TRANSITION@"]
+      - [Dance::XsensRetargetting::OpenClose::HalfSitting, OK, Dance::FinalLiftLegFSM, Strict]
       - [Dance::FinalLiftLegFSM, OK, HalfSitting::Final, Strict]
       # Suspend in the air
       # - [Dance::XsensRetargetting::LookAtVideo, OK, Dance::PrepareFlying, Strict]
