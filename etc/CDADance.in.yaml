@@ -1473,10 +1473,18 @@ states:
   Demo::Start::HalfSitting:
     base: HalfSitting::Interpolation
 
-  Demo::Start:
+  Demo::Start::InitializeWalking:
+    base: LIPMWalking::Initial
+    autoplay: true
+
+  Demo::Start::StabilizedDemo:
     base: Parallel
     states: [Demo::LIPMWalking::WalkFSM, Dance::Demo::FSM::FullSequence]
 
+  Demo::Start:
+    base: Meta
+    transitions:
+      - [Demo::Start::InitializeWalking, Standing, Demo::Start::StabilizedDemo, Auto]
 
   Dance::Demo::StabilizedFSM:
     base: Parallel
@@ -1499,12 +1507,7 @@ states:
     states: [LIPMWalking::RunStabilizer, Demo::LIPMWalking::WalkInternal]
 
   Demo::LIPMWalking::WalkFSM:
-    base: Meta
-    transitions:
-      - [LIPMWalking::Initial, Standing, LIPMWalking::StabilizedWalkInternal, Auto]
-    configs:
-      LIPMWalking::Initial:
-        autoplay: true
+    base: LIPMWalking::StabilizedWalkInternal
 
   Demo::LIPMWalking::Dance:
     base: Parallel

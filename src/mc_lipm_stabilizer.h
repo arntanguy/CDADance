@@ -28,6 +28,10 @@ struct MC_CONTROL_DLLAPI LIPMStabilizerController : public WalkingCtl
 
 protected:
   WalkingInterfacePtr walking_interface_;
+  // width/length of the area needed for the demo
+  // This corresponds to the bounds of the floating base x/y position over the whole demo
+  Eigen::Vector2d stageMinSize_ = Eigen::Vector2d::Zero();
+  Eigen::Vector2d stageMaxSize_ = Eigen::Vector2d::Zero();
 };
 
 extern template struct LIPMStabilizerController<lipm_walking::Controller>;

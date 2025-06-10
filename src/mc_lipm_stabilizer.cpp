@@ -287,6 +287,23 @@ LIPMStabilizerController<WalkingCtl>::LIPMStabilizerController(mc_rbdyn::RobotMo
 
   walking_interface_ = std::make_shared<WalkingInterfaceImpl<WalkingCtl>>(*this);
   this->datastore().template make<WalkingInterfacePtr>("WalkingInterface", walking_interface_);
+
+  this->gui()->addElement(
+      this, {"CDADance"},
+      mc_rtc::gui::Polygon("Stage Size",
+                           [this]()
+                           {
+                             std::vector<Eigen::Vector3d> p;
+                             p.emplace_back(stageMinSize_.x(), stageMinSize_.y(), 0.);
+                             p.emplace_back(stageMinSize_.x(), stageMaxSize_.y(), 0.);
+                             p.emplace_back(stageMaxSize_.x(), stageMaxSize_.y(), 0.);
+                             p.emplace_back(stageMaxSize_.x(), stageMinSize_.y(), 0.);
+                             p.emplace_back(stageMinSize_.x(), stageMinSize_.y(), 0.);
+                             return p;
+                           }),
+      mc_rtc::gui::ArrayLabel(
+          "Stage Width/Length", {"Width", "Length"}, [this]() -> std::array<double, 2>
+          { return {stageMaxSize_.x() - stageMinSize_.x(), stageMaxSize_.y() - stageMinSize_.y()}; }));
 }
 
 template<typename WalkingCtl>
@@ -307,6 +324,11 @@ bool LIPMStabilizerController<WalkingCtl>::run()
   /* { */
   /*   std::cout << j.name() << ", dof: " << j.dof() << std::endl; */
   /* } */
+  auto & t = this->robot().posW().translation();
+  stageMaxSize_.x() = std::max(t.x(), stageMaxSize_.x());
+  stageMaxSize_.y() = std::max(t.y(), stageMaxSize_.y());
+  stageMinSize_.x() = std::min(t.x(), stageMinSize_.x());
+  stageMinSize_.y() = std::min(t.y(), stageMinSize_.y());
   return WalkingCtl::run();
 }
 
