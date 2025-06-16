@@ -6,7 +6,6 @@
 #include <mc_tasks/PostureTask.h>
 
 #include <algorithm>
-#include <iostream>
 #include <random>
 
 #include "../WalkingInterface.h"
@@ -19,11 +18,6 @@ void InterpolatePosture::start(mc_control::fsm::Controller & ctl)
     mc_rtc::log::error_and_throw("[{}] No robot named {}", name(), robotName_);
   }
   auto & robot = ctl.robot(robotName_);
-  if(!config_.has(robot.name()))
-  {
-    mc_rtc::log::error_and_throw("[{}] No configuration for robot {}", name(), robot.name());
-  }
-  auto robotConfig = config_(robot.name());
 
   // Parse the desired posture sequence.
   // We expect a vector of PostureConfig
@@ -43,33 +37,35 @@ void InterpolatePosture::start(mc_control::fsm::Controller & ctl)
   //        NECK_Y:
   //          period: 0.1 # s
   //          amplitude: 1 # rad
-  config_("autoplay", autoplay_);
-  config_("repeat", repeat_);
-  config_("useDefaultPostureTask", useDefaultPostureTask_);
-  config_("restorePostureGains", restorePostureGains_);
-  config_("goBackToInitialPosture", goBackToInitialPosture_);
-  config_("usePostureTransitionCriteria", usePostureTransitionCriteria_);
-  config_("postureTransitionSpeed", postureTransitionSpeed_);
-  config_("enableShake", enableShake_);
-  config_("enableLookAt", enableLookAt_);
-  config_("improvise", improvise_);
-  robotConfig("autoplay", autoplay_);
-  robotConfig("improvise", improvise_);
-  robotConfig("goBackToInitialPosture", goBackToInitialPosture_);
-  robotConfig("useDefaultPostureTask", useDefaultPostureTask_);
-  robotConfig("restorePostureGains", restorePostureGains_);
-  robotConfig("usePostureTransitionCriteria", usePostureTransitionCriteria_);
-  robotConfig("postureTransitionSpeed", postureTransitionSpeed_);
-  robotConfig("enableShake", enableShake_);
-  robotConfig("enableLookAt", enableLookAt_);
+  std::vector<PostureConfig> postureSequence;
+  auto loadConfig = [&, this](const mc_rtc::Configuration & conf)
+  {
+    conf("autoplay", autoplay_);
+    conf("enableLookAt", enableLookAt_);
+    conf("lookAtRobotFrame", lookAtRobotFrame_);
+    conf("enableShake", enableShake_);
+    conf("goBackToInitialPosture", goBackToInitialPosture_);
+    conf("improvise", improvise_);
+    conf("postureTransitionSpeed", postureTransitionSpeed_);
+    conf("repeat", repeat_);
+    conf("restorePostureGains", restorePostureGains_);
+    conf("useDefaultPostureTask", useDefaultPostureTask_);
+    conf("usePostureTransitionCriteria", usePostureTransitionCriteria_);
+    if(auto ps = conf.find("posture_sequence"))
+    {
+      postureSequence = *ps;
+    }
+  };
+
+  config_.load(config_(robot.name(), mc_rtc::Configuration{}));
+  auto robotConfig = config_;
+  loadConfig(config_);
+
   if(ctl.datastore().has("Improvise"))
   {
     improvise_ = ctl.datastore().get<bool>("Improvise");
     ctl.datastore().remove("Improvise");
   }
-  robotConfig("repeat", repeat_);
-
-  std::vector<PostureConfig> postureSequence = robotConfig("posture_sequence");
 
   // If improvising, shuffle order
   if(improvise_)
@@ -206,8 +202,8 @@ void InterpolatePosture::start(mc_control::fsm::Controller & ctl)
   postureTask_->load(ctl.solver(), robotConfig("posture_task", mc_rtc::Configuration{}));
   postureTask_->reset();
 
-  lookAt_ =
-      std::make_shared<mc_tasks::LookAtTask>(ctl.robot().frame("NECK_P_LINK"), Eigen::Vector3d{1, 0, 0}, 10.0, 100.0);
+  lookAt_ = std::make_shared<mc_tasks::LookAtTask>(ctl.robot().frame(lookAtRobotFrame_), Eigen::Vector3d{1, 0, 0}, 10.0,
+                                                   100.0);
 
   ctl.gui()->addElement(
       this, {name()},

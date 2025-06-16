@@ -2,8 +2,14 @@ InterpolatePosture::Base:
   base: InterpolatePosture
   goBackToInitialPosture: false
   hrp4:
+    lookAtRobotFrame: NECK_P_LINK
     posture_task:
       stiffness: 200
       activeJoints: [L_SHOULDER_P, L_SHOULDER_R, L_SHOULDER_Y, L_ELBOW_P, L_WRIST_Y,
                      R_SHOULDER_P, R_SHOULDER_R, R_SHOULDER_Y, R_ELBOW_P, R_WRIST_P, R_WRIST_R, R_WRIST_Y,
                      CHEST_P, NECK_P, NECK_Y]
+  rhps1:
+    lookAtRobotFrame: HEAD_P_LINK
+    posture_task:
+      stiffness: 200
+      activeJoints: [ "CHEST_Y",      "CHEST_P",         "HEAD_Y",       "HEAD_P",      "L_SHOULDER_P", "L_SHOULDER_R", "L_SHOULDER_Y", "L_ELBOW_P",    "L_ELBOW_Y",    "L_WRIST_R",   "L_WRIST_Y",    "L_HAND", "R_SHOULDER_P", "R_SHOULDER_R", "R_SHOULDER_Y", "R_ELBOW_P",   "R_ELBOW_Y",    "R_WRIST_R", "R_WRIST_Y",    "R_HAND"]

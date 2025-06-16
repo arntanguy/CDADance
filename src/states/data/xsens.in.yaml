@@ -1,28 +1,46 @@
 XsensRetargetting::Standing:
   base: XsensRetargetting
-  robot: hrp4
-  unactiveJoints: [R_HIP_P, R_HIP_R, R_HIP_Y, R_KNEE_P, R_ANKLE_P, L_HIP_P, L_HIP_R, L_HIP_Y, L_KNEE_P, L_ANKLE_P, CHEST_P]
-  stiffness: 20
-  weight: 1000
-  offset:
-    translation: [0.0, 0.0, 0.1]
-    rotation: [0.0, 0.34, 0.0]
-  activeBodies:
-    - torso
-    - NECK_P_LINK
-    - R_SHOULDER_R_LINK
-    - R_SHOULDER_Y_LINK
-    - R_ELBOW_P_LINK
-    - r_wrist
-    - L_SHOULDER_R_LINK
-    - L_SHOULDER_Y_LINK
-    - L_ELBOW_P_LINK
-      #- l_wrist
+  # Common parameters for all robots
   fixBaseLink: true
   fixed_stiffness: 150
   fixed_weight: 8000
   initialStiffnessInterpolationDuration: 5
+  stiffness: 20
+  weight: 1000
+  # Robot-specific configuration
+  hrp4:
+    unactiveJoints: [R_HIP_P, R_HIP_R, R_HIP_Y, R_KNEE_P, R_ANKLE_P, L_HIP_P, L_HIP_R, L_HIP_Y, L_KNEE_P, L_ANKLE_P, CHEST_P]
+    offset:
+      translation: [0.0, 0.0, 0.1]
+      rotation: [0.0, 0.34, 0.0]
+    activeBodies:
+      - torso
+      - NECK_P_LINK
+      - R_SHOULDER_R_LINK
+      - R_SHOULDER_Y_LINK
+      - R_ELBOW_P_LINK
+      - R_WRIST_Y_LINK
+      - L_SHOULDER_R_LINK
+      - L_SHOULDER_Y_LINK
+      - L_ELBOW_P_LINK
+      - L_WRIST_Y_LINK
+  rhps1:
+    unactiveJoints: ["L_CROTCH_Y", "L_CROTCH_R", "L_CROTCH_P", "L_KNEE_P", "L_ANKLE_R", "L_ANKLE_P", "R_CROTCH_Y", "R_CROTCH_R", "R_CROTCH_P", "R_KNEE_P", "R_ANKLE_R", "R_ANKLE_P" ]
 
+    offset:
+      translation: [0.0, 0.0, 0.1]
+      rotation: [0.0, 0.34, 0.0]
+    activeBodies:
+      - CHEST_P_LINK # torso
+      - HEAD_P_LINK # NECK_P_LINK
+      - R_SHOULDER_R_LINK
+      - R_SHOULDER_Y_LINK
+      - R_ELBOW_P_LINK
+      - R_WRIST_Y_LINK
+      - L_SHOULDER_R_LINK
+      - L_SHOULDER_Y_LINK
+      - L_ELBOW_P_LINK
+      - L_WRIST_Y_LINK
 
 Dance::XsensRetargetting::Salutations:
   base: XsensRetargetting::Standing
@@ -30,7 +48,6 @@ Dance::XsensRetargetting::Salutations:
   autoTransition: true
   start_time: 15.0
   end_time: 41.0
-  robot: hrp4
   stiffness: 100
   weight: 1000
   offset:
@@ -46,7 +63,6 @@ Dance::XsensRetargetting::ListenToRobot:
   autoTransition: true
   start_time: 6.8
   end_time: 16.0
-  robot: hrp4
   stiffness: 15
   weight: 1000
   offset:
@@ -62,7 +78,6 @@ Dance::XsensRetargetting::Doute:
   start_time: 3.965
   end_time: 13.760
   autoTransition: true
-  robot: hrp4
   stiffness: 100
   weight: 1000
   offset:
@@ -84,7 +99,6 @@ Dance::XsensRetargetting::PetiteDance:
     # end_time: 66.4
   start_time: 36
   end_time: 66
-  robot: hrp4
   stiffness: 100
   weight: 1000
   offset:
@@ -116,7 +130,6 @@ Dance::XsensRetargetting::Deception:
   autoTransition: true
   start_time: 4.7
   end_time: 50.87
-  robot: hrp4
   stiffness: 100
   weight: 1000
   offset:
@@ -137,7 +150,6 @@ Dance::XsensRetargetting::FinDance:
   start_time: 50.87
   end_time: 58.4
   autoTransition: true
-  robot: hrp4
   stiffness: 100
   weight: 1000
   offset:
@@ -166,7 +178,6 @@ Dance::PrepareFlying:
       #   log: "@XSENS_DIR@/Rocio_dance/Rocio08_fix_cutSecondPart_from_34_to_120.bin"
       #   start_time: 7.0
       #   end_time: 78.6
-      #   robot: hrp4
       #   stiffness: 15
       #   weight: 1000
       #   offset:
@@ -180,7 +191,6 @@ Dance::PrepareFlying:
       #   log: "@XSENS_DIR@/Rocio_dance/Rocio09_FlyToSky_fix_cut_from_29_to_46.5.bin"
       #   start_time: 0.0
       #   end_time: 46
-      #   robot: hrp4
       #   stiffness: 15
       #   weight: 1000
       #   offset:
@@ -195,7 +205,6 @@ Dance::XsensRetargetting::OpenClose:
   start_time: 28.0
   end_time: 40.0
   autoTransition: true
-  robot: hrp4
   stiffness: 15
   weight: 1000
   offset:
@@ -226,7 +235,6 @@ Dance::XsensRetargetting::FlyToSky:
   log: "@XSENS_DIR@/Rocio_dance/Rocio16_fix_from_6_to_43.bin"
   start_time: 6.0
   end_time: 28.0
-  robot: hrp4
   stiffness: 100
   weight: 1000
   offset:
@@ -281,7 +289,6 @@ Dance::XsensRetargetting::FlyToSkyUpperBody:
   autoTransition: true
   start_time: 6.0
   end_time: 28.0
-  robot: hrp4
   stiffness: 100
   weight: 1000
   offset:
@@ -311,7 +318,6 @@ Dance::XsensRetargetting::LookAtVideo:
   configs:
     XsensRetargetting::Standing:
       log: "@XSENS_DIR@/Rocio_dance/Rocio10_LookAtVideo_fix_cut_from_0_to_53.bin"
-      robot: hrp4
       activeBodies:
         - torso
         - R_SHOULDER_R_LINK
@@ -327,9 +333,14 @@ Dance::XsensRetargetting::LookAtVideo:
       end_time: 46 # 44s from start of lookat
       stiffness: 100
       weight: 1000
-      offset:
-        translation: [0.0, 0.0, 0.1]
-        rotation: [0.0, 0.0, 0.17]
+      hrp4:
+        offset:
+          translation: [0.0, 0.0, 0.1]
+          rotation: [0.0, 0.0, 0.17]
+      rhps1:
+        offset:
+          translation: [0.0, 0.0, 0.1]
+          rotation: [-0.5, 0., 0.17]
     InterpolatePosture::Base:
       hrp4:
         posture_sequence:
@@ -382,10 +393,11 @@ Dance::XsensRetargetting::LookAtVideo::HalfSitting:
   base: HalfSitting::Interpolation
 
 Dance::InterpolatePosture::LiftLeftLeg:
-  base: InterpolatePosture
+  base: InterpolatePosture::Base
+  goBackToInitialPosture: false
+  restorePostureGains: true
   hrp4:
-    goBackToInitialPosture: false
-    restorePostureGains: true
+    lookAtRobotFrame: NECK_P_LINK
     posture_task:
       stiffness: 50
       activeJoints: [L_SHOULDER_P, L_SHOULDER_R, L_SHOULDER_Y, L_ELBOW_P, L_WRIST_P, L_WRIST_R, L_WRIST_Y,
@@ -466,33 +478,120 @@ Dance::InterpolatePosture::LiftLeftLeg:
           L_HAND_J0: -0.015708000000000095
           L_HAND_J1: -4.644190648921802e-22
 
+  rhps1:
+    lookAtRobotFrame: HEAD_P_LINK
+    posture_task:
+      stiffness: 500
+      weight: 1000
+      activeJoints: ["L_CROTCH_Y",   "L_CROTCH_R",   "L_CROTCH_P",   "L_KNEE_P",    "L_ANKLE_R",    "L_ANKLE_P",
+                        "CHEST_Y",      "CHEST_P", "HEAD_Y",       "HEAD_P",      "L_SHOULDER_P", "L_SHOULDER_R",
+                        "L_SHOULDER_Y", "L_ELBOW_P",    "L_ELBOW_Y",    "L_WRIST_R",   "L_WRIST_Y",    "L_HAND",
+                        "R_SHOULDER_P", "R_SHOULDER_R", "R_SHOULDER_Y", "R_ELBOW_P",   "R_ELBOW_Y",    "R_WRIST_R", "R_WRIST_Y",    "R_HAND"]
+    posture_sequence:
+      - time: 2
+        posture:
+          L_CROTCH_Y: -0.010904589849052786
+          L_CROTCH_R: -0.15498001956710984
+          L_CROTCH_P: -0.40367995111872576
+          L_KNEE_P: 1.0744225239449575
+          L_ANKLE_R: -0.15437088763610627
+          L_ANKLE_P: -0.6176730249265595
+          CHEST_Y: -0.012381408064085734
+          CHEST_P: -0.03497748750672236
+          R_CROTCH_Y: 0.07088483530217309
+          R_CROTCH_R: 0.1
+          R_CROTH_P: -0.1274353885220404
+          R_KNEE_P: 0.4955231891305897
+          R_ANKLE_R: -0.045595206125735369
+          R_ANKLE_P: -0.30089643483212516
+          HEAD_Y: 0.000271591600663803
+          HEAD_P: 0.0015353075556041082
+          L_SHOULDER_P: 0.2548693894531012
+          L_SHOULDER_R: 0.17773882233125189
+          L_SHOULDER_Y: -0.08659699727883294
+          L_ELBOW_P: -0.5207543355423806
+          L_ELBOW_Y: -0.000019693608534065424
+          L_WRIST_R: 0.00027256769468147937
+          L_WRIST_Y: -0.00003201218934321875
+          R_SHOULDER_P: -0.3831017226429983
+          R_SHOULDER_R: -0.8096033734814387
+          R_SHOULDER_Y: -0.1944388163101644
+          R_ELBOW_P: -0.6929944992369321
+          R_ELBOW_Y: -0.17192261484574188
+          R_WRIST_R: 0.286027171633087
+          R_WRIST_Y: -0.11290600202298623
+      - time: 5
+        posture:
+          L_CROTCH_Y: -0.10579378226586031
+          L_CROTCH_R: 0.3
+          L_CROTCH_P: 0.33022228798360539
+          L_KNEE_P: 0.47068975970679319
+          L_ANKLE_R: -0.24090671999915254
+          L_ANKLE_P: -0.9273506846798715
+          CHEST_Y: -0.010590973601591062
+          CHEST_P: -0.5061457099999918
+          R_CROTCH_Y: -0.010115361370033155
+          R_CROTCH_R: -0.0033568165469960757
+          R_CROTCH_P: -0.9836748580571417
+          R_KNEE_P: 0.6491538203159799
+          R_ANKLE_R: 0.05714721945747154
+          R_ANKLE_P: -0.2926390725452379
+          HEAD_Y: -0.004203758865743386
+          HEAD_P: -0.0008404682240766711
+          L_SHOULDER_P: -0.2838996389014941
+          L_SHOULDER_R: 1.0512650876742154
+          L_SHOULDER_Y: 0.045115438967745138
+          L_ELBOW_P: -1.1970205351525008
+          L_ELBOW_Y: -0.02940649106442587
+          L_WRIST_R: -0.6171336730808783
+          L_WRIST_Y: -1.1399605119605596
+          R_SHOULDER_P: -0.3831017226429983
+          R_SHOULDER_R: -0.8096033734814387
+          R_SHOULDER_Y: -0.1944388163101644
+          R_ELBOW_P: -0.6929944992369321
+          R_ELBOW_Y: -0.17192261484574188
+          R_WRIST_R: 0.286027171633087
+          R_WRIST_Y: -0.11290600202298623
+
 Dance::LiftLeg:
   base: Parallel
   states: [DisableWalk, Stabilizer::RightSupport, Dance::InterpolatePosture::LiftLeftLeg]
+  RemoveContacts:
+    - r2: ground
+      r1Surface: LeftFootCenter
+      r2Surface: AllGround
   configs:
     Stabilizer::RightSupport:
+      above: RightAnkle
       StabilizerConfig:
         admittance:
           cop: [0.005, 0.01]
+        # tasks:
+        #   com:
+        #     activeJoints: ["R_CROTCH_Y",   "R_CROTCH_R",   "R_CROTCH_P",   "R_KNEE_P",    "R_ANKLE_R",    "R_ANKLE_P",
+        #                       "CHEST_Y",      "CHEST_P", "HEAD_Y",       "HEAD_P",      "L_SHOULDER_P", "L_SHOULDER_R",
+        #                       "L_SHOULDER_Y", "L_ELBOW_P",    "L_ELBOW_Y",    "L_WRIST_R",   "L_WRIST_Y",    "L_HAND",
+        #                       "R_SHOULDER_P", "R_SHOULDER_R", "R_SHOULDER_Y", "R_ELBOW_P",   "R_ELBOW_Y",    "R_WRIST_R", "R_WRIST_Y",    "R_HAND"]
 
 Fin::PrepareLift:
   base: InterpolatePosture
   duration: 3
+  goBackToInitialPosture: true
+  posture_task:
+    stiffness: 100
+  posture_sequence: []
   hrp4:
-    goBackToInitialPosture: true
-    posture_task:
-      stiffness: 100
-    posture_sequence: []
+    lookAtRobotFrame: NECK_P_LINK
+  rhps1:
+    lookAtRobotFrame: NECK_P_LINK
 
 Dance::FinalLiftLegFSM:
   base: Meta
   transitions:
     - [Dance::PrepareFlying, OK, Stabilizer::GoRight, Auto]
-    # - [Stabilizer::GoRight, OK, Dance::LiftLeg, "@DEMO_TRANSITION@"]
-    # - [Dance::LiftLeg, OK, Fin::PrepareLift, "@DEMO_TRANSITION@"]
     - [Stabilizer::GoRight, OK, Dance::LiftLeg, Strict]
     - [Dance::LiftLeg, OK, Fin::PrepareLift, Strict]
   configs:
     Stabilizer::GoRight:
       completion:
-        dcmEval: [0.005, 0.005, 0.05]
+        dcmEval: [0.005, 0.002, 0.05]

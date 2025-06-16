@@ -213,5 +213,5 @@ private:
   bool enableLookAt_ = true;
   std::shared_ptr<mc_tasks::LookAtTask> lookAt_;
   bool lookAtActive_ = false;
-  std::string lookAtFrame_{};
+  std::string lookAtRobotFrame_{"undefined"};
 };

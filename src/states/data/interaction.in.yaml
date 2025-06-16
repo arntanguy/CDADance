@@ -11,11 +11,33 @@ Right::TouchHead:
           R_SHOULDER_Y: 1.6 #-3.1
           R_ELBOW_P: -2.1
           # L_SHOULDER_R: 2.15
+  rhps1:
+    posture_sequence:
+      - time: 2.0
+        posture:
+          # NECK_P: 0.8
+          # NECK_Y: 1.2
+          R_SHOULDER_R: -0.6
+          R_SHOULDER_P: -2.5 #-2.0
+          R_SHOULDER_Y: 1.6 #-3.1
+          R_ELBOW_P: -2.1
+          # L_SHOULDER_R: 2.15
 
 Right::HandHigh:
   base: InterpolatePosture::Base
+  scaleTime: 1.0
   hrp4:
-    scaleTime: 1.0
+    posture_sequence:
+      - time: 2.0
+        posture:
+          R_SHOULDER_P: -0.971
+          R_SHOULDER_R: -0.071
+      - time: 2.0
+        posture:
+          R_SHOULDER_P: -1.551
+          R_SHOULDER_R: -0.503
+          R_SHOULDER_Y: 0.132
+  rhps1:
     posture_sequence:
       - time: 2.0
         posture:
@@ -29,8 +51,17 @@ Right::HandHigh:
 
 Right::HandSide:
   base: InterpolatePosture::Base
+  scaleTime: 1.0
   hrp4:
-    scaleTime: 1.0
+    posture_sequence:
+      - time: 2.0
+        posture:
+          R_SHOULDER_P: -1.150
+      - time: 2.0
+        posture:
+          R_SHOULDER_P: -1.150
+          R_SHOULDER_R: -1.47
+  rhps1:
     posture_sequence:
       - time: 2.0
         posture:
@@ -53,11 +84,32 @@ Left::TouchHead:
         # L_SHOULDER_Y: 1.6 #-3.1
         L_ELBOW_P: -2.12
         # L_SHOULDER_R: 2.15
+  rhps1:
+    posture_sequence:
+    - time: 2.0
+      posture:
+        # NECK_P: 0.8
+        # NECK_Y: 1.2
+        L_SHOULDER_R: 1.235
+        L_SHOULDER_P: -1.9 #-2.0
+        # L_SHOULDER_Y: 1.6 #-3.1
+        L_ELBOW_P: -2.12
+        # L_SHOULDER_R: 2.15
 
 Left::HandSide:
   base: InterpolatePosture::Base
+  scaleTime: 1.0
   hrp4:
-    scaleTime: 1.0
+    posture_sequence:
+      - time: 2.0
+        posture:
+          L_SHOULDER_P: -1.127
+      - time: 2.0
+        posture:
+          L_SHOULDER_P: -1.127
+          L_SHOULDER_R: 0.603
+          L_SHOULDER_Y: -0.841
+  rhps1:
     posture_sequence:
       - time: 2.0
         posture:
@@ -70,8 +122,19 @@ Left::HandSide:
 
 Left::HandHigh:
   base: InterpolatePosture::Base
+  scaleTime: 1.0
   hrp4:
-    scaleTime: 1.0
+    posture_sequence:
+      - time: 2.0
+        posture:
+          L_SHOULDER_P: -0.585
+      - time: 2.0
+        posture:
+          L_SHOULDER_P: 0.382
+          L_SHOULDER_R: 0.627
+          L_SHOULDER_Y: 0.819
+          L_ELBOW_P: -0.601
+  rhps1:
     posture_sequence:
       - time: 2.0
         posture:
@@ -118,8 +181,17 @@ Dance::Interaction::Fake:
 
 Left::HandForward:
   base: InterpolatePosture::Base
+  scaleTime: 1.0
   hrp4:
-    scaleTime: 1.0
+    posture_sequence:
+      - time: 2.0
+        posture:
+          L_SHOULDER_P: -0.7044003811369571
+          L_SHOULDER_R: 0.11682543675543102
+          L_SHOULDER_Y: -0.014070956585719627
+          L_ELBOW_P: -0.9182042624469274
+          L_WRIST_Y: -0.10429334323019289
+  rhps1:
     posture_sequence:
       - time: 2.0
         posture:
@@ -131,8 +203,17 @@ Left::HandForward:
 
 Right::HandForward:
   base: InterpolatePosture::Base
+  scaleTime: 1.0
   hrp4:
-    scaleTime: 1.0
+    posture_sequence:
+      - time: 2.0
+        posture:
+          R_SHOULDER_P: -0.7044003811369571
+          R_SHOULDER_R: 0.11682543675543102
+          R_SHOULDER_Y: -0.014070956585719627
+          R_ELBOW_P: -0.9182042624469274
+          R_WRIST_Y: -0.10429334323019289
+  rhps1:
     posture_sequence:
       - time: 2.0
         posture:
@@ -144,8 +225,22 @@ Right::HandForward:
 
 Both::Raise:
   base: InterpolatePosture::Base
+  scaleTime: 1.0
   hrp4:
-    scaleTime: 1.0
+    posture_sequence:
+      - time: 2.0
+        posture:
+          L_SHOULDER_P: -1.428492798587428
+          L_SHOULDER_R: -0.02326798864483972
+          L_SHOULDER_Y: -0.15610860393484769
+          L_ELBOW_P: -1.7751388011496606
+          L_WRIST_Y: -0.08325554331222093
+          R_SHOULDER_P: -1.428492798587428
+          R_SHOULDER_R: -0.02326798864483972
+          R_SHOULDER_Y: -0.15610860393484769
+          R_ELBOW_P: -1.7751388011496606
+          R_WRIST_Y: -0.08325554331222093
+  rhps1:
     posture_sequence:
       - time: 2.0
         posture:

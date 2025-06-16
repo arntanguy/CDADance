@@ -5,14 +5,39 @@
 #include "mc_lipm_stabilizer.h"
 
 #include <mc_control/MCController.h>
+#include <mc_rtc/Configuration.h>
+#include <mc_rtc/config.h>
 #include <mc_rtc/logging.h>
 
 #include "WalkingInterface.h"
+#include <lipm_walking/utils/SE2d.h>
 
 // Patch the config so it's compatible with LIPMWalking
-static inline mc_rtc::Configuration patch_config(mc_rtc::Configuration config)
+template<typename WalkingCtl>
+static inline mc_rtc::Configuration patch_config(const mc_rbdyn::RobotModule & rm, mc_rtc::Configuration config)
 {
-  config.add("robot_models", config("stabilizer")("robot"));
+  constexpr bool is_lipm = std::is_same_v<WalkingCtl, lipm_walking::Controller>;
+  if constexpr(is_lipm)
+  {
+    // Attempt to load robot-specific config for LIPMWalking
+    mc_rtc::Configuration conf;
+    try
+    {
+
+      const auto lipm_robot_conf_path =
+          std::string{mc_rtc::MC_CONTROLLER_INSTALL_PREFIX} + "LIPMWalking/" + rm.name + ".yaml";
+      conf.load(lipm_robot_conf_path);
+      mc_rtc::log::info(
+          "Found robot-specific configuration for LIPMWalking for robot {} in {}: loading into the main configuration",
+          rm.name, lipm_robot_conf_path);
+      config.load(conf);
+    }
+    catch(mc_rtc::Configuration::Exception & e)
+    {
+      e.silence();
+    }
+  }
+
   return config;
 }
 
@@ -48,12 +73,26 @@ struct WalkingInterfaceImpl : public WalkingInterface
 
   WalkingInterfaceImpl(LIPMStabilizerController<WalkingCtl> & ctl) : ctl_(ctl) {}
 
-  void load_plan(const std::string & name)
+  void load_plan(const std::string & name, const std::optional<sva::PTransformd> & relTarget)
   {
     if constexpr(is_lipm)
     {
-      ctl_.loadFootstepPlan(name);
-      // ctl_.updatePlan();
+      if(relTarget && (name == "custom_forward" || name == "custom_lateral" || name == "custom_backward"))
+      {
+        lipm_walking::utils::SE2d localTarget;
+        localTarget.x = relTarget->translation().x();
+        localTarget.y = relTarget->translation().y();
+        localTarget.theta = mc_rbdyn::rpyFromMat(relTarget->rotation()).z();
+        mc_rtc::log::info("load_plan {} with custom target (x: {}, y: {}, theta: {})", name, localTarget.x,
+                          localTarget.y, mc_rtc::constants::toDeg(localTarget.theta));
+        ctl_.planInterpolator.updateLocalTarget_(localTarget);
+        ctl_.planInterpolator.run();
+        ctl_.updatePlan(name);
+      }
+      else
+      {
+        ctl_.updatePlan(name);
+      }
     }
 #ifdef WITH_ISMPC
     if constexpr(is_ismpc)
@@ -280,7 +319,7 @@ LIPMStabilizerController<WalkingCtl>::LIPMStabilizerController(mc_rbdyn::RobotMo
                                                                double dt,
                                                                const mc_rtc::Configuration & config,
                                                                const mc_control::ControllerParameters & params)
-: WalkingCtl(patch_rm(rm, config), dt, patch_config(config), params)
+: WalkingCtl(patch_rm(rm, config), dt, patch_config<WalkingCtl>(*rm, config), params)
 {
   /* mc_rtc::log::info("FULL CONFIG IS {}",
    * mc_control::MCController::config().dump(true, true)); */
@@ -303,7 +342,22 @@ LIPMStabilizerController<WalkingCtl>::LIPMStabilizerController(mc_rbdyn::RobotMo
                            }),
       mc_rtc::gui::ArrayLabel(
           "Stage Width/Length", {"Width", "Length"}, [this]() -> std::array<double, 2>
-          { return {stageMaxSize_.x() - stageMinSize_.x(), stageMaxSize_.y() - stageMinSize_.y()}; }));
+          { return {stageMaxSize_.x() - stageMinSize_.x(), stageMaxSize_.y() - stageMinSize_.y()}; }),
+      mc_rtc::gui::Button("Dump posture",
+                          [this]()
+                          {
+                            mc_rtc::Configuration jc;
+                            auto & robot = this->robot();
+                            for(const auto & joint : robot.refJointOrder())
+                            {
+                              auto j = robot.mbc().q[robot.jointIndexByName(joint)];
+                              if(j.size() == 1)
+                              {
+                                jc.add(joint, j[0]);
+                              }
+                            }
+                            mc_rtc::log::info(jc.dump(true, true));
+                          }));
 }
 
 template<typename WalkingCtl>

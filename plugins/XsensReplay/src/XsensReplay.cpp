@@ -151,11 +151,13 @@ void XsensReplay::init(mc_control::MCGlobalController & gc, const mc_rtc::Config
   auto & ds = gc.controller().datastore();
   ds.make_call("Replay::SkipIter", [this](size_t skipIter) { skipIter_ = std::max(static_cast<size_t>(1), skipIter); });
   ds.make_call("Replay::SetStartTime",
-               [this, &gc](double startTime) { start_iter_ = timeToIter(startTime, gc.timestep()); });
-  ds.make_call("Replay::SetEndTime", [this, &gc](double endTime) { end_iter_ = timeToIter(endTime, gc.timestep()); });
-  ds.make_call("Replay::GetStartTime", [this, &gc]() { return static_cast<double>(start_iter_) * gc.timestep(); });
-  ds.make_call("Replay::GetCurrentTime", [this, &gc]() { return static_cast<double>(iters_) * gc.timestep(); });
-  ds.make_call("Replay::GetEndTime", [this, &gc]() { return (static_cast<double>(end_iter_) - 1.0) * gc.timestep(); });
+               [this, &gc](double startTime) { start_iter_ = timeToIter(startTime, logRecordTimestep_); });
+  ds.make_call("Replay::SetEndTime",
+               [this, &gc](double endTime) { end_iter_ = timeToIter(endTime, logRecordTimestep_); });
+  ds.make_call("Replay::GetStartTime", [this, &gc]() { return static_cast<double>(start_iter_) * logRecordTimestep_; });
+  ds.make_call("Replay::GetCurrentTime", [this, &gc]() { return static_cast<double>(iters_) * logRecordTimestep_; });
+  ds.make_call("Replay::GetEndTime",
+               [this, &gc]() { return (static_cast<double>(end_iter_) - 1.0) * logRecordTimestep_; });
   ds.make_call("Replay::SetLog",
                [this, &ds, &gc](const std::string & logPath)
                {
@@ -197,8 +199,9 @@ void XsensReplay::init(mc_control::MCGlobalController & gc, const mc_rtc::Config
   do_config("with-gui-inputs", with_gui_inputs_, "replay GUI inputs");
   do_config("with-outputs", with_outputs_, "replay controller output");
   do_config("pause", pause_, "start paused");
-  start_iter_ = timeToIter(config("start_time", 0), gc.timestep());
-  end_iter_ = timeToIter(config("end_time", 0), gc.timestep());
+  logRecordTimestep_ = config("logRecordTimestep", gc.timestep());
+  start_iter_ = timeToIter(config("start_time", 0), logRecordTimestep_);
+  end_iter_ = timeToIter(config("end_time", 0), logRecordTimestep_);
   auto preload_logs = config("preload_logs", std::vector<std::string>{});
   if(preload_logs.size())
   {
@@ -254,7 +257,8 @@ void XsensReplay::init_log(const std::string & logPath, mc_rtc::DataStore & ds)
   }
   if(start_iter_ > log_->size() - 1)
   {
-    mc_rtc::log::error_and_throw("[XsensReplay] Start time cannot be outside of the log");
+    mc_rtc::log::error_and_throw("[XsensReplay] Start time (iter={}) cannot be outside of the log (max iter: {})",
+                                 start_iter_, log_->size() - 1);
   }
   else if(end_iter_ != 0 && end_iter_ > log_->size() - 1)
   {

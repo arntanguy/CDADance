@@ -60,6 +60,7 @@ private:
   size_t end_iter_ = 0;
   size_t skipIter_ = 1;
   size_t totalIter_ = 0;
+  double logRecordTimestep_ = 0; // same as controller's timestep by default
   std::map<std::string, std::string> log_to_datastore_;
   struct DataStoreUpdate
   {

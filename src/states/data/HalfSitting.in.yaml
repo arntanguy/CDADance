@@ -1,12 +1,19 @@
 HalfSitting::Interpolation:
   base: InterpolatePosture
   duration: 3
+
+  # NOTE: you can also override these parameters per-robot
+  # hrp4:
+  #   <parameters>
+  useDefaultPostureTask: true
+  goBackToInitialPosture: false
+  restorePostureGains: true
+  posture_task:
+    stiffness: 100
+  posture_sequence:
+    - time: 2.0
+      halfsitting: true
   hrp4:
-    useDefaultPostureTask: true
-    goBackToInitialPosture: false
-    restorePostureGains: true
-    posture_task:
-      stiffness: 100
-    posture_sequence:
-      - time: 2.0
-        halfsitting: true
+    lookAtRobotFrame: NECK_P_LINK
+  rhps1:
+    lookAtRobotFrame: HEAD_P_LINK

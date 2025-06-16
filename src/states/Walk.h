@@ -1,4 +1,5 @@
 #include <mc_control/fsm/State.h>
+#include <SpaceVecAlg/SpaceVecAlg>
 
 struct Walk : mc_control::fsm::State
 {
@@ -9,7 +10,5 @@ struct Walk : mc_control::fsm::State
 protected:
   bool walking_ = false;
   bool autoWalk_ = true;
-  double stopDistance_ = 1;
-  bool useStopDistance_ = true;
-  Eigen::Vector3d startPos_;
+  sva::PTransformd startPos_;
 };

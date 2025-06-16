@@ -1,9 +1,12 @@
 #include "Walk.h"
 
 #include <mc_control/fsm/Controller.h>
-#include <Eigen/src/Core/Matrix.h>
+#include <mc_rtc/Configuration.h>
+#include <SpaceVecAlg/PTransform.h>
+#include <SpaceVecAlg/SpaceVecAlg>
 
 #include "../WalkingInterface.h"
+#include <lipm_walking/utils/SE2d.h>
 
 void Walk::start(mc_control::fsm::Controller & ctl)
 {
@@ -19,26 +22,27 @@ void Walk::start(mc_control::fsm::Controller & ctl)
                         mc_rtc::gui::Button("STOP WALKING", [&walk]() { walk.stop_walking(); }));
 
   config_("autoWalk", autoWalk_);
-  /* config_("useStopDistance", useStopDistance_); */
-  /* config_("stopDistance", stopDistance_); */
-  /* Eigen::Vector3d refVel = Eigen::Vector3d::Zero(); */
-  /* if (config_.has("refVel")) */
-  /* { */
-  /*   refVel = config_("refVel"); */
-  /* } */
-  if(config_.has("plan"))
+  if(auto planName = config_.find("plan"))
   {
-    mc_rtc::log::warning("PLAN IS SET");
-    walk.load_plan(config_("plan"));
+    mc_rtc::log::warning("PLAN IS SET to {}", *planName);
+    std::optional<sva::PTransformd> localTarget;
+    if(auto localTargetConf = config_(*planName, mc_rtc::Configuration{}).find("localTarget"))
+    {
+      localTarget = sva::PTransformd::Identity();
+      localTarget->translation().x() = (*localTargetConf)("x", 0.);
+      localTarget->translation().y() = (*localTargetConf)("y", 0.);
+      localTarget->rotation() = sva::RotZ(mc_rtc::constants::toRad((*localTargetConf)("theta", 0.)));
+    }
+    walk.load_plan(*planName, localTarget);
   }
-  /* mc_rtc::log::info("refVel is {}", refVel); */
-  // walk.set_planner_ref_vel(refVel);
-  Eigen::Vector3d startPos_ = ctl.robot().posW().translation();
   if(autoWalk_)
   {
     walk.start_walking();
     mc_rtc::log::warning("ASKING TO START WALKING");
   }
+
+  startPos_ =
+      sva::interpolate(ctl.robot().frame("LeftFoot").position(), ctl.robot().frame("RightFoot").position(), 0.5);
   output("OK");
   run(ctl);
 }
@@ -54,16 +58,6 @@ bool Walk::run(mc_control::fsm::Controller & ctl)
       walking_ = true;
   }
 
-  /* if (useStopDistance_ && (ctl.robot().posW().translation() -
-   * startPos_).norm() >= stopDistance_) */
-  /* { */
-  /*   walk.set_planner_ref_vel(Eigen::Vector3d{0, 0, 0}); */
-  /*   walk.stop_walking(); */
-  /*   return true; */
-  /* } */
-  /* else */
-  /* { */
-  /* } */
   return walking_ && walk.is_stopped();
 }
 
@@ -73,6 +67,12 @@ void Walk::teardown(mc_control::fsm::Controller & ctl)
   walk.set_planner_ref_vel(Eigen::Vector3d{0, 0, 0});
   walk.stop_walking();
   ctl.gui()->removeElements(this);
+  auto endPos =
+      sva::interpolate(ctl.robot().frame("LeftFoot").position(), ctl.robot().frame("RightFoot").position(), 0.5);
+
+  auto relWalkPose = endPos * startPos_.inv();
+  mc_rtc::log::info("[{}] Walked:\n{}", name(),
+                    lipm_walking::utils::SE2d{relWalkPose}.toConfiguration(true).dump(true, true));
 }
 
 EXPORT_SINGLE_STATE("Walk", Walk)
