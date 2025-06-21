@@ -62,6 +62,10 @@ install(
 
 configure_file(etc/CDADance.in.yaml "${CMAKE_CURRENT_BINARY_DIR}/etc/CDADance.yaml" @ONLY)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/etc/CDADance.yaml" DESTINATION "${MC_CONTROLLER_RUNTIME_INSTALL_PREFIX}/etc")
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/etc/mc_rtc_hrp4_real.yaml" DESTINATION "${MC_CONTROLLER_RUNTIME_INSTALL_PREFIX}/etc")
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/etc/mc_rtc_hrp4_mujoco.yaml" DESTINATION "${MC_CONTROLLER_RUNTIME_INSTALL_PREFIX}/etc")
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/etc/mc_rtc_rhps1_real.yaml" DESTINATION "${MC_CONTROLLER_RUNTIME_INSTALL_PREFIX}/etc")
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/etc/mc_rtc_rhps1_mujoco.yaml" DESTINATION "${MC_CONTROLLER_RUNTIME_INSTALL_PREFIX}/etc")
 
 if(${WITH_ISMPC})
   configure_file(etc/CDADance.in.yaml "${CMAKE_CURRENT_BINARY_DIR}/etc/CDADance_ismpc.yaml")

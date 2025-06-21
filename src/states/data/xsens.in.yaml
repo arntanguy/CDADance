@@ -53,6 +53,8 @@ Dance::XsensRetargetting::Salutations:
   offset:
     translation: [0.0, 0.0, 0.1]
     rotation: [0.0, 0.34, 0.0]
+  rhps1:
+    pause: true
 
 Dance::XsensRetargetting::Salutations::HalfSitting:
   base: HalfSitting::Interpolation

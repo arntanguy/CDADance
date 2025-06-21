@@ -1,0 +1,7 @@
+MainRobot: RHPS1_MuJoCo
+Timestep: 0.002
+
+Log: false
+
+Enabled: CDADance
+# Enabled: LIPMWalking

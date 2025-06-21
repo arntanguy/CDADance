@@ -1,15 +1,13 @@
-# MainRobot: RHPS1_MuJoCo
-# Timestep: 0.002
-
 MainRobot: HRP4::ImpactGrippers
 Timestep: 0.005
+
 Log: false
 
 Enabled: CDADance
 # Enabled: LIPMWalking
 
 UDP:
-  host: hrp4005c
+  host: hrp4005c 
   port: 4444
   IgnoredJoints:
     joints: [R_HAND_J0, R_HAND_J1, L_HAND_J0, L_HAND_J1, R_WRIST_Y]
