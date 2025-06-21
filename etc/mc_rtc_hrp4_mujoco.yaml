@@ -1,0 +1,9 @@
+MainRobot: HRP4::MuJoCo
+# There is no impact gripper in MuJoCo
+# MainRobot: HRP4::ImpactGrippers::MuJoCo
+Timestep: 0.005
+
+Log: false
+
+Enabled: CDADance
+# Enabled: LIPMWalking
