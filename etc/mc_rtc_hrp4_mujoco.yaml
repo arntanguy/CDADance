@@ -1,4 +1,4 @@
-MainRobot: HRP4::ImpactGrippers::MuJoCo 
+MainRobot: HRP4::ImpactGrippers::MuJoCo
 Timestep: 0.005
 
 Log: false
